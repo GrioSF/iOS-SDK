@@ -1,0 +1,364 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C1A4297916E967EB001BD576 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297816E967EB001BD576 /* UIKit.framework */; };
+		C1A4297B16E967EB001BD576 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297A16E967EB001BD576 /* Foundation.framework */; };
+		C1A4297D16E967EB001BD576 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297C16E967EB001BD576 /* CoreGraphics.framework */; };
+		C1A4298316E967EB001BD576 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1A4298116E967EB001BD576 /* InfoPlist.strings */; };
+		C1A4298516E967EB001BD576 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A4298416E967EB001BD576 /* main.m */; };
+		C1A4298916E967EB001BD576 /* FMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A4298816E967EB001BD576 /* FMAppDelegate.m */; };
+		C1A4298B16E967EB001BD576 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A4298A16E967EB001BD576 /* Default.png */; };
+		C1A4298D16E967EC001BD576 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A4298C16E967EC001BD576 /* Default@2x.png */; };
+		C1A4298F16E967EC001BD576 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A4298E16E967EC001BD576 /* Default-568h@2x.png */; };
+		C1A4299216E967EC001BD576 /* FMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A4299116E967EC001BD576 /* FMViewController.m */; };
+		C1A4299516E967EC001BD576 /* FMViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1A4299316E967EC001BD576 /* FMViewController.xib */; };
+		C1A4299E16E96806001BD576 /* FMSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A4299D16E96806001BD576 /* FMSession.m */; };
+		C1A429A116E96812001BD576 /* FMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A016E96812001BD576 /* FMAudioPlayer.m */; };
+		C1A429A416E96833001BD576 /* FMMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A316E96833001BD576 /* FMMediaItem.m */; };
+		C1A429A816E96A04001BD576 /* FMServerDispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A716E96A04001BD576 /* FMServerDispatch.m */; };
+		C1A429AB16E96A0C001BD576 /* FMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429AA16E96A0C001BD576 /* FMAuth.m */; };
+		C1A429AE16E96A17001BD576 /* FMBandwidthMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429AD16E96A17001BD576 /* FMBandwidthMonitor.m */; };
+		C1A429B116E96A1F001BD576 /* FMReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429B016E96A1F001BD576 /* FMReachability.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C1A4297516E967EB001BD576 /* sdktest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sdktest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1A4297816E967EB001BD576 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C1A4297A16E967EB001BD576 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C1A4297C16E967EB001BD576 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C1A4298016E967EB001BD576 /* sdktest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "sdktest-Info.plist"; sourceTree = "<group>"; };
+		C1A4298216E967EB001BD576 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C1A4298416E967EB001BD576 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C1A4298616E967EB001BD576 /* sdktest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sdktest-Prefix.pch"; sourceTree = "<group>"; };
+		C1A4298716E967EB001BD576 /* FMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMAppDelegate.h; sourceTree = "<group>"; };
+		C1A4298816E967EB001BD576 /* FMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMAppDelegate.m; sourceTree = "<group>"; };
+		C1A4298A16E967EB001BD576 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		C1A4298C16E967EC001BD576 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		C1A4298E16E967EC001BD576 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		C1A4299016E967EC001BD576 /* FMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMViewController.h; sourceTree = "<group>"; };
+		C1A4299116E967EC001BD576 /* FMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMViewController.m; sourceTree = "<group>"; };
+		C1A4299416E967EC001BD576 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FMViewController.xib; sourceTree = "<group>"; };
+		C1A4299C16E96806001BD576 /* FMSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMSession.h; sourceTree = "<group>"; };
+		C1A4299D16E96806001BD576 /* FMSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMSession.m; sourceTree = "<group>"; };
+		C1A4299F16E96812001BD576 /* FMAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAudioPlayer.h; sourceTree = "<group>"; };
+		C1A429A016E96812001BD576 /* FMAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioPlayer.m; sourceTree = "<group>"; };
+		C1A429A216E96833001BD576 /* FMMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMMediaItem.h; sourceTree = "<group>"; };
+		C1A429A316E96833001BD576 /* FMMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMMediaItem.m; sourceTree = "<group>"; };
+		C1A429A616E96A04001BD576 /* FMServerDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMServerDispatch.h; sourceTree = "<group>"; };
+		C1A429A716E96A04001BD576 /* FMServerDispatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMServerDispatch.m; sourceTree = "<group>"; };
+		C1A429A916E96A0C001BD576 /* FMAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAuth.h; sourceTree = "<group>"; };
+		C1A429AA16E96A0C001BD576 /* FMAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAuth.m; sourceTree = "<group>"; };
+		C1A429AC16E96A17001BD576 /* FMBandwidthMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMBandwidthMonitor.h; sourceTree = "<group>"; };
+		C1A429AD16E96A17001BD576 /* FMBandwidthMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMBandwidthMonitor.m; sourceTree = "<group>"; };
+		C1A429AF16E96A1F001BD576 /* FMReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMReachability.h; sourceTree = "<group>"; };
+		C1A429B016E96A1F001BD576 /* FMReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMReachability.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C1A4297216E967EB001BD576 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1A4297916E967EB001BD576 /* UIKit.framework in Frameworks */,
+				C1A4297B16E967EB001BD576 /* Foundation.framework in Frameworks */,
+				C1A4297D16E967EB001BD576 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C1A4296C16E967EB001BD576 = {
+			isa = PBXGroup;
+			children = (
+				C1A4297E16E967EB001BD576 /* sdktest */,
+				C1A4297716E967EB001BD576 /* Frameworks */,
+				C1A4297616E967EB001BD576 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C1A4297616E967EB001BD576 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1A4297516E967EB001BD576 /* sdktest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C1A4297716E967EB001BD576 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C1A4297816E967EB001BD576 /* UIKit.framework */,
+				C1A4297A16E967EB001BD576 /* Foundation.framework */,
+				C1A4297C16E967EB001BD576 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C1A4297E16E967EB001BD576 /* sdktest */ = {
+			isa = PBXGroup;
+			children = (
+				C1A4299B16E967F5001BD576 /* Feed SDK */,
+				C1A4298716E967EB001BD576 /* FMAppDelegate.h */,
+				C1A4298816E967EB001BD576 /* FMAppDelegate.m */,
+				C1A4299016E967EC001BD576 /* FMViewController.h */,
+				C1A4299116E967EC001BD576 /* FMViewController.m */,
+				C1A4299316E967EC001BD576 /* FMViewController.xib */,
+				C1A4297F16E967EB001BD576 /* Supporting Files */,
+			);
+			path = sdktest;
+			sourceTree = "<group>";
+		};
+		C1A4297F16E967EB001BD576 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C1A4298016E967EB001BD576 /* sdktest-Info.plist */,
+				C1A4298116E967EB001BD576 /* InfoPlist.strings */,
+				C1A4298416E967EB001BD576 /* main.m */,
+				C1A4298616E967EB001BD576 /* sdktest-Prefix.pch */,
+				C1A4298A16E967EB001BD576 /* Default.png */,
+				C1A4298C16E967EC001BD576 /* Default@2x.png */,
+				C1A4298E16E967EC001BD576 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C1A4299B16E967F5001BD576 /* Feed SDK */ = {
+			isa = PBXGroup;
+			children = (
+				C1A4299C16E96806001BD576 /* FMSession.h */,
+				C1A4299D16E96806001BD576 /* FMSession.m */,
+				C1A4299F16E96812001BD576 /* FMAudioPlayer.h */,
+				C1A429A016E96812001BD576 /* FMAudioPlayer.m */,
+				C1A429A216E96833001BD576 /* FMMediaItem.h */,
+				C1A429A316E96833001BD576 /* FMMediaItem.m */,
+				C1A429A516E969E9001BD576 /* Internal */,
+			);
+			name = "Feed SDK";
+			sourceTree = "<group>";
+		};
+		C1A429A516E969E9001BD576 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				C1A429A616E96A04001BD576 /* FMServerDispatch.h */,
+				C1A429A716E96A04001BD576 /* FMServerDispatch.m */,
+				C1A429A916E96A0C001BD576 /* FMAuth.h */,
+				C1A429AA16E96A0C001BD576 /* FMAuth.m */,
+				C1A429AC16E96A17001BD576 /* FMBandwidthMonitor.h */,
+				C1A429AD16E96A17001BD576 /* FMBandwidthMonitor.m */,
+				C1A429AF16E96A1F001BD576 /* FMReachability.h */,
+				C1A429B016E96A1F001BD576 /* FMReachability.m */,
+			);
+			name = Internal;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C1A4297416E967EB001BD576 /* sdktest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1A4299816E967EC001BD576 /* Build configuration list for PBXNativeTarget "sdktest" */;
+			buildPhases = (
+				C1A4297116E967EB001BD576 /* Sources */,
+				C1A4297216E967EB001BD576 /* Frameworks */,
+				C1A4297316E967EB001BD576 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = sdktest;
+			productName = sdktest;
+			productReference = C1A4297516E967EB001BD576 /* sdktest.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C1A4296D16E967EB001BD576 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = FM;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Feed Media, Inc.";
+			};
+			buildConfigurationList = C1A4297016E967EB001BD576 /* Build configuration list for PBXProject "sdktest" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C1A4296C16E967EB001BD576;
+			productRefGroup = C1A4297616E967EB001BD576 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C1A4297416E967EB001BD576 /* sdktest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C1A4297316E967EB001BD576 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1A4298316E967EB001BD576 /* InfoPlist.strings in Resources */,
+				C1A4298B16E967EB001BD576 /* Default.png in Resources */,
+				C1A4298D16E967EC001BD576 /* Default@2x.png in Resources */,
+				C1A4298F16E967EC001BD576 /* Default-568h@2x.png in Resources */,
+				C1A4299516E967EC001BD576 /* FMViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C1A4297116E967EB001BD576 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1A4298516E967EB001BD576 /* main.m in Sources */,
+				C1A4298916E967EB001BD576 /* FMAppDelegate.m in Sources */,
+				C1A4299216E967EC001BD576 /* FMViewController.m in Sources */,
+				C1A4299E16E96806001BD576 /* FMSession.m in Sources */,
+				C1A429A116E96812001BD576 /* FMAudioPlayer.m in Sources */,
+				C1A429A416E96833001BD576 /* FMMediaItem.m in Sources */,
+				C1A429A816E96A04001BD576 /* FMServerDispatch.m in Sources */,
+				C1A429AB16E96A0C001BD576 /* FMAuth.m in Sources */,
+				C1A429AE16E96A17001BD576 /* FMBandwidthMonitor.m in Sources */,
+				C1A429B116E96A1F001BD576 /* FMReachability.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		C1A4298116E967EB001BD576 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1A4298216E967EB001BD576 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C1A4299316E967EC001BD576 /* FMViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1A4299416E967EC001BD576 /* en */,
+			);
+			name = FMViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C1A4299616E967EC001BD576 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C1A4299716E967EC001BD576 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C1A4299916E967EC001BD576 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "sdktest/sdktest-Prefix.pch";
+				INFOPLIST_FILE = "sdktest/sdktest-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C1A4299A16E967EC001BD576 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "sdktest/sdktest-Prefix.pch";
+				INFOPLIST_FILE = "sdktest/sdktest-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C1A4297016E967EB001BD576 /* Build configuration list for PBXProject "sdktest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1A4299616E967EC001BD576 /* Debug */,
+				C1A4299716E967EC001BD576 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1A4299816E967EC001BD576 /* Build configuration list for PBXNativeTarget "sdktest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1A4299916E967EC001BD576 /* Debug */,
+				C1A4299A16E967EC001BD576 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C1A4296D16E967EB001BD576 /* Project object */;
+}
