@@ -16,3 +16,5 @@ profile
 *.moved-aside
 DerivedData
 .idea/
+DEBUG
+(A Document Being Saved By Xcode)
