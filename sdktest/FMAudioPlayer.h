@@ -28,6 +28,7 @@ typedef enum FMAudioPlayerPlaybackState : NSUInteger {
 @property (nonatomic) FMSession *session;
 //delegate?
 @property (nonatomic) float mixVolume; // value between 0.0 and 1.0 relative to system volume
+@property (nonatomic, readonly) FMAudioPlayerPlaybackState playbackState;
 @property (nonatomic, readonly) NSTimeInterval currentPlaybackTime;
 @property (nonatomic, readonly) NSTimeInterval currentItemDuration;
 @property (nonatomic, readonly) float currentPlaybackRate; //seeking is not supported, so this will always be 0.0 or 1.0

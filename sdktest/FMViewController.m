@@ -20,15 +20,14 @@
     [super viewDidLoad];
     FMSession *session = [FMSession sessionWithClientToken:@"Token" secret:@"Secret"];
     [session requestStationsForPlacement:@"Placement"];
-	// Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)session:(FMSession *)session didReceiveStations:(NSArray *)stations {
     if([stations count] > 0) {
         [session setStation:stations[0]];
+        self.feedPlayer = [FMAudioPlayer playerWithSession:session];
+        [self.feedPlayer play];
     }
-    FMAudioPlayer *player = [FMAudioPlayer playerWithSession:session];
-    [player play];
 }
 
 - (void)didReceiveMemoryWarning

@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "FMSession.h"
+#import "FMAudioPlayer.h"
 
 @interface FMViewController : UIViewController <FMSessionDelegate>
+
+@property FMAudioPlayer *feedPlayer;
 
 @end
