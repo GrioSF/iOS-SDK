@@ -7,7 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FMAPIRequest.h"
 
-@interface FMAuth : NSObject
+@interface FMAuth : NSObject <FMAuthenticator, NSCoding>
+
+@property NSNumber *timeOffset;
+@property NSString *clientToken;
+@property NSString *clientSecret;
+@property NSString *cuuid;
+
+- (void) setCurrentServerTime:(NSTimeInterval)unixTime; //triggers timeOffset update
 
 @end

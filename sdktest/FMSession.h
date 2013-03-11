@@ -7,19 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
-@class FMAudioItem, FMSession;
+@class FMAudioItem, FMSession, FMStation;
 
 
 extern NSString * const FZAPIErrorDomain;
 
 typedef enum FMErrorCode : NSInteger {
     FMErrorCodeRequestFailed = -4,
-    FMErrorCodeAuthenticationFailed = -2,
     FMErrorCodeUnexpectedReturnType = -1,
     FMErrorCodeGeoBlocked = 1,
-    FMErrorCodeUnknownEmail = 2,
-    FMErrorCodeSkipLimitExceeded = 3    //temp code, need real one
-    //Need more codes, including out of budget / paused /etc.
+    FMErrorCodeInvalidCredentials = 5,
+    FMErrorCodeAccessForbidden = 6,
+    FMErrorCodeSkipLimitExceeded = 7,
+    FMErrorCodeNoAvailableMusic = 9,
+    FMErrorCodeInvalidSkip = 12,
+    FMErrorCodeInvalidParameter = 15,
+    FMErrorCodeMissingParameter = 16,
+    FMErrorCodeNoSuchResource = 17,
+    FMErrorCodeInternal = 18
 } FMErrorCode;
 
 typedef enum FMAudioFormat : NSUInteger {
@@ -45,14 +50,17 @@ typedef enum FMAudioFormat : NSUInteger {
 @interface FMSession : NSObject
 
 @property (nonatomic, assign) id<FMSessionDelegate> delegate;
-@property (nonatomic) NSString *station;
+@property (nonatomic) NSString *currentStationId;
 @property (nonatomic) FMAudioFormat *preferredCodec;    //defaults to FMAudioFormatAny
 @property (nonatomic, readonly) FMAudioItem *currentItem;
 @property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog
 
 + (FMSession *)sessionWithClientToken:(NSString *)token secret:(NSString *)secret;
+- (id)initWithClientToken:(NSString *)token secret:(NSString *)secret;
+
 - (void)requestStationsForPlacement:(NSString *)placementId;
-- (void)setStation:(NSString *)stationId;
+- (void)setStation:(FMStation *)station;
+- (void)setStationWithId:(NSString *)stationId;
 
 // These are only required if not using the FMAudioPlayer
 - (void)requestNextTrack;
