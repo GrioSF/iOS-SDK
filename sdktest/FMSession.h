@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class FMMediaItem, FMSession;
+@class FMAudioItem, FMSession;
 
 
 extern NSString * const FZAPIErrorDomain;
@@ -35,7 +35,7 @@ typedef enum FMAudioFormat : NSUInteger {
 - (void)session:(FMSession *)session didReceiveStations:(NSArray *)stations;
 - (void)session:(FMSession *)session didFailToReceiveStations:(NSError *)error;
 
-- (void)session:(FMSession *)session didReceiveItem:(FMMediaItem *)nextItem;
+- (void)session:(FMSession *)session didReceiveItem:(FMAudioItem *)nextItem;
 - (void)session:(FMSession *)session didFailToReceiveItem:(NSError *)error;
 - (void)session:(FMSession *)session didFailToSkipTrack:(NSError *)error;
 
@@ -47,7 +47,7 @@ typedef enum FMAudioFormat : NSUInteger {
 @property (nonatomic, assign) id<FMSessionDelegate> delegate;
 @property (nonatomic) NSString *station;
 @property (nonatomic) FMAudioFormat *preferredCodec;    //defaults to FMAudioFormatAny
-@property (nonatomic, readonly) FMMediaItem *currentItem;
+@property (nonatomic, readonly) FMAudioItem *currentItem;
 @property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog
 
 + (FMSession *)sessionWithClientToken:(NSString *)token secret:(NSString *)secret;

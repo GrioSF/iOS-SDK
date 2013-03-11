@@ -20,7 +20,7 @@
 		C1A4299516E967EC001BD576 /* FMViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1A4299316E967EC001BD576 /* FMViewController.xib */; };
 		C1A4299E16E96806001BD576 /* FMSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A4299D16E96806001BD576 /* FMSession.m */; };
 		C1A429A116E96812001BD576 /* FMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A016E96812001BD576 /* FMAudioPlayer.m */; };
-		C1A429A416E96833001BD576 /* FMMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A316E96833001BD576 /* FMMediaItem.m */; };
+		C1A429A416E96833001BD576 /* FMAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A316E96833001BD576 /* FMAudioItem.m */; };
 		C1A429A816E96A04001BD576 /* FMServerDispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A716E96A04001BD576 /* FMServerDispatch.m */; };
 		C1A429AB16E96A0C001BD576 /* FMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429AA16E96A0C001BD576 /* FMAuth.m */; };
 		C1A429AE16E96A17001BD576 /* FMBandwidthMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429AD16E96A17001BD576 /* FMBandwidthMonitor.m */; };
@@ -48,8 +48,8 @@
 		C1A4299D16E96806001BD576 /* FMSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMSession.m; sourceTree = "<group>"; };
 		C1A4299F16E96812001BD576 /* FMAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAudioPlayer.h; sourceTree = "<group>"; };
 		C1A429A016E96812001BD576 /* FMAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioPlayer.m; sourceTree = "<group>"; };
-		C1A429A216E96833001BD576 /* FMMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMMediaItem.h; sourceTree = "<group>"; };
-		C1A429A316E96833001BD576 /* FMMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMMediaItem.m; sourceTree = "<group>"; };
+		C1A429A216E96833001BD576 /* FMAudioItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAudioItem.h; sourceTree = "<group>"; };
+		C1A429A316E96833001BD576 /* FMAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioItem.m; sourceTree = "<group>"; };
 		C1A429A616E96A04001BD576 /* FMServerDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMServerDispatch.h; sourceTree = "<group>"; };
 		C1A429A716E96A04001BD576 /* FMServerDispatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMServerDispatch.m; sourceTree = "<group>"; };
 		C1A429A916E96A0C001BD576 /* FMAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAuth.h; sourceTree = "<group>"; };
@@ -136,8 +136,8 @@
 				C1A4299D16E96806001BD576 /* FMSession.m */,
 				C1A4299F16E96812001BD576 /* FMAudioPlayer.h */,
 				C1A429A016E96812001BD576 /* FMAudioPlayer.m */,
-				C1A429A216E96833001BD576 /* FMMediaItem.h */,
-				C1A429A316E96833001BD576 /* FMMediaItem.m */,
+				C1A429A216E96833001BD576 /* FMAudioItem.h */,
+				C1A429A316E96833001BD576 /* FMAudioItem.m */,
 				C1A429A516E969E9001BD576 /* Internal */,
 			);
 			name = "Feed SDK";
@@ -230,7 +230,7 @@
 				C1A4299216E967EC001BD576 /* FMViewController.m in Sources */,
 				C1A4299E16E96806001BD576 /* FMSession.m in Sources */,
 				C1A429A116E96812001BD576 /* FMAudioPlayer.m in Sources */,
-				C1A429A416E96833001BD576 /* FMMediaItem.m in Sources */,
+				C1A429A416E96833001BD576 /* FMAudioItem.m in Sources */,
 				C1A429A816E96A04001BD576 /* FMServerDispatch.m in Sources */,
 				C1A429AB16E96A0C001BD576 /* FMAuth.m in Sources */,
 				C1A429AE16E96A17001BD576 /* FMBandwidthMonitor.m in Sources */,
@@ -357,6 +357,7 @@
 				C1A4299A16E967EC001BD576 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

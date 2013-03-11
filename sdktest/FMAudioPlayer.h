@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class FMSession, FMMediaItem;
+@class FMSession, FMAudioItem;
 
 extern NSString *const FMAudioPlayerPlaybackStateChangedNotification;
 extern NSString *const FMAudioPlayerCurrentItemChangedNotification;
@@ -33,7 +33,7 @@ typedef enum FMAudioPlayerPlaybackState : NSUInteger {
 @property (nonatomic, readonly) NSTimeInterval currentItemDuration;
 @property (nonatomic, readonly) float currentPlaybackRate; //seeking is not supported, so this will always be 0.0 or 1.0
 @property (nonatomic, readonly) BOOL isPreparedToPlay;
-@property (nonatomic, readonly) FMMediaItem *currentItem;
+@property (nonatomic, readonly) FMAudioItem *currentItem;
 
 + (FMAudioPlayer *)playerWithSession:(FMSession *)session;
 - (id)initWithSession:(FMSession *)session;

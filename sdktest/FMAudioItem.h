@@ -1,5 +1,5 @@
 //
-//  FMMediaItem.h
+//  FMAudioItem.h
 //  sdktest
 //
 //  Created by James Anthony on 3/7/13.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FMMediaItem : NSObject
+@interface FMAudioItem : NSObject
 
 @property (readonly) NSString *playId;
 @property (readonly) NSString *name;
