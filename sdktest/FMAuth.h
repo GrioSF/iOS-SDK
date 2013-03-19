@@ -16,6 +16,7 @@
 @property NSString *clientSecret;
 @property NSString *cuuid;
 
-- (void) setCurrentServerTime:(NSTimeInterval)unixTime; //triggers timeOffset update
+- (void)setCurrentServerTime:(NSTimeInterval)unixTime; //triggers timeOffset update
+- (long)serverTime; //returns unix timestamp of server
 
 @end

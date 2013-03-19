@@ -129,6 +129,7 @@ static inline NSString *FM_URLDecodeString(NSString *string) {
     if(![FMAuth isValidString:self.clientToken] || ![FMAuth isValidString:self.clientSecret] || ![FMAuth isValidString:self.cuuid]) {
         return nil;
     }
+    request.postParameters[@"client_id"] = self.cuuid;
     NSDictionary *oauthHeaders = [self oauthHeaders];   //NOTE: this generates nonce & timestamp
     NSString *signatureBaseString = [self signatureBaseString:request withOAuthHeaders:oauthHeaders];
     NSString *key = FM_URLEncodeString(self.clientSecret);
@@ -237,8 +238,12 @@ NSData *HMAC_SHA256(NSString *key, NSString *data)
     return nonce;
 }
 
+- (long)serverTime {
+    return (long)([[NSDate date] timeIntervalSince1970] + [self.timeOffset doubleValue]);
+}
+
 - (NSString *)timestamp {
-    long time = [[NSDate date] timeIntervalSince1970] + [self.timeOffset integerValue];
+    long time = [self serverTime];
     return [NSString stringWithFormat:@"%li",time];
 }
 

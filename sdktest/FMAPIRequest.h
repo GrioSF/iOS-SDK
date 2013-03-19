@@ -17,7 +17,7 @@
 @interface FMAPIRequest : NSObject
 
 @property (nonatomic, assign) id<FMAuthenticator> auth;
-@property (nonatomic, copy) void (^successBlock)(id);
+@property (nonatomic, copy) void (^successBlock)(NSDictionary *);
 @property (nonatomic, copy) void (^failureBlock)(NSError *);
 @property (readonly) NSURLRequest *urlRequest;
 @property (readonly) BOOL authRequired;
@@ -27,8 +27,8 @@
 + (FMAPIRequest *)requestCUUID;
 + (FMAPIRequest *)requestServerTime;
 + (FMAPIRequest *)requestStationsForPlacement:(NSString *)placementId;
-+ (FMAPIRequest *)requestPlay;
-+ (FMAPIRequest *)requestPlayInStation:(NSString *)stationId;
++ (FMAPIRequest *)requestPlayInPlacement:(NSString *)placementId;
++ (FMAPIRequest *)requestPlayInPlacement:(NSString *)placementId withStation:(NSString *)stationId;
 + (FMAPIRequest *)requestStart:(NSString *)playId;
 + (FMAPIRequest *)requestElapse:(NSString *)playId time:(NSTimeInterval)elapsedTime;
 + (FMAPIRequest *)requestSkip:(NSString *)playId;

@@ -7,9 +7,11 @@
 //
 
 #import "FMAPIRequest.h"
+#import "FMError.h"
 
 #define kFeedAPILocation @"http://feed.fm/api/v2/"
 #define kFeedSDKVersion @"1.0"
+#define kFeedRequestDefaultRetryCount 3
 
 @interface FMAPIRequest () {
 
@@ -17,9 +19,11 @@
 
 @property NSString *httpMethod;
 @property NSString *httpEndpoint;
+@property NSInteger retryCount;
 @property NSMutableDictionary *postParameters;
+@property NSMutableDictionary *queryParameters;
 @property BOOL authRequired;
-@property id result;
+@property NSDictionary *result;
 @property NSError *error;
 
 @end
@@ -50,16 +54,23 @@
     return request;
 }
 
-+ (FMAPIRequest *)requestPlay {
-    return [self requestPlayInStation:nil];
++ (FMAPIRequest *)requestPlayInPlacement:(NSString *)placementId {
+    return [self requestPlayInPlacement:placementId withStation:nil];
 }
 
-+ (FMAPIRequest *)requestPlayInStation:(NSString *)stationId {
++ (FMAPIRequest *)requestPlayInPlacement:(NSString *)placementId withStation:(NSString *)stationId {
+    if(placementId == nil || [placementId isEqualToString:@""]) {
+        NSLog(@"ERROR: placementId must not be nil");
+        return nil;
+    }
     FMAPIRequest *request = [[FMAPIRequest alloc] init];
     request.httpMethod = @"POST";
     request.httpEndpoint = @"play";
+    request.postParameters[@"placement_id"] = placementId;
+    if(stationId && ![stationId isEqualToString:@""]) {
+        request.postParameters[@"station_id"] = stationId;
+    }
     request.authRequired = YES;
-    //  NEEDS POST PARAMETERS placement_id, client_id, station_id (if not nil)
     return request;
 }
 
@@ -116,12 +127,12 @@
 }
 
 + (NSString *)URLEncodeString:(NSString *)string {
-    NSString *result = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                                              (CFStringRef)string,
                                                                                              NULL,
                                                                                              CFSTR("!*'();:@&=+$,/?%#[]"),
                                                                                              kCFStringEncodingUTF8));
-	return result;
+	return encodedString;
 }
 
 + (NSString *)stringFromParameters:(NSDictionary *)parameters {
@@ -140,6 +151,8 @@
 - (id)init {
     if(self = [super init]) {
         self.postParameters = [[NSMutableDictionary alloc] init];
+        self.queryParameters = [[NSMutableDictionary alloc] init];
+        self.retryCount = kFeedRequestDefaultRetryCount;
     }
     return self;
 }
@@ -147,14 +160,18 @@
 - (void)failWithError:(NSError *)error {
     self.error = error;
     if(self.failureBlock) {
-        self.failureBlock(error); //todo: do we need to call this on a particular thread, or will the request take care of it?
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.failureBlock(error);
+        });
     }
 }
 
-- (void)succeedWithResult:(id)result {
+- (void)succeedWithResult:(NSDictionary *)result {
     self.result = result;
     if(self.successBlock) {
-        self.successBlock(result); //todo: do we need to call this on a particular thread, or will the request take care of it?
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.successBlock(result);
+        });
     }
 }
 
@@ -163,13 +180,13 @@
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
     urlRequest.HTTPMethod = self.httpMethod;
     if([self.httpMethod isEqualToString:@"POST"]) {
-        [urlRequest setValue:@"application/x-www-form-urlencoded charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue:@"application/x-www-form-urlencoded; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
         if([self.postParameters count] > 0) {
             [urlRequest setHTTPBody:[[FMAPIRequest stringFromParameters:self.postParameters] dataUsingEncoding:NSUTF8StringEncoding]];
         }
     }
     else if([self.httpMethod isEqualToString:@"GET"]) {
-        [urlRequest setValue: @"text/text" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue: @"text/text; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     }
     else {
         NSLog(@"Warning: Unexpected http method: %@",self.httpMethod);
@@ -180,14 +197,40 @@
     return urlRequest;
 }
 
+- (NSError *)errorFromJSON:(id)json {
+    if(json == nil || ![json isKindOfClass:[NSDictionary class]]) {
+        return [NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:nil];
+    }
+    else if(([json[@"success"] isKindOfClass:[NSNumber class]] && [(NSNumber *)json[@"success"] boolValue] == YES) ||
+            ([json[@"success"] isKindOfClass:[NSString class]] && [(NSString *)json[@"success"] isEqualToString:@"true"])) {
+        return nil;
+    }
+    else {
+        NSNumber *code = json[@"error"][@"code"];
+        NSString *message = json[@"error"][@"message"];
+        NSDictionary *errorInfo = nil;
+        if([message isKindOfClass:[NSString class]]) {
+            errorInfo = @{NSLocalizedDescriptionKey : message};
+        }
+        return [NSError errorWithDomain:FMAPIErrorDomain code:[code integerValue] userInfo:errorInfo];
+    }
+}
+
+- (BOOL)shouldRetryAfterResponse:(NSHTTPURLResponse *)response error:(NSError *)error {
+    BOOL hasRetriesLeft = self.retryCount > 0;
+    BOOL isRecoverable = ([response isKindOfClass:[NSHTTPURLResponse class]] && response.statusCode == 408) ||
+                         ([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorTimedOut);
+    
+    return hasRetriesLeft && isRecoverable;
+}
+
 - (void)send {
     NSURLRequest *urlRequest = nil;
     if(self.authRequired) {
         urlRequest = [self.auth authenticatedURLRequest:self];
         if(urlRequest == nil) {
             NSLog(@"ERROR: Tried to send API Request but no authentication available: %@", self);
-            NSError *error = nil; //todo: Create NSError with appropriate codes
-            [self failWithError:error];
+            [self failWithError:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeInvalidCredentials userInfo:nil]];
             return;
         }
     }
@@ -195,7 +238,50 @@
         urlRequest = [self urlRequest];
     }
 
-    //todo: fire request
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSHTTPURLResponse *response = nil;
+        NSError *connectionError = nil;
+        NSError *jsonError = nil;
+        id jsonObject = nil;
+
+        NSData *resultData = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&connectionError];
+
+        if(resultData && [resultData length] > 0) {
+            jsonObject = [NSJSONSerialization JSONObjectWithData:resultData options:0 error:&jsonError];
+        }
+        else if([self shouldRetryAfterResponse:response error:connectionError]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.retryCount--;
+                [self send];
+            });
+            return;
+        }
+        else {
+            NSDictionary *errorInfo = nil;
+            if(connectionError) {
+                errorInfo = @{NSUnderlyingErrorKey : connectionError};
+            }
+            [self failWithError:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeRequestFailed userInfo:errorInfo]];
+            return;
+        }
+
+        if(jsonError != nil) {
+            [self failWithError:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:@{NSUnderlyingErrorKey : jsonError}]];
+            return;
+        }
+        if(![jsonObject isKindOfClass:[NSDictionary class]]) {
+            [self failWithError:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:nil]];
+        }
+        
+        NSError *apiError = [self errorFromJSON:jsonObject];
+        if(apiError) {
+            //TODO: Try to recover from timestamp error?
+            [self failWithError:apiError];
+        }
+        else {
+            [self succeedWithResult:jsonObject];
+        }
+    });
 }
 
 @end

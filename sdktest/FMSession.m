@@ -11,32 +11,63 @@
 #import "FMAPIRequest.h"
 #import "FMStation.h"
 #import "FMAudioItem.h"
+#import "FMError.h"
 
 #define kFMAuthStoragePath @"FeedMedia/"
 #define kFMAuthStorageName @"FMAuth.plist"
 
 
 @interface FMSession () {
+    FMAuth *_auth;
 }
-@property (nonatomic) NSString *clientToken;
-@property (nonatomic) NSString *clientSecret;
-@property (nonatomic) FMAuth *auth;
+@property FMAuth *auth;
 @end
 
 @implementation FMSession
 
-+ (FMSession *)sessionWithClientToken:(NSString *)token secret:(NSString *)secret {
-    return [[FMSession alloc] initWithClientToken:token secret:secret];
+static NSLock *fmsession_credentialLock;
+static NSString *fmsession_clientToken = nil;
+static NSString *fmsession_clientSecret = nil;
+
++ (void)setClientToken:(NSString *)token secret:(NSString *)secret {
+    static dispatch_once_t lockToken;
+    dispatch_once(&lockToken, ^{
+        fmsession_credentialLock = [[NSLock alloc] init];
+    });
+
+    if(token == nil || [token isEqualToString:@""] || secret == nil || [secret isEqualToString:@""]) {
+        NSLog(@"ERROR: FMSession must be initialized with a token and secret");
+        return;
+    }
+    [fmsession_credentialLock lock];
+    fmsession_clientToken = [token copy];
+    fmsession_clientSecret = [secret copy];
+    [fmsession_credentialLock unlock];
 }
 
-- (id)initWithClientToken:(NSString *)token secret:(NSString *)secret {
++ (NSString *)clientToken {
+    NSString *ret = nil;
+    [fmsession_credentialLock lock];
+    ret = [fmsession_clientToken copy];
+    [fmsession_credentialLock unlock];
+    return ret;
+}
+
++ (NSString *)clientSecret {
+    NSString *ret = nil;
+    [fmsession_credentialLock lock];
+    ret = [fmsession_clientSecret copy];
+    [fmsession_credentialLock unlock];
+    return ret;
+}
+
++ (FMSession *)sessionWithPlacementId:(NSString *)placementId {
+    return [[FMSession alloc] initWithPlacementId:placementId];
+}
+
+- (id)initWithPlacementId:(NSString *)placementId {
     if(self = [super init]) {
-        _clientToken = token;
-        _clientSecret = secret;
-    }
-    if(self.clientToken == nil || [self.clientToken isEqualToString:@""] || self.clientSecret == nil || [self.clientSecret isEqualToString:@""]) {
-        NSLog(@"ERROR: FMSession must be initialized with a token and secret");
-        return nil;
+        self.placementId = placementId;
     }
     return self;
 }
@@ -61,16 +92,48 @@
     return saveDirectory;
 }
 
+- (void)updateServerTime {
+    FMAPIRequest *timeRequest = [FMAPIRequest requestServerTime];
+    timeRequest.successBlock = ^(NSDictionary *result) {
+        id timeObject = result[@"time"];
+        if([timeObject respondsToSelector:@selector(doubleValue)]) {
+            [self.auth setCurrentServerTime:[timeObject doubleValue]];
+            [self storeAuthToDisk];
+        }
+    };
+    timeRequest.failureBlock = ^(NSError *error) {
+        NSLog(@"ERROR: FeedMedia Failed to synchronize clock to server: %@",error);
+    };
+}
+
+- (void)setAuth:(FMAuth *)auth {
+    @synchronized(self) {
+        _auth = auth;
+    }
+}
+
 - (FMAuth *)auth {
-    if(self.auth == nil) {
+    if(_auth == nil) {
         self.auth = [self authFromDisk];
     }
     if(self.auth == nil) {
         self.auth = [[FMAuth alloc] init];
-        //need cuuid + timestamp
+        self.auth.clientToken = [FMSession clientToken];
+        self.auth.clientSecret = [FMSession clientSecret];
+        FMAPIRequest *cuuidRequest = [FMAPIRequest requestCUUID];
+        cuuidRequest.successBlock = ^(NSDictionary *result) {
+            NSString *cuuid = result[@"client_id"];
+            if([cuuid isKindOfClass:[NSString class]] && ![cuuid isEqualToString:@""]) {
+                self.auth.cuuid = cuuid;
+                [self updateServerTime];
+                [self storeAuthToDisk];
+            }
+        };
+        cuuidRequest.failureBlock = ^(NSError *error) {
+            NSLog(@"ERROR: FeedMedia failed to obtain cuuid: %@",error);
+        };
+        [cuuidRequest send];
     }
-    self.auth.clientToken = self.clientToken;
-    self.auth.clientSecret = self.clientSecret;
     return self.auth;
 }
 
@@ -89,15 +152,24 @@
     if(!authData) return nil;
 
     NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:authData];
-    return [[FMAuth alloc] initWithCoder:unarchiver];
+    FMAuth *auth = [[FMAuth alloc] initWithCoder:unarchiver];
+    auth.clientToken = [FMSession clientToken];
+    auth.clientSecret = [FMSession clientSecret];
+    return auth;
 }
 
 #pragma mark - STATIONS
 
-- (void)requestStationsForPlacement:(NSString *)placementId {
-    FMAPIRequest *stationRequest = [FMAPIRequest requestStationsForPlacement:placementId];
-    stationRequest.successBlock = ^(id stationJSON) {
-        [self stationRequestSucceeded:stationJSON];
+- (void)requestStations {
+    FMAPIRequest *stationRequest = [FMAPIRequest requestStationsForPlacement:self.placementId];
+    stationRequest.successBlock = ^(NSDictionary *result) {
+        NSArray *stationJSON = result[@"stations"];
+        if(![stationJSON isKindOfClass:[NSArray class]]) {
+            [self stationRequestFailed:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:nil]];
+        }
+        else {
+            [self stationRequestSucceeded:stationJSON];
+        }
     };
     stationRequest.failureBlock = ^(NSError *error) {
         [self stationRequestFailed:error];
@@ -105,7 +177,7 @@
     [self sendRequest:stationRequest];
 }
 
-- (void)stationRequestSucceeded:(id)stationJSON {
+- (void)stationRequestSucceeded:(NSArray *)stationJSON {
     NSArray *stations = nil; //todo: process stationJSON & validate
     if(self.delegate && [self.delegate respondsToSelector:@selector(session:didReceiveStations:)]) {
         [self.delegate session:self didReceiveStations:stations];
@@ -129,7 +201,7 @@
 #pragma mark - PLAYBACK
 
 - (void)requestNextTrack {
-    FMAPIRequest *trackRequest = [FMAPIRequest requestPlayInStation:self.currentStationId];
+    FMAPIRequest *trackRequest = [FMAPIRequest requestPlayInPlacement:self.placementId withStation:self.currentStationId];
     trackRequest.successBlock = ^(id playJSON) {
         [self nextTrackSucceeded:playJSON];
     };

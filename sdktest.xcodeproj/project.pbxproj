@@ -64,6 +64,7 @@
 		C1A9284716EE8BE3006C6963 /* FMAuth+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FMAuth+Base64.m"; sourceTree = "<group>"; };
 		C1A9284916EE92C6006C6963 /* FMStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStation.h; sourceTree = "<group>"; };
 		C1A9284A16EE92C6006C6963 /* FMStation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStation.m; sourceTree = "<group>"; };
+		C1A9284C16EFDB52006C6963 /* FMError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMError.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +147,7 @@
 				C1A429A316E96833001BD576 /* FMAudioItem.m */,
 				C1A9284916EE92C6006C6963 /* FMStation.h */,
 				C1A9284A16EE92C6006C6963 /* FMStation.m */,
+				C1A9284C16EFDB52006C6963 /* FMError.h */,
 				C1A429A516E969E9001BD576 /* Internal */,
 			);
 			name = "Feed SDK";
