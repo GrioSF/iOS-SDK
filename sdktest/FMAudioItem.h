@@ -14,12 +14,15 @@
 @property (readonly) NSString *name;
 @property (readonly) NSString *artist;
 @property (readonly) NSString *album;
-@property (readonly) NSURL *imageUrl;       //album art
-@property (readonly) NSURL *storeUrl;       //itms link
+//Not yet supported
+//@property (readonly) NSURL *imageUrl;       //album art
+//@property (readonly) NSURL *storeUrl;       //itms link
 
 @property (readonly) NSTimeInterval duration;
 @property (readonly) NSURL *contentUrl;
 @property (readonly) NSString *codec;
-@property (readonly) double bitrate;
+@property (readonly) double bitrate;        //in kbps
+
+- (id)initWithJSON:(id)jsonDictionary;
 
 @end
