@@ -10,7 +10,7 @@
 
 @class FMSession, FMAudioItem;
 
-extern NSString *const FMAudioPlayerPlaybackStateChangedNotification;
+extern NSString *const FMAudioPlayerPlaybackStateDidChangeNotification;
 
 typedef enum FMAudioPlayerPlaybackState : NSUInteger {
     FMAudioPlayerPlaybackStateWaitingForItem,
@@ -24,22 +24,20 @@ typedef enum FMAudioPlayerPlaybackState : NSUInteger {
 @interface FMAudioPlayer : NSObject
 
 @property (nonatomic) FMSession *session;
-//delegate?
 @property (nonatomic) float mixVolume; // value between 0.0 and 1.0 relative to system volume
 @property (nonatomic, readonly) FMAudioPlayerPlaybackState playbackState;
 @property (nonatomic, readonly) NSTimeInterval currentPlaybackTime;
 @property (nonatomic, readonly) NSTimeInterval currentItemDuration;
 @property (nonatomic, readonly) float currentPlaybackRate; //seeking is not supported, so this will always be 0.0 or 1.0
 @property (nonatomic, readonly) BOOL isPreparedToPlay;
-@property (nonatomic, readonly) FMAudioItem *currentItem;
 
 + (FMAudioPlayer *)playerWithSession:(FMSession *)session;
 - (id)initWithSession:(FMSession *)session;
 
+- (void)prepareToPlay;
 - (void)play;
 - (void)pause;
 - (void)stop;
 - (void)skip;
-- (void)prepareToPlay;
 
 @end
