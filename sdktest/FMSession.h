@@ -32,20 +32,17 @@ typedef enum FMAudioFormat : NSUInteger {
 @interface FMSession : NSObject
 
 @property (nonatomic, assign) id<FMSessionDelegate> delegate;
-@property (nonatomic) NSString *currentStationId;
-@property (nonatomic) NSString *placementId;
+@property (nonatomic, setter=setStation:) FMStation *activeStation;
+@property (nonatomic, setter=setPlacement:) NSString *activePlacementId;
 @property (nonatomic) FMAudioFormat *preferredCodec;    //defaults to FMAudioFormatAny
 @property (nonatomic, readonly) FMAudioItem *currentItem;
 @property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog
 
 + (void)setClientToken:(NSString *)token secret:(NSString *)secret;
-
-+ (FMSession *)sessionWithPlacementId:(NSString *)placementId;
-- (id)initWithPlacementId:(NSString *)placementId;
++ (FMSession *)sharedSession;
 
 - (void)requestStations;
-- (void)setStation:(FMStation *)station;
-- (void)setStationWithId:(NSString *)stationId;
+- (void)requestStationsForPlacement:(NSString *)placementId;
 
 // These are only required if not using the FMAudioPlayer
 - (void)requestNextTrack;

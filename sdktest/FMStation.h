@@ -13,4 +13,6 @@
 @property (readonly) NSString *name;
 @property (readonly) NSString *identifier;
 
+- (id)initWithJSON:(id)jsonDictionary;
+
 @end

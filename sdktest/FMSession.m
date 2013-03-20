@@ -19,55 +19,44 @@
 
 @interface FMSession () {
     FMAuth *_auth;
+    NSMutableArray *_queuedRequests;
 }
 @property FMAuth *auth;
 @end
 
 @implementation FMSession
 
-static NSLock *fmsession_credentialLock;
-static NSString *fmsession_clientToken = nil;
-static NSString *fmsession_clientSecret = nil;
-
 + (void)setClientToken:(NSString *)token secret:(NSString *)secret {
-    static dispatch_once_t lockToken;
-    dispatch_once(&lockToken, ^{
-        fmsession_credentialLock = [[NSLock alloc] init];
-    });
 
     if(token == nil || [token isEqualToString:@""] || secret == nil || [secret isEqualToString:@""]) {
         NSLog(@"ERROR: FMSession must be initialized with a token and secret");
         return;
     }
-    [fmsession_credentialLock lock];
-    fmsession_clientToken = [token copy];
-    fmsession_clientSecret = [secret copy];
-    [fmsession_credentialLock unlock];
+    [FMSession sharedSession].auth.clientToken = token;
+    [FMSession sharedSession].auth.clientSecret = secret;
+
+    if([FMSession sharedSession].auth.cuuid == nil || [[FMSession sharedSession].auth.cuuid isEqualToString:@""]) {
+        [[FMSession sharedSession] requestCuuid];
+    }
+    [[FMSession sharedSession] updateServerTime];
 }
 
-+ (NSString *)clientToken {
-    NSString *ret = nil;
-    [fmsession_credentialLock lock];
-    ret = [fmsession_clientToken copy];
-    [fmsession_credentialLock unlock];
-    return ret;
++ (FMSession *)sharedSession {
+    static FMSession *_sharedSession;
+    static dispatch_once_t singletonToken;
+    dispatch_once(&singletonToken, ^{
+        _sharedSession = [[FMSession alloc] init];
+    });
+    return _sharedSession;
 }
 
-+ (NSString *)clientSecret {
-    NSString *ret = nil;
-    [fmsession_credentialLock lock];
-    ret = [fmsession_clientSecret copy];
-    [fmsession_credentialLock unlock];
-    return ret;
-}
-
-+ (FMSession *)sessionWithPlacementId:(NSString *)placementId {
-    return [[FMSession alloc] initWithPlacementId:placementId];
-}
-
-- (id)initWithPlacementId:(NSString *)placementId {
+- (id)init {
     if(self = [super init]) {
-        self.placementId = placementId;
+        _queuedRequests = [[NSMutableArray alloc] init];
+        _auth = [self authFromDisk];
+        if(_auth == nil) {
+            _auth = [[FMAuth alloc] init];
+        }
     }
     return self;
 }
@@ -104,37 +93,29 @@ static NSString *fmsession_clientSecret = nil;
     timeRequest.failureBlock = ^(NSError *error) {
         NSLog(@"ERROR: FeedMedia Failed to synchronize clock to server: %@",error);
     };
+    [timeRequest send];
 }
 
-- (void)setAuth:(FMAuth *)auth {
-    @synchronized(self) {
-        _auth = auth;
-    }
-}
-
-- (FMAuth *)auth {
-    if(_auth == nil) {
-        self.auth = [self authFromDisk];
-    }
-    if(self.auth == nil) {
-        self.auth = [[FMAuth alloc] init];
-        self.auth.clientToken = [FMSession clientToken];
-        self.auth.clientSecret = [FMSession clientSecret];
-        FMAPIRequest *cuuidRequest = [FMAPIRequest requestCUUID];
-        cuuidRequest.successBlock = ^(NSDictionary *result) {
-            NSString *cuuid = result[@"client_id"];
-            if([cuuid isKindOfClass:[NSString class]] && ![cuuid isEqualToString:@""]) {
-                self.auth.cuuid = cuuid;
-                [self updateServerTime];
-                [self storeAuthToDisk];
-            }
-        };
-        cuuidRequest.failureBlock = ^(NSError *error) {
-            NSLog(@"ERROR: FeedMedia failed to obtain cuuid: %@",error);
-        };
-        [cuuidRequest send];
-    }
-    return self.auth;
+- (void)requestCuuid {
+    FMAPIRequest *cuuidRequest = [FMAPIRequest requestCUUID];
+    cuuidRequest.auth = self.auth;
+    cuuidRequest.successBlock = ^(NSDictionary *result) {
+        id cuuid = result[@"client_id"];
+        if([cuuid isKindOfClass:[NSNumber class]] && ![cuuid isEqual:@(0)]) {
+            cuuid = [NSString stringWithFormat:@"%ld",(long)[(NSNumber *)cuuid integerValue]];
+        }
+        if([cuuid isKindOfClass:[NSString class]] && ![cuuid isEqualToString:@""]) {
+            self.auth.cuuid = cuuid;
+            [self storeAuthToDisk];
+            [self sendQueuedRequests];
+        }
+    };
+    cuuidRequest.failureBlock = ^(NSError *error) {
+        NSLog(@"ERROR: FeedMedia failed to obtain cuuid: %@",error);
+    };
+    NSLog(@"Sending cuuid Request");
+    NSLog(@"Cuuid request has auth: %@",cuuidRequest.auth);
+    [cuuidRequest send];
 }
 
 - (BOOL)storeAuthToDisk {
@@ -153,15 +134,36 @@ static NSString *fmsession_clientSecret = nil;
 
     NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:authData];
     FMAuth *auth = [[FMAuth alloc] initWithCoder:unarchiver];
-    auth.clientToken = [FMSession clientToken];
-    auth.clientSecret = [FMSession clientSecret];
     return auth;
+}
+
+#pragma mark - REQUEST QUEUEING
+
+- (void)sendRequest:(FMAPIRequest *)request {
+    if(request.authRequired) {
+        if(self.auth.cuuid == nil || [self.auth.cuuid isEqualToString:@""]) {
+            [_queuedRequests addObject:request];
+            return;
+        }
+        else {
+            request.auth = self.auth;
+        }
+    }
+    [request send];
+}
+
+- (void)sendQueuedRequests {
+    for(FMAPIRequest *request in _queuedRequests) {
+        request.auth = self.auth;
+        [request send];
+    }
+    [_queuedRequests removeAllObjects];
 }
 
 #pragma mark - STATIONS
 
-- (void)requestStations {
-    FMAPIRequest *stationRequest = [FMAPIRequest requestStationsForPlacement:self.placementId];
+- (void)requestStationsForPlacement:(NSString *)placementId {
+    FMAPIRequest *stationRequest = [FMAPIRequest requestStationsForPlacement:placementId];
     stationRequest.successBlock = ^(NSDictionary *result) {
         NSArray *stationJSON = result[@"stations"];
         if(![stationJSON isKindOfClass:[NSArray class]]) {
@@ -177,8 +179,20 @@ static NSString *fmsession_clientSecret = nil;
     [self sendRequest:stationRequest];
 }
 
+- (void)requestStations {
+    [self requestStationsForPlacement:self.activePlacementId];
+}
+
 - (void)stationRequestSucceeded:(NSArray *)stationJSON {
-    NSArray *stations = nil; //todo: process stationJSON & validate
+    NSMutableArray *stations = [[NSMutableArray alloc] initWithCapacity:[stationJSON count]];
+    for(NSDictionary *stationDict in stationJSON) {
+        if([stationDict isKindOfClass:[NSDictionary class]]) {
+            FMStation *station = [[FMStation alloc] initWithJSON:stationDict];
+            if(station) {
+                [stations addObject:station];
+            }
+        }
+    }
     if(self.delegate && [self.delegate respondsToSelector:@selector(session:didReceiveStations:)]) {
         [self.delegate session:self didReceiveStations:stations];
     }
@@ -190,18 +204,10 @@ static NSString *fmsession_clientSecret = nil;
     }
 }
 
-- (void)setStation:(FMStation *)station {
-    self.currentStationId = station.identifier;
-}
-
-- (void)setStationWithId:(NSString *)stationId {
-    self.currentStationId = stationId;
-}
-
 #pragma mark - PLAYBACK
 
 - (void)requestNextTrack {
-    FMAPIRequest *trackRequest = [FMAPIRequest requestPlayInPlacement:self.placementId withStation:self.currentStationId];
+    FMAPIRequest *trackRequest = [FMAPIRequest requestPlayInPlacement:self.activePlacementId withStation:self.activeStation.identifier];
     trackRequest.successBlock = ^(id playJSON) {
         [self nextTrackSucceeded:playJSON];
     };
@@ -244,13 +250,6 @@ static NSString *fmsession_clientSecret = nil;
 
 - (void)requestSkipIgnoringLimit {
 
-}
-
-- (void)sendRequest:(FMAPIRequest *)request {
-    if(request.authRequired) {
-        request.auth = self.auth;
-    }
-    [request send];
 }
 
 @end

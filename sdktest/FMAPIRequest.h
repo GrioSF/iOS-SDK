@@ -21,6 +21,7 @@
 @property (nonatomic, copy) void (^failureBlock)(NSError *);
 @property (readonly) NSURLRequest *urlRequest;
 @property (readonly) BOOL authRequired;
+@property (readonly) NSString *httpMethod;
 @property (readonly) NSMutableDictionary *postParameters;
 @property (readonly) NSMutableDictionary *queryParameters;
 

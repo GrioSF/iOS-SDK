@@ -126,13 +126,23 @@ static inline NSString *FM_URLDecodeString(NSString *string) {
 }
 
 - (NSURLRequest *)authenticatedURLRequest:(FMAPIRequest *)request {
-    if(![FMAuth isValidString:self.clientToken] || ![FMAuth isValidString:self.clientSecret] || ![FMAuth isValidString:self.cuuid]) {
+    NSLog(@"Authenticating request using token/secret/cuuid %@/%@/%@",self.clientToken,self.clientSecret,self.cuuid);
+
+    if(![FMAuth isValidString:self.clientToken] || ![FMAuth isValidString:self.clientSecret]) {
         return nil;
     }
-    request.postParameters[@"client_id"] = self.cuuid;
+    if([FMAuth isValidString:self.cuuid]) {
+        if([request.httpMethod isEqualToString:@"POST"]) {
+            request.postParameters[@"client_id"] = self.cuuid;
+        }
+        else {
+            request.queryParameters[@"client_id"] = self.cuuid;
+        }
+    }
     NSDictionary *oauthHeaders = [self oauthHeaders];   //NOTE: this generates nonce & timestamp
     NSString *signatureBaseString = [self signatureBaseString:request withOAuthHeaders:oauthHeaders];
-    NSString *key = FM_URLEncodeString(self.clientSecret);
+    NSLog(@"Generated SBS: %@",signatureBaseString);
+    NSString *key = [NSString stringWithFormat:@"%@&",FM_URLEncodeString(self.clientSecret)];
     NSData *hash = HMAC_SHA256(key, signatureBaseString);
     NSString *base64hash = [FMAuth base64EncodedStringFromData:hash];
     NSMutableString *oauthString = [[NSMutableString alloc] init];
@@ -144,6 +154,7 @@ static inline NSString *FM_URLDecodeString(NSString *string) {
     NSMutableURLRequest *urlRequest = [[request urlRequest] mutableCopy];
     [urlRequest addValue:oauthString forHTTPHeaderField:@"Authorization"];
 
+    NSLog(@"Returning urlRequest: %@\nHeaders: %@", urlRequest,[urlRequest allHTTPHeaderFields]);
     return urlRequest;
 }
 
@@ -231,6 +242,9 @@ NSData *HMAC_SHA256(NSString *key, NSString *data)
 #pragma mark - Utility
 
 - (NSString *)generateNonce {
+////DEBUG:
+//    return @"k320wtrzfr";
+
     NSMutableString *nonce = [NSMutableString stringWithCapacity:kFMNonceLength];
     for(int i = 0; i< kFMNonceLength; i++) {
         [nonce appendFormat:@"%c",kFMNonceabet[arc4random_uniform(strlen(kFMNonceabet))]];
@@ -243,6 +257,9 @@ NSData *HMAC_SHA256(NSString *key, NSString *data)
 }
 
 - (NSString *)timestamp {
+////DEBUG:
+//    return @"1363799128";
+
     long time = [self serverTime];
     return [NSString stringWithFormat:@"%li",time];
 }

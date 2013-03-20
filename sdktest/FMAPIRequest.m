@@ -175,8 +175,21 @@
     }
 }
 
+- (NSString *)queryString {
+    if([self.queryParameters count] == 0) {
+        return @"";
+    }
+    else  {
+        NSMutableString *queryString = [[NSMutableString alloc] init];
+        for(NSString *key in self.queryParameters) {
+            [queryString appendString:[NSString stringWithFormat:@"&%@=%@",key,self.queryParameters[key]]];
+        }
+        return [queryString stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@"?"];  //convert leading '&'
+    }
+}
+
 - (NSURLRequest *)urlRequest {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",kFeedAPILocation,self.httpEndpoint]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",kFeedAPILocation,self.httpEndpoint,[self queryString]]];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
     urlRequest.HTTPMethod = self.httpMethod;
     if([self.httpMethod isEqualToString:@"POST"]) {
@@ -224,9 +237,14 @@
     return hasRetriesLeft && isRecoverable;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@: %@",[super description], [self httpEndpoint]];
+}
+
 - (void)send {
     NSURLRequest *urlRequest = nil;
     if(self.authRequired) {
+        NSLog(@"Trying to send request with auth: %@", self.auth);
         urlRequest = [self.auth authenticatedURLRequest:self];
         if(urlRequest == nil) {
             NSLog(@"ERROR: Tried to send API Request but no authentication available: %@", self);
@@ -237,6 +255,7 @@
     else {
         urlRequest = [self urlRequest];
     }
+    NSLog(@"Sending request with endpoint, body: %@\%@",urlRequest.URL.absoluteString,[[NSString alloc] initWithData:urlRequest.HTTPBody encoding:NSUTF8StringEncoding]);
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSHTTPURLResponse *response = nil;
