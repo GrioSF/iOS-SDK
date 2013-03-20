@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FMStation : NSObject
+@interface FMStation : NSObject <NSCopying>
 
 @property (readonly) NSString *name;
 @property (readonly) NSString *identifier;

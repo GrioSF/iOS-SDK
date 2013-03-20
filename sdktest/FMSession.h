@@ -15,14 +15,16 @@ typedef enum FMAudioFormat : NSUInteger {
     FMAudioFormatAAC
 } FMAudioFormat;
 
+extern NSString *const FMSessionCurrentItemChangedNotification;
+extern NSString *const FMSessionNextItemAvailableNotification;
+extern NSString *const FMSessionActivePlacementChangedNotification;
+extern NSString *const FMSessionActiveStationChangedNotification;
 
 @protocol FMSessionDelegate <NSObject>
 
 @optional
 - (void)session:(FMSession *)session didReceiveStations:(NSArray *)stations;
 - (void)session:(FMSession *)session didFailToReceiveStations:(NSError *)error;
-
-- (void)session:(FMSession *)session didReceiveItem:(FMAudioItem *)nextItem;
 - (void)session:(FMSession *)session didFailToReceiveItem:(NSError *)error;
 - (void)session:(FMSession *)session didFailToSkipTrack:(NSError *)error;
 
@@ -32,10 +34,12 @@ typedef enum FMAudioFormat : NSUInteger {
 @interface FMSession : NSObject
 
 @property (nonatomic, assign) id<FMSessionDelegate> delegate;
-@property (nonatomic, setter=setStation:) FMStation *activeStation;
-@property (nonatomic, setter=setPlacement:) NSString *activePlacementId;
+@property (nonatomic, copy, setter=setStation:) FMStation *activeStation;
+@property (nonatomic, copy, setter=setPlacement:) NSString *activePlacementId;
 @property (nonatomic) FMAudioFormat *preferredCodec;    //defaults to FMAudioFormatAny
 @property (nonatomic, readonly) FMAudioItem *currentItem;
+@property (nonatomic, readonly) FMAudioItem *nextItem;
+@property (nonatomic, readonly) BOOL skipAvailable;
 @property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog
 
 + (void)setClientToken:(NSString *)token secret:(NSString *)secret;
@@ -47,7 +51,7 @@ typedef enum FMAudioFormat : NSUInteger {
 // These are only required if not using the FMAudioPlayer
 - (void)requestNextTrack;
 - (void)playStarted;
-- (void)playPaused;
+- (void)playPaused:(NSTimeInterval)elapsedTime;
 - (void)playCompleted;
 - (void)requestSkip;
 - (void)requestSkipIgnoringLimit;   // Use only to resolve system issues, e.g. unplayable track

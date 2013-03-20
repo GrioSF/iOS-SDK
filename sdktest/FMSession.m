@@ -16,12 +16,19 @@
 #define kFMAuthStoragePath @"FeedMedia/"
 #define kFMAuthStorageName @"FMAuth.plist"
 
+NSString *const FMSessionCurrentItemChangedNotification = @"FMSessionCurrentItemChangedNotification";
+NSString *const FMSessionNextItemAvailableNotification = @"FMSessionNextItemAvailableNotification";
+NSString *const FMSessionActivePlacementChangedNotification = @"FMSessionActivePlacementChangedNotification";
+NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveStationChangedNotification";
 
 @interface FMSession () {
     FMAuth *_auth;
     NSMutableArray *_queuedRequests;
 }
 @property FMAuth *auth;
+@property (nonatomic) FMAudioItem *currentItem;
+@property (nonatomic) FMAudioItem *nextItem;
+@property (nonatomic) BOOL skipAvailable;
 @end
 
 @implementation FMSession
@@ -59,6 +66,42 @@
         }
     }
     return self;
+}
+
+- (void)setNextItem:(FMAudioItem *)nextItem {
+    if([nextItem isEqual:_nextItem]) return;
+
+    _nextItem = nextItem;
+    if(nextItem != nil) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionNextItemAvailableNotification object:self userInfo:nil];
+    }
+}
+
+- (void)setCurrentItem:(FMAudioItem *)currentItem {
+    if(currentItem == nil && _currentItem == nil) return;
+    if([currentItem isEqual:_currentItem]) return;
+
+    _currentItem = currentItem;
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionCurrentItemChangedNotification object:self userInfo:nil];
+}
+
+- (void)setPlacement:(NSString *)activePlacementId {
+    if(activePlacementId == nil && _activePlacementId == nil) return;
+    if([activePlacementId isEqualToString:_activePlacementId]) return;
+
+    _activePlacementId = [activePlacementId copy];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActivePlacementChangedNotification object:self userInfo:nil];
+    self.activeStation = nil;
+    //todo: any other sideeffects? Clear out current/next items?
+}
+
+- (void)setStation:(FMStation *)activeStation {
+    if(activeStation == nil && _activeStation == nil) return;
+    if([activeStation isEqual:_activeStation]) return;
+
+    _activeStation = [activeStation copy];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActiveStationChangedNotification object:self userInfo:nil];
+    //todo: any other sideeffects? Clear out current/next items?
 }
 
 #pragma mark - AUTH
@@ -208,8 +251,20 @@
 
 - (void)requestNextTrack {
     FMAPIRequest *trackRequest = [FMAPIRequest requestPlayInPlacement:self.activePlacementId withStation:self.activeStation.identifier];
-    trackRequest.successBlock = ^(id playJSON) {
-        [self nextTrackSucceeded:playJSON];
+    trackRequest.successBlock = ^(NSDictionary *result) {
+        NSDictionary *playJSON = result[@"play"];
+        FMAudioItem *nextItem = nil;
+
+        if([playJSON isKindOfClass:[NSDictionary class]]) {
+            nextItem = [[FMAudioItem alloc] initWithJSON:playJSON];
+        }
+        
+        if(nextItem == nil) {
+            [self nextTrackFailed:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:nil]];
+        }
+        else {
+            [self nextTrackSucceeded:nextItem];
+        }
     };
     trackRequest.failureBlock = ^(NSError *error) {
         [self nextTrackFailed:error];
@@ -217,39 +272,68 @@
     [self sendRequest:trackRequest];
 }
 
-- (void)nextTrackSucceeded:(id)playJSON {
-    //todo: process json into nextItem
-    FMAudioItem *nextItem = nil;
-    if(self.delegate && [self.delegate respondsToSelector:@selector(session:didReceiveItem:)]) {
-        [self.delegate session:self didReceiveItem:nextItem];
-    }
+- (void)nextTrackSucceeded:(FMAudioItem *)nextItem {
+    self.nextItem = nextItem;
 }
 
 - (void)nextTrackFailed:(NSError *)error {
     if(self.delegate && [self.delegate respondsToSelector:@selector(session:didFailToReceiveItem:)]) {
         [self.delegate session:self didFailToReceiveItem:error];
     }
-
 }
 
 - (void)playStarted {
+    self.currentItem = self.nextItem;
+    self.nextItem = nil;
 
+    FMAPIRequest *playRequest = [FMAPIRequest requestStart:self.currentItem.playId];
+    playRequest.successBlock = ^(NSDictionary *result) {
+        self.skipAvailable = [result[@"can_skip"] boolValue];
+    };
+    playRequest.failureBlock = ^(NSError *error) {
+        NSLog(@"ERROR: Failed to start play on %@. Next item will not be available! %@", self.currentItem, error);
+    };
+    [self sendRequest:playRequest];
 }
 
-- (void)playPaused {
-
+- (void)playPaused:(NSTimeInterval)elapsedTime {
+    FMAPIRequest *elapseRequest = [FMAPIRequest requestElapse:self.currentItem.playId time:elapsedTime];
+    [self sendRequest:elapseRequest];
 }
 
 - (void)playCompleted {
+    NSString *playId = self.currentItem.playId;
+    self.currentItem = nil;
 
+    FMAPIRequest *completeRequest = [FMAPIRequest requestComplete:playId];
+    completeRequest.failureBlock = ^(NSError *error) {
+        NSLog(@"ERROR: Failed to register play completion: %@. Next item will not be available!", error);
+    };
+    [self sendRequest:completeRequest];
+}
+
+//todo: What is full behavior on success? do we automatically initiate a nextTrack?
+- (void)requestSkip:(BOOL)forced {
+    FMAPIRequest *skipRequest = [FMAPIRequest requestSkip:self.currentItem.playId force:forced elapsed:-1];
+    skipRequest.successBlock = ^(NSDictionary *result) {
+        self.currentItem = nil;
+    };
+    skipRequest.failureBlock = ^(NSError *error) {
+        if([[error domain] isEqualToString:FMAPIErrorDomain] && [error code] == FMErrorCodeInvalidSkip) {
+            self.skipAvailable = NO;
+        }
+        else {
+            NSLog(@"ERROR: Failed to skip: %@", error);
+        }
+    };
 }
 
 - (void)requestSkip {
-
+    [self requestSkip:NO];
 }
 
 - (void)requestSkipIgnoringLimit {
-
+    [self requestSkip:YES];
 }
 
 @end

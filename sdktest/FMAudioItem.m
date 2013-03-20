@@ -16,20 +16,16 @@
             return nil;
         }
 
-        // Fail if json doesn't contain a play object, a playId, or a contentUrl
+        // Fail if json doesn't contain a playId, or a contentUrl
 
-        NSDictionary *playDict = jsonDictionary[@"play"];
-        if(![playDict isKindOfClass:[NSDictionary class]]) {
-            return nil;
-        }
-
-        NSString *playId = playDict[@"id"];
+        NSString *playId = jsonDictionary[@"id"];
         if(![playId isKindOfClass:[NSString class]] || [playId isEqualToString:@""]) {
             return nil;
         }
         _playId = playId;
 
-        NSString *fileLocation = playDict[@"blip"][@"audio_file"][@"url"];
+        NSDictionary *trackDict = jsonDictionary[@"blip"][@"audio_file"];
+        NSString *fileLocation = trackDict[@"url"];
         if([fileLocation isKindOfClass:[NSString class]] && ![fileLocation isEqualToString:@""]) {
             _contentUrl = [NSURL URLWithString:fileLocation];
         }
@@ -39,37 +35,50 @@
 
         // Be tolerant if any metadata is missing or empty
 
-        NSString *trackTitle = playDict[@"blip"][@"audio_file"][@"track"][@"title"];
+        NSString *trackTitle = trackDict[@"track"][@"title"];
         if([trackTitle isKindOfClass:[NSString class]]) {
             _name = trackTitle;
         }
 
-        NSString *artistName = playDict[@"blip"][@"audio_file"][@"artist"][@"name"];
+        NSString *artistName = trackDict[@"artist"][@"name"];
         if([artistName isKindOfClass:[NSString class]]) {
             _artist = artistName;
         }
 
-        NSString *albumTitle = playDict[@"blip"][@"audio_file"][@"release"][@"title"];
+        NSString *albumTitle = trackDict[@"release"][@"title"];
         if([albumTitle isKindOfClass:[NSString class]]) {
             _album = albumTitle;
         }
 
-        NSString *codec = playDict[@"blip"][@"audio_file"][@"codec"];
+        NSString *codec = trackDict[@"codec"];
         if([codec isKindOfClass:[NSString class]]) {
             _codec = codec;
         }
 
-        id duration = playDict[@"blip"][@"audio_file"][@"duration_in_seconds"];
+        id duration = trackDict[@"duration_in_seconds"];
         if([duration respondsToSelector:@selector(doubleValue)]) {
             _duration = [duration doubleValue];
         }
 
-        id bitrate = playDict[@"blip"][@"audio_file"][@"kbitrate"];
+        id bitrate = trackDict[@"kbitrate"];
         if([bitrate respondsToSelector:@selector(doubleValue)]) {
             _bitrate = [bitrate doubleValue];
         }
     }
     return self;
+}
+
+- (NSString *)identifier {
+    return self.playId;
+}
+
+- (BOOL)isEqual:(id)object {
+    if(![object isKindOfClass:[self class]]) return NO;
+    return ([[self identifier] isEqual:[(FMAudioItem *)object identifier]]);
+}
+
+- (NSUInteger)hash {
+    return [[self identifier] hash];
 }
 
 @end

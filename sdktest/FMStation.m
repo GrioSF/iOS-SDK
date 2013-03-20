@@ -36,4 +36,17 @@
     return self;
 }
 
+- (BOOL)isEqual:(id)object {
+    if(![object isKindOfClass:[self class]]) return NO;
+    return ([[self identifier] isEqual:[(FMStation *)object identifier]]);
+}
+
+- (NSUInteger)hash {
+    return [[self identifier] hash];
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    return self;    //immutable, doesn't matter
+}
+
 @end
