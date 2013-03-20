@@ -24,6 +24,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 @interface FMSession () {
     FMAuth *_auth;
     NSMutableArray *_queuedRequests;
+    BOOL _nextTrackInProgress;
 }
 @property FMAuth *auth;
 @property (nonatomic) FMAudioItem *currentItem;
@@ -249,7 +250,11 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
 #pragma mark - PLAYBACK
 
-- (void)requestNextTrack {
+- (void)queueNextTrack {
+    if(self.nextItem != nil || _nextTrackInProgress) return;
+
+    _nextTrackInProgress = YES;
+
     FMAPIRequest *trackRequest = [FMAPIRequest requestPlayInPlacement:self.activePlacementId withStation:self.activeStation.identifier];
     trackRequest.successBlock = ^(NSDictionary *result) {
         NSDictionary *playJSON = result[@"play"];
@@ -273,10 +278,13 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 }
 
 - (void)nextTrackSucceeded:(FMAudioItem *)nextItem {
+    _nextTrackInProgress = NO;
     self.nextItem = nextItem;
 }
 
 - (void)nextTrackFailed:(NSError *)error {
+    _nextTrackInProgress = NO;
+
     if(self.delegate && [self.delegate respondsToSelector:@selector(session:didFailToReceiveItem:)]) {
         [self.delegate session:self didFailToReceiveItem:error];
     }
@@ -289,6 +297,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     FMAPIRequest *playRequest = [FMAPIRequest requestStart:self.currentItem.playId];
     playRequest.successBlock = ^(NSDictionary *result) {
         self.skipAvailable = [result[@"can_skip"] boolValue];
+        //todo: request nextTrack automatically?
     };
     playRequest.failureBlock = ^(NSError *error) {
         NSLog(@"ERROR: Failed to start play on %@. Next item will not be available! %@", self.currentItem, error);
@@ -296,7 +305,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     [self sendRequest:playRequest];
 }
 
-- (void)playPaused:(NSTimeInterval)elapsedTime {
+- (void)updatePlay:(NSTimeInterval)elapsedTime {
     FMAPIRequest *elapseRequest = [FMAPIRequest requestElapse:self.currentItem.playId time:elapsedTime];
     [self sendRequest:elapseRequest];
 }

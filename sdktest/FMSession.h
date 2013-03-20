@@ -48,12 +48,45 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 - (void)requestStations;
 - (void)requestStationsForPlacement:(NSString *)placementId;
 
-// These are only required if not using the FMAudioPlayer
-- (void)requestNextTrack;
+///-----------------------------------------------------
+/// @name Playback State Controls
+///-----------------------------------------------------
+
+/**
+ These are only required if not using the FMAudioPlayer.
+ */
+
+/**
+ Requests the next track to be played, which will populate the `nextItem` property and trigger the `FMSessionNextItemAvailableNotification` notification on success. Only has effect if `nextItem` is nil.
+ */
+ - (void)queueNextTrack;
+
+/** 
+ Moves the nextItem into the currentItem position and notifies the server that the play began. If a previous item is playing, `-playCompleted` or `-requestSkip` must be called first.
+ */
 - (void)playStarted;
-- (void)playPaused:(NSTimeInterval)elapsedTime;
+
+/**
+ Notifies the server of how much of the current item has been played for reporting purposes. Can be called periodically or specifically on events such as when playback is paused.
+ 
+ @param elapsedTime The amount of time the currentItem has already been played
+ */
+- (void)updatePlay:(NSTimeInterval)elapsedTime;
+
+/**
+ Notifies the server that playthrough completed successfully. It nils out the currentItem in preparation for the next play to be started.
+ */
 - (void)playCompleted;
+
+/**
+ If successful, `-requestSkip` will behave like `-playCompleted` by nilling out the currentItem in preparation for the next `-playStarted` call.
+    May fail if the user is out of skips, in which case the delegate will be notified.
+ */
 - (void)requestSkip;
-- (void)requestSkipIgnoringLimit;   // Use only to resolve system issues, e.g. unplayable track
+
+/**
+ Behaves like `-requestSkip`, but ignores the user's skip limit. Use only to resolve system issues, e.g. unplayable track
+ */
+- (void)requestSkipIgnoringLimit;
 
 @end
