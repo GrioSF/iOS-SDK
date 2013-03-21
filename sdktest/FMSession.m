@@ -250,7 +250,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
 #pragma mark - PLAYBACK
 
-- (void)queueNextTrack {
+- (void)requestNextTrack {
     if(self.nextItem != nil || _nextTrackInProgress) return;
 
     _nextTrackInProgress = YES;

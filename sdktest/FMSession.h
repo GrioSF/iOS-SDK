@@ -57,9 +57,9 @@ extern NSString *const FMSessionActiveStationChangedNotification;
  */
 
 /**
- Requests the next track to be played, which will populate the `nextItem` property and trigger the `FMSessionNextItemAvailableNotification` notification on success. Only has effect if `nextItem` is nil.
+ Requests the next track for the current placement/station, which will populate the `nextItem` property and trigger the `FMSessionNextItemAvailableNotification` notification on success. Only has effect if `nextItem` is nil.
  */
- - (void)queueNextTrack;
+ - (void)requestNextTrack;
 
 /** 
  Moves the nextItem into the currentItem position and notifies the server that the play began. If a previous item is playing, `-playCompleted` or `-requestSkip` must be called first.
