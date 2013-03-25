@@ -312,3 +312,11 @@ char *FM_NewBase64Encode(
 }
 
 @end
+
+#undef xx
+#undef BINARY_UNIT_SIZE
+#undef BASE64_UNIT_SIZE
+#undef MAX_NUM_PADDING_CHARS
+#undef OUTPUT_LINE_LENGTH
+#undef INPUT_LINE_LENGTH
+#undef CR_LF_SIZE
