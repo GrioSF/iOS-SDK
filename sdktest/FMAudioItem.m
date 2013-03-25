@@ -32,6 +32,8 @@
         if(_contentUrl == nil) {
             return nil;
         }
+        //DEBUGGING ONLY:
+//        _contentUrl = [NSURL URLWithString:@"http://stor01.fuzz.com/files/8/55/T2PRul-tc.mp3"];
 
         // Be tolerant if any metadata is missing or empty
 

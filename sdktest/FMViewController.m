@@ -28,8 +28,8 @@
     NSLog(@"Got stations: %@",stations);
     if([stations count] > 0) {
         [session setStation:stations[0]];
-        //self.feedPlayer = [FMAudioPlayer playerWithSession:session];
-        //[self.feedPlayer play];
+        self.feedPlayer = [FMAudioPlayer playerWithSession:session];
+        [self.feedPlayer play];
     }
 }
 

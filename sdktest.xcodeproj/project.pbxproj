@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C1937AB217010D2000FED375 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB117010D2000FED375 /* AVFoundation.framework */; };
+		C1937AB417010D4C00FED375 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB317010D4B00FED375 /* CoreMedia.framework */; };
 		C1A4297916E967EB001BD576 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297816E967EB001BD576 /* UIKit.framework */; };
 		C1A4297B16E967EB001BD576 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297A16E967EB001BD576 /* Foundation.framework */; };
 		C1A4297D16E967EB001BD576 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297C16E967EB001BD576 /* CoreGraphics.framework */; };
@@ -31,6 +33,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C1937AB117010D2000FED375 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C1937AB317010D4B00FED375 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C1A4297516E967EB001BD576 /* sdktest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sdktest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A4297816E967EB001BD576 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C1A4297A16E967EB001BD576 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -74,6 +78,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1937AB417010D4C00FED375 /* CoreMedia.framework in Frameworks */,
+				C1937AB217010D2000FED375 /* AVFoundation.framework in Frameworks */,
 				C1A4297916E967EB001BD576 /* UIKit.framework in Frameworks */,
 				C1A4297B16E967EB001BD576 /* Foundation.framework in Frameworks */,
 				C1A4297D16E967EB001BD576 /* CoreGraphics.framework in Frameworks */,
@@ -86,6 +92,8 @@
 		C1A4296C16E967EB001BD576 = {
 			isa = PBXGroup;
 			children = (
+				C1937AB317010D4B00FED375 /* CoreMedia.framework */,
+				C1937AB117010D2000FED375 /* AVFoundation.framework */,
 				C1A4297E16E967EB001BD576 /* sdktest */,
 				C1A4297716E967EB001BD576 /* Frameworks */,
 				C1A4297616E967EB001BD576 /* Products */,

@@ -255,7 +255,7 @@
     else {
         urlRequest = [self urlRequest];
     }
-    NSLog(@"Sending request with endpoint, body: %@\%@",urlRequest.URL.absoluteString,[[NSString alloc] initWithData:urlRequest.HTTPBody encoding:NSUTF8StringEncoding]);
+    NSLog(@"Sending request with endpoint, body: %@\n%@",urlRequest.URL.absoluteString,[[NSString alloc] initWithData:urlRequest.HTTPBody encoding:NSUTF8StringEncoding]);
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSHTTPURLResponse *response = nil;

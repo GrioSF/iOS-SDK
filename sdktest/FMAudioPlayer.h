@@ -23,7 +23,7 @@ typedef enum FMAudioPlayerPlaybackState : NSUInteger {
 
 @interface FMAudioPlayer : NSObject
 
-@property (nonatomic) FMSession *session;
+@property (nonatomic) FMSession *session; //note: playback will stop automatically if the placement or station are changed
 @property (nonatomic) float mixVolume; // value between 0.0 and 1.0 relative to system volume
 @property (nonatomic, readonly) FMAudioPlayerPlaybackState playbackState;
 @property (nonatomic, readonly) NSTimeInterval currentPlaybackTime;

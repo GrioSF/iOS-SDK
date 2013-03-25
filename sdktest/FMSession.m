@@ -74,6 +74,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
     _nextItem = nextItem;
     if(nextItem != nil) {
+        NSLog(@"Next Item Set, sending Notification");
         [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionNextItemAvailableNotification object:self userInfo:nil];
     }
 }
@@ -278,11 +279,13 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 }
 
 - (void)nextTrackSucceeded:(FMAudioItem *)nextItem {
+    NSLog(@"Next Track Succeeded: %@",nextItem);
     _nextTrackInProgress = NO;
     self.nextItem = nextItem;
 }
 
 - (void)nextTrackFailed:(NSError *)error {
+    NSLog(@"Next Track Failed: %@",error);
     _nextTrackInProgress = NO;
 
     if(self.delegate && [self.delegate respondsToSelector:@selector(session:didFailToReceiveItem:)]) {
