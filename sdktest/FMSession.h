@@ -36,11 +36,11 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 @property (nonatomic, assign) id<FMSessionDelegate> delegate;
 @property (nonatomic, copy, setter=setStation:) FMStation *activeStation;
 @property (nonatomic, copy, setter=setPlacement:) NSString *activePlacementId;
-@property (nonatomic) FMAudioFormat *preferredCodec;    //defaults to FMAudioFormatAny
+@property (nonatomic) FMAudioFormat *preferredCodec;    //defaults to FMAudioFormatAny (not yet supported)
 @property (nonatomic, readonly) FMAudioItem *currentItem;
 @property (nonatomic, readonly) FMAudioItem *nextItem;
 @property (nonatomic, readonly) BOOL skipAvailable;
-@property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog
+@property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog (consider moving to separate debug header with more powerful options, e.g. log levels and output options)
 
 + (void)setClientToken:(NSString *)token secret:(NSString *)secret;
 + (FMSession *)sharedSession;
