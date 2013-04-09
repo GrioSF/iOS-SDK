@@ -207,28 +207,46 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
 #pragma mark - STATIONS
 
-- (void)requestStationsForPlacement:(NSString *)placementId {
+- (void)requestStationsForPlacement:(NSString *)placementId
+                        withSuccess:(void (^)(NSArray *stations))success
+                            failure:(void (^)(NSError *error))failure {
     FMAPIRequest *stationRequest = [FMAPIRequest requestStationsForPlacement:placementId];
     stationRequest.successBlock = ^(NSDictionary *result) {
         NSArray *stationJSON = result[@"stations"];
         if(![stationJSON isKindOfClass:[NSArray class]]) {
-            [self stationRequestFailed:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:nil]];
+            NSError *error = [NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:nil];
+            if(failure) {
+                failure(error);
+            }
+            [self stationRequestFailed:error];
         }
         else {
-            [self stationRequestSucceeded:stationJSON];
+            NSArray *stations = [self stationsFromJSON:stationJSON];
+            if(success) {
+                success(stations);
+            }
+            [self stationRequestSucceeded:stations];
         }
     };
     stationRequest.failureBlock = ^(NSError *error) {
+        if(failure) {
+            failure(error);
+        }
         [self stationRequestFailed:error];
     };
     [self sendRequest:stationRequest];
+}
+
+
+- (void)requestStationsForPlacement:(NSString *)placementId {
+    [self requestStationsForPlacement:placementId withSuccess:nil failure:nil];
 }
 
 - (void)requestStations {
     [self requestStationsForPlacement:self.activePlacementId];
 }
 
-- (void)stationRequestSucceeded:(NSArray *)stationJSON {
+- (NSArray *)stationsFromJSON:(NSArray *)stationJSON {
     NSMutableArray *stations = [[NSMutableArray alloc] initWithCapacity:[stationJSON count]];
     for(NSDictionary *stationDict in stationJSON) {
         if([stationDict isKindOfClass:[NSDictionary class]]) {
@@ -238,6 +256,10 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
             }
         }
     }
+    return stations;
+}
+
+- (void)stationRequestSucceeded:(NSArray *)stations {
     if(self.delegate && [self.delegate respondsToSelector:@selector(session:didReceiveStations:)]) {
         [self.delegate session:self didReceiveStations:stations];
     }

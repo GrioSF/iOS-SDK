@@ -254,6 +254,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
                                              selector:@selector(playerItemFailedToReachEnd:)
                                                  name:AVPlayerItemFailedToPlayToEndTimeNotification
                                                object:item];
+    //todo: iOS 6 ONLY!
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playerItemStalled:)
                                                  name:AVPlayerItemPlaybackStalledNotification

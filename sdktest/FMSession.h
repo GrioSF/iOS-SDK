@@ -47,6 +47,9 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 
 - (void)requestStations;
 - (void)requestStationsForPlacement:(NSString *)placementId;
+- (void)requestStationsForPlacement:(NSString *)placementId
+                        withSuccess:(void (^)(NSArray *stations))success
+                            failure:(void (^)(NSError *error))failure;
 
 ///-----------------------------------------------------
 /// @name Playback State Controls

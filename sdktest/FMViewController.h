@@ -13,5 +13,8 @@
 @interface FMViewController : UIViewController <FMSessionDelegate>
 
 @property FMAudioPlayer *feedPlayer;
+@property IBOutlet UILabel *currentStationLabel;
+
+- (IBAction)selectStation:(id)sender;
 
 @end

@@ -8,6 +8,12 @@
 
 #import "FMViewController.h"
 #import "FMAudioPlayer.h"
+#import "FMStationPickerViewController.h"
+#import "FMStation.h"
+
+#define kFMSessionClientToken @"e518c7bb995c28ea12deb8ddc9b6458c41005f56"
+#define kFMSessionClientSecret @"512cac1423f76a4b25235fa0afb092013b68f7d8"
+#define kFMSessionPlacementId @"10002"
 
 @interface FMViewController ()
 
@@ -18,25 +24,34 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [FMSession setClientToken:@"e518c7bb995c28ea12deb8ddc9b6458c41005f56" secret:@"512cac1423f76a4b25235fa0afb092013b68f7d8"];
-    [[FMSession sharedSession] setPlacement:@"10002"];
+    self.title = @"Feed Media SDK Demo";
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                             style:UIBarButtonItemStyleBordered
+                                                                            target:nil
+                                                                            action:nil];
+
+    [FMSession setClientToken:kFMSessionClientToken
+                       secret:kFMSessionClientSecret];
+    [[FMSession sharedSession] setPlacement:kFMSessionPlacementId];
     [[FMSession sharedSession] setDelegate:self];
-    [[FMSession sharedSession] requestStations];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationUpdated:) name:FMSessionActiveStationChangedNotification object:[FMSession sharedSession]];
 }
 
-- (void)session:(FMSession *)session didReceiveStations:(NSArray *)stations {
-    NSLog(@"Got stations: %@",stations);
-    if([stations count] > 0) {
-        [session setStation:stations[0]];
-        self.feedPlayer = [FMAudioPlayer playerWithSession:session];
-        [self.feedPlayer play];
-    }
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)stationUpdated:(NSNotification *)notification {
+    self.currentStationLabel.text = [FMSession sharedSession].activeStation.name;
 }
+
+- (void)selectStation:(id)sender {
+    [self.navigationController pushViewController:[[FMStationPickerViewController alloc] init] animated:YES];
+}
+
 
 @end
+
+#undef kFMSessionClientToken
+#undef kFMSessionClientSecret
+#undef kFMSessionPlacementId

@@ -29,6 +29,7 @@
 		C1A9284516EE6E6C006C6963 /* FMAPIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284416EE6E6C006C6963 /* FMAPIRequest.m */; };
 		C1A9284816EE8BE3006C6963 /* FMAuth+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284716EE8BE3006C6963 /* FMAuth+Base64.m */; };
 		C1A9284B16EE92C7006C6963 /* FMStation.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284A16EE92C6006C6963 /* FMStation.m */; };
+		C1B11589170A273500DA8041 /* FMStationPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B11588170A273500DA8041 /* FMStationPickerViewController.m */; };
 		C1BF242416FA211A007909CB /* FMError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1BF242316FA211A007909CB /* FMError.m */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,8 @@
 		C1A9284916EE92C6006C6963 /* FMStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStation.h; sourceTree = "<group>"; };
 		C1A9284A16EE92C6006C6963 /* FMStation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStation.m; sourceTree = "<group>"; };
 		C1A9284C16EFDB52006C6963 /* FMError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMError.h; sourceTree = "<group>"; };
+		C1B11587170A273500DA8041 /* FMStationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStationPickerViewController.h; sourceTree = "<group>"; };
+		C1B11588170A273500DA8041 /* FMStationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStationPickerViewController.m; sourceTree = "<group>"; };
 		C1BF242316FA211A007909CB /* FMError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMError.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,6 +127,8 @@
 				C1A4299B16E967F5001BD576 /* Feed SDK */,
 				C1A4298716E967EB001BD576 /* FMAppDelegate.h */,
 				C1A4298816E967EB001BD576 /* FMAppDelegate.m */,
+				C1B11587170A273500DA8041 /* FMStationPickerViewController.h */,
+				C1B11588170A273500DA8041 /* FMStationPickerViewController.m */,
 				C1A4299016E967EC001BD576 /* FMViewController.h */,
 				C1A4299116E967EC001BD576 /* FMViewController.m */,
 				C1A4299316E967EC001BD576 /* FMViewController.xib */,
@@ -261,6 +266,7 @@
 				C1A9284816EE8BE3006C6963 /* FMAuth+Base64.m in Sources */,
 				C1A9284B16EE92C7006C6963 /* FMStation.m in Sources */,
 				C1BF242416FA211A007909CB /* FMError.m in Sources */,
+				C1B11589170A273500DA8041 /* FMStationPickerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
