@@ -36,9 +36,13 @@
 
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kFMStationPickerCellIdentifier];
 
-    [[FMSession sharedSession] requestStationsForPlacement:[FMSession sharedSession].activePlacementId withSuccess:^(NSArray *stations) {
+    [[FMSession sharedSession] requestStationsForPlacement:nil
+                                               withSuccess:
+     ^(NSArray *stations) {
         self.stations = stations;
-    } failure:^(NSError *error) {
+    }
+                                                   failure:
+    ^(NSError *error) {
         [self stationRequestFailed:error];
     }];
 }
