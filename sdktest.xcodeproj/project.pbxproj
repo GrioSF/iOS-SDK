@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C108F23D1714B9EC0096DF46 /* FMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C108F23C1714B9EC0096DF46 /* FMProgressView.m */; };
+		C108F2401714BFC50096DF46 /* nexttrack.png in Resources */ = {isa = PBXBuildFile; fileRef = C108F23F1714BFC50096DF46 /* nexttrack.png */; };
+		C108F2461714BFD30096DF46 /* nexttrack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C108F2411714BFD20096DF46 /* nexttrack@2x.png */; };
+		C108F2471714BFD30096DF46 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C108F2421714BFD20096DF46 /* pause.png */; };
+		C108F2481714BFD30096DF46 /* pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C108F2431714BFD20096DF46 /* pause@2x.png */; };
+		C108F2491714BFD30096DF46 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = C108F2441714BFD20096DF46 /* play.png */; };
+		C108F24A1714BFD30096DF46 /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C108F2451714BFD20096DF46 /* play@2x.png */; };
+		C108F24C1714C5730096DF46 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C108F24B1714C5730096DF46 /* QuartzCore.framework */; };
 		C1937AB217010D2000FED375 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB117010D2000FED375 /* AVFoundation.framework */; };
 		C1937AB417010D4C00FED375 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB317010D4B00FED375 /* CoreMedia.framework */; };
 		C1A4297916E967EB001BD576 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297816E967EB001BD576 /* UIKit.framework */; };
@@ -34,6 +42,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C108F23B1714B9EC0096DF46 /* FMProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMProgressView.h; sourceTree = "<group>"; };
+		C108F23C1714B9EC0096DF46 /* FMProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMProgressView.m; sourceTree = "<group>"; };
+		C108F23F1714BFC50096DF46 /* nexttrack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nexttrack.png; sourceTree = "<group>"; };
+		C108F2411714BFD20096DF46 /* nexttrack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nexttrack@2x.png"; sourceTree = "<group>"; };
+		C108F2421714BFD20096DF46 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
+		C108F2431714BFD20096DF46 /* pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pause@2x.png"; sourceTree = "<group>"; };
+		C108F2441714BFD20096DF46 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
+		C108F2451714BFD20096DF46 /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
+		C108F24B1714C5730096DF46 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C1937AB117010D2000FED375 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C1937AB317010D4B00FED375 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C1A4297516E967EB001BD576 /* sdktest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sdktest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C108F24C1714C5730096DF46 /* QuartzCore.framework in Frameworks */,
 				C1937AB417010D4C00FED375 /* CoreMedia.framework in Frameworks */,
 				C1937AB217010D2000FED375 /* AVFoundation.framework in Frameworks */,
 				C1A4297916E967EB001BD576 /* UIKit.framework in Frameworks */,
@@ -92,9 +110,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C108F23E1714BFA60096DF46 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C108F23F1714BFC50096DF46 /* nexttrack.png */,
+				C108F2411714BFD20096DF46 /* nexttrack@2x.png */,
+				C108F2421714BFD20096DF46 /* pause.png */,
+				C108F2431714BFD20096DF46 /* pause@2x.png */,
+				C108F2441714BFD20096DF46 /* play.png */,
+				C108F2451714BFD20096DF46 /* play@2x.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		C1A4296C16E967EB001BD576 = {
 			isa = PBXGroup;
 			children = (
+				C108F24B1714C5730096DF46 /* QuartzCore.framework */,
 				C1937AB317010D4B00FED375 /* CoreMedia.framework */,
 				C1937AB117010D2000FED375 /* AVFoundation.framework */,
 				C1A4297E16E967EB001BD576 /* sdktest */,
@@ -132,6 +164,9 @@
 				C1A4299016E967EC001BD576 /* FMViewController.h */,
 				C1A4299116E967EC001BD576 /* FMViewController.m */,
 				C1A4299316E967EC001BD576 /* FMViewController.xib */,
+				C108F23B1714B9EC0096DF46 /* FMProgressView.h */,
+				C108F23C1714B9EC0096DF46 /* FMProgressView.m */,
+				C108F23E1714BFA60096DF46 /* Resources */,
 				C1A4297F16E967EB001BD576 /* Supporting Files */,
 			);
 			path = sdktest;
@@ -243,6 +278,12 @@
 				C1A4298D16E967EC001BD576 /* Default@2x.png in Resources */,
 				C1A4298F16E967EC001BD576 /* Default-568h@2x.png in Resources */,
 				C1A4299516E967EC001BD576 /* FMViewController.xib in Resources */,
+				C108F2401714BFC50096DF46 /* nexttrack.png in Resources */,
+				C108F2461714BFD30096DF46 /* nexttrack@2x.png in Resources */,
+				C108F2471714BFD30096DF46 /* pause.png in Resources */,
+				C108F2481714BFD30096DF46 /* pause@2x.png in Resources */,
+				C108F2491714BFD30096DF46 /* play.png in Resources */,
+				C108F24A1714BFD30096DF46 /* play@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +308,7 @@
 				C1A9284B16EE92C7006C6963 /* FMStation.m in Sources */,
 				C1BF242416FA211A007909CB /* FMError.m in Sources */,
 				C1B11589170A273500DA8041 /* FMStationPickerViewController.m in Sources */,
+				C108F23D1714B9EC0096DF46 /* FMProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

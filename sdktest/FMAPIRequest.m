@@ -158,6 +158,7 @@
 }
 
 - (void)failWithError:(NSError *)error {
+    NSLog(@"Request failing with error: %@", error);
     self.error = error;
     if(self.failureBlock) {
         dispatch_async(dispatch_get_main_queue(), ^{

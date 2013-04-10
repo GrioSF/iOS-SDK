@@ -210,6 +210,10 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 - (void)requestStationsForPlacement:(NSString *)placementId
                         withSuccess:(void (^)(NSArray *stations))success
                             failure:(void (^)(NSError *error))failure {
+
+    placementId = placementId ?: self.activePlacementId;
+    NSAssert(placementId != nil, @"Must either set FMSession's placementId in advance or pass explicit placementId to -requestStations call");
+
     FMAPIRequest *stationRequest = [FMAPIRequest requestStationsForPlacement:placementId];
     stationRequest.successBlock = ^(NSDictionary *result) {
         NSArray *stationJSON = result[@"stations"];
@@ -243,7 +247,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 }
 
 - (void)requestStations {
-    [self requestStationsForPlacement:self.activePlacementId];
+    [self requestStationsForPlacement:nil];
 }
 
 - (NSArray *)stationsFromJSON:(NSArray *)stationJSON {

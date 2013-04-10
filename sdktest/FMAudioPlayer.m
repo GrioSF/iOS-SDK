@@ -43,16 +43,13 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     if(self = [super init]) {
         self.session = session;
         _mixVolume = 1.0;
-        _playbackState = FMAudioPlayerPlaybackStateComplete;
+        _playbackState = FMAudioPlayerPlaybackStateWaitingForItem;
         _player = [[AVQueuePlayer alloc] init];
-        _player.actionAtItemEnd = AVPlayerActionAtItemEndAdvance; //todo: is this necessary?
+        _player.actionAtItemEnd = AVPlayerActionAtItemEndAdvance;
         [_player addObserver:self
                   forKeyPath:kCurrentItemKey
                      options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                      context:FMAudioPlayerCurrentItemObservationContext];
-
-        /* Observe the AVPlayer "rate" property to update the scrubber control. */
-        //todo: is this necessary?
         [_player addObserver:self
                   forKeyPath:kRateKey
                      options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
@@ -96,7 +93,6 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 
 #pragma mark - Audio Mixing
 
-//todo: consider ramping volume instead of setting it hard
 - (void)applyMixVolumeToItem:(AVPlayerItem *)playerItem {
     AVAsset *asset = playerItem.asset;
     NSMutableArray *allAudioParams = [NSMutableArray array];
@@ -112,7 +108,6 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     [playerItem setAudioMix:audioMix];
 }
 
-
 - (void)setMixVolume:(float)mixVolume {
     _mixVolume = MIN(MAX(0.0f,mixVolume),1.0f);
     for(AVPlayerItem *playerItem in [_player items]) {
@@ -124,8 +119,8 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 
 - (void)prepareToPlay {
     NSLog(@"Prepare To Play");
-    if([_player.items count] > 0) {
-        NSLog(@"Already have item, ignoring");
+    if([_player.items count] > 1) {
+        NSLog(@"Already have items, ignoring");
         //already have a playing item, no need for additional preparation
         return;
     }
@@ -138,7 +133,6 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
         NSLog(@"Requesting item");
         //todo: make sure we actually have a session, and that session has a placement/station/etc
         [self.session requestNextTrack];
-        [self setPlaybackState: FMAudioPlayerPlaybackStateWaitingForItem];
         return;
     }
 }
@@ -254,11 +248,12 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
                                              selector:@selector(playerItemFailedToReachEnd:)
                                                  name:AVPlayerItemFailedToPlayToEndTimeNotification
                                                object:item];
-    //todo: iOS 6 ONLY!
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemStalled:)
-                                                 name:AVPlayerItemPlaybackStalledNotification
-                                               object:item];
+    if(&AVPlayerItemPlaybackStalledNotification) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playerItemStalled:)
+                                                     name:AVPlayerItemPlaybackStalledNotification
+                                                   object:item];
+    }
 }
 
 - (void)unregisterForPlayerItemNotifications:(AVPlayerItem *)item {
@@ -279,9 +274,10 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     [self unregisterForPlayerItemNotifications:notification.object];
     [self.session playCompleted];
     self.playbackState = FMAudioPlayerPlaybackStateComplete;
-    if([_player.items count] == 0) {
+    if([_player.items count] < 2) {
         NSLog(@"Player Queue empty, preparing to play a new one");
         [self prepareToPlay];
+        [self setPlaybackState: FMAudioPlayerPlaybackStateWaitingForItem];
     }
 }
 
@@ -308,6 +304,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     NSLog(@"Stalled");
     [self setPlaybackState:FMAudioPlayerPlaybackStateStalled];
     //todo: try to recover from stall
+    //todo: check if this is equivalent to existing iOS 5 tests for stalled-ness
 }
 
 #pragma mark - State Handling
@@ -331,6 +328,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 
 - (void)setPlaybackState:(FMAudioPlayerPlaybackState)playbackState {
     _playbackState = playbackState;
+    NSLog(@"Posting new playback state: %i", _playbackState);
     [[NSNotificationCenter defaultCenter] postNotificationName:FMAudioPlayerPlaybackStateDidChangeNotification object:self];
 }
 
@@ -350,6 +348,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
              [playerItem status] == AVPlayerItemStatusReadyToPlay,
              its duration can be fetched from the item. */
             NSLog(@"Observed AVPlayerStatusReadyToPlay");
+            //todo: only set this state if we're not currently playing and it's the active item
             [self setPlaybackState:FMAudioPlayerPlaybackStateReadyToPlay];
             if(_playImmediately) {
                 NSLog(@"Playing immediately");
@@ -380,7 +379,16 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 
     /* AVPlayer "rate" property value observer. */
 	else if (context == FMAudioPlayerRateObservationContext) {
-
+        BOOL playing = _player.rate > 0;
+        if(playing) {
+            [self setPlaybackState:FMAudioPlayerPlaybackStatePlaying];
+        }
+        else if(_isClientPaused) {
+            [self setPlaybackState:FMAudioPlayerPlaybackStatePaused];
+        }
+        else {
+            [self setPlaybackState:FMAudioPlayerPlaybackStateStalled];
+        }
 	}
 
 	/* AVPlayer "currentItem" property observer.
@@ -436,8 +444,6 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 - (void)skip {
     
 }
-
-
 
 @end
 
