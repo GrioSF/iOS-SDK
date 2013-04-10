@@ -84,6 +84,7 @@
     cell.detailTextLabel.text = station.identifier;
     if([station isEqual:[FMSession sharedSession].activeStation]) {
         [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+        self.selectedCell = cell;
     }
     else {
         [cell setAccessoryType:UITableViewCellAccessoryNone];

@@ -27,7 +27,8 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 @interface FMAudioPlayer () {
     AVQueuePlayer *_player;
     BOOL _isClientPaused;
-    BOOL _isInternalPaused;
+    //BOOL _isInternalPaused;
+    BOOL _isTryingToPlay;
     BOOL _playImmediately;
 }
 @property (nonatomic) FMAudioPlayerPlaybackState playbackState;
@@ -124,20 +125,16 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
         //already have a playing item, no need for additional preparation
         return;
     }
-    if(self.playbackState == FMAudioPlayerPlaybackStateWaitingForItem) {
-        NSLog(@"Already waiting for item, ignoring");
-        //already requested an item, keep waiting
-        return;
-    }
     if(!self.session.nextItem) {
         NSLog(@"Requesting item");
+        //FMSession will ignore requestNextTrack if a request is already in progress, then we'll get a callback when it's ready
         //todo: make sure we actually have a session, and that session has a placement/station/etc
         [self.session requestNextTrack];
         return;
     }
 }
 
-- (void)sessionReceivedItem {
+- (void)sessionReceivedItem:(NSNotification *)notification {
     NSLog(@"Session Received Item");
     if(self.session.nextItem) {
         NSURL *itemUrl = self.session.nextItem.contentUrl;
@@ -210,7 +207,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     [_player insertItem:nextItem afterItem:nil];
     NSLog(@"Added item to queue");
 
-    //If we want to try prerolling, delete teh above block and put all this into effect AFTER readyToPlay KVO is triggered
+    //If we want to try prerolling, delete the above block and put all this into effect AFTER readyToPlay KVO is triggered
 //    if([_player.items count] == 1) {
 //        NSLog(@"Requesting preroll");
 //        [_player prerollAtRate:1.0 completionHandler:^(BOOL finished) {
@@ -319,14 +316,27 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     }
     _session = session;
     if(_session) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionReceivedItem) name:FMSessionNextItemAvailableNotification object:_session];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stop) name:FMSessionActivePlacementChangedNotification object:_session];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stop) name:FMSessionActiveStationChangedNotification object:_session];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionReceivedItem:) name:FMSessionNextItemAvailableNotification object:_session];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(placementChanged:) name:FMSessionActivePlacementChangedNotification object:_session];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationChanged:) name:FMSessionActiveStationChangedNotification object:_session];
 
     }
 }
 
+- (void)placementChanged:(NSNotification *)notification {
+    NSLog(@"Placement Changed");
+    [self stop];
+}
+
+- (void)stationChanged:(NSNotification *)notification {
+    NSLog(@"Station Changed");
+    [self stop];
+    [self prepareToPlay];
+}
+
 - (void)setPlaybackState:(FMAudioPlayerPlaybackState)playbackState {
+    if(_playbackState == playbackState) return;
+    
     _playbackState = playbackState;
     NSLog(@"Posting new playback state: %i", _playbackState);
     [[NSNotificationCenter defaultCenter] postNotificationName:FMAudioPlayerPlaybackStateDidChangeNotification object:self];
@@ -386,7 +396,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
         else if(_isClientPaused) {
             [self setPlaybackState:FMAudioPlayerPlaybackStatePaused];
         }
-        else {
+        else if(_isTryingToPlay) {
             [self setPlaybackState:FMAudioPlayerPlaybackStateStalled];
         }
 	}
@@ -422,23 +432,28 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     if(![self isPreparedToPlay]) {
         [self prepareToPlay];
     }
-    else if(!_isInternalPaused) {
+    else {  //if(!_isInternalPaused) {
         NSLog(@"Telling _player Play");
         [_player play];
+        _isTryingToPlay = YES;
         _playImmediately = NO;
     }
 }
 
 - (void)pause {
     _isClientPaused = YES;
+    _isTryingToPlay = NO;
     [_player pause];
     [self.session updatePlay:[self currentPlaybackTime]];
 }
 
 - (void)stop {
     NSLog(@"Stop Called");
+    _isTryingToPlay = NO;
+    _isClientPaused = NO;
     [_player pause];
     [_player removeAllItems];
+    [self setPlaybackState:FMAudioPlayerPlaybackStateComplete];
 }
 
 - (void)skip {

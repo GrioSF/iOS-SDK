@@ -102,6 +102,8 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     if([activeStation isEqual:_activeStation]) return;
 
     _activeStation = [activeStation copy];
+    self.currentItem = nil;
+    self.nextItem = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActiveStationChangedNotification object:self userInfo:nil];
     //todo: any other sideeffects? Clear out current/next items?
 }

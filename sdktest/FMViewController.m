@@ -120,6 +120,7 @@
             [self.playButton setEnabled:NO];    //if no more items, don't let the user mash the button
             [self.skipButton setEnabled:NO];
             [self cancelProgressTimer];
+            [self.progressView setProgress:0.0];
             break;
 //        case FMAudioPlayerPlaybackStateSkip:
 //            [self updateLabels];
@@ -179,12 +180,12 @@
 }
 
 #pragma mark - Progress Bar
-- (void) cancelProgressTimer {
+- (void)cancelProgressTimer {
     [_progressTimer invalidate];
     _progressTimer = nil;
 }
 
-- (void) startProgressTimer {
+- (void)startProgressTimer {
     [_progressTimer invalidate];
     _progressTimer = [NSTimer scheduledTimerWithTimeInterval:kFMProgressBarUpdateTimeInterval
                                                      target:self
@@ -193,7 +194,7 @@
                                                     repeats:YES];
 }
 
-- (void) updateProgress:(NSTimer *)timer {
+- (void)updateProgress:(NSTimer *)timer {
     NSTimeInterval duration = self.feedPlayer.currentItemDuration;
     if(duration > 0) {
         self.progressView.progress = (self.feedPlayer.currentPlaybackTime / duration);
