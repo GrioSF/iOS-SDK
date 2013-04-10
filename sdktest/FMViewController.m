@@ -115,17 +115,17 @@
             [self.skipButton setEnabled:YES];
             [self startProgressTimer];
             break;
+        case FMAudioPlayerPlaybackStateRequestingSkip:
+            [self showPlayButtonSpinner];
+            [self.playButton setEnabled:NO];
+            [self.skipButton setEnabled:NO];
         case FMAudioPlayerPlaybackStateComplete:
             [self updateLabels];
-            [self.playButton setEnabled:NO];    //if no more items, don't let the user mash the button
+            [self.playButton setEnabled:NO];
             [self.skipButton setEnabled:NO];
             [self cancelProgressTimer];
             [self.progressView setProgress:0.0];
             break;
-//        case FMAudioPlayerPlaybackStateSkip:
-//            [self updateLabels];
-//            [self.skipButton setEnabled:NO];    //if no more items, don't let the user mash the button
-//            [self cancelProgressTimer];
         default:
             break;
     };

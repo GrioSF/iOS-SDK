@@ -86,10 +86,14 @@ extern NSString *const FMSessionActiveStationChangedNotification;
     May fail if the user is out of skips, in which case the delegate will be notified.
  */
 - (void)requestSkip;
+- (void)requestSkipWithSuccess:(void (^)(void))success
+                       failure:(void (^)(NSError *error))failure;
 
 /**
  Behaves like `-requestSkip`, but ignores the user's skip limit. Use only to resolve system issues, e.g. unplayable track
  */
 - (void)requestSkipIgnoringLimit;
+- (void)requestSkipIgnoringLimitWithSuccess:(void (^)(void))success
+                                    failure:(void (^)(NSError *error))failure;
 
 @end

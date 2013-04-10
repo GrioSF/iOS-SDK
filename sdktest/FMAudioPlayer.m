@@ -129,6 +129,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
         NSLog(@"Requesting item");
         //FMSession will ignore requestNextTrack if a request is already in progress, then we'll get a callback when it's ready
         //todo: make sure we actually have a session, and that session has a placement/station/etc
+        //todo: if there's an error, we won't get a callback. Is it ok to stay in WaitingForItem forever, or do we need a solution?
         [self.session requestNextTrack];
         return;
     }
@@ -153,13 +154,6 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
                             });
          }];
     }
-}
-
--(void)assetFailedToPrepareForPlayback:(NSError *)error {
-    NSLog(@"Asset failed to prepare: %@", error);
-    //todo: cleanup
-    //todo: throw error
-    //todo: attempt to reload/load next asset
 }
 
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys {
@@ -189,7 +183,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 								   localizedDescription, NSLocalizedDescriptionKey,
 								   localizedFailureReason, NSLocalizedFailureReasonErrorKey,
 								   nil];
-		NSError *assetCannotBePlayedError = [NSError errorWithDomain:@"StitchedStreamPlayer" code:0 userInfo:errorDict];
+		NSError *assetCannotBePlayedError = [NSError errorWithDomain:@"FMAudioPlayerErrorDomain" code:0 userInfo:errorDict];
 
         /* Display the error to the user. */
         [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
@@ -225,6 +219,27 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 //            }
 //        }];
 //    }
+}
+
+-(void)assetFailedToPrepareForPlayback:(NSError *)error {
+    NSLog(@"Asset failed to prepare: %@", error);
+    //todo: cleanup
+    //todo: throw error
+    //todo: attempt to reload/load next asset
+}
+
+- (void)assetReadyForPlayback {
+    //todo: only set this state if we're not currently playing and it's the active item
+    if(_player.rate == 0.0) {
+        [self setPlaybackState:FMAudioPlayerPlaybackStateReadyToPlay];
+    }
+    else {
+        [self setPlaybackState:FMAudioPlayerPlaybackStatePlaying];
+    }
+    if(_playImmediately) {
+        NSLog(@"Playing immediately");
+        [self play];
+    }
 }
 
 #pragma mark - Player Item Notifications
@@ -274,7 +289,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     if([_player.items count] < 2) {
         NSLog(@"Player Queue empty, preparing to play a new one");
         [self prepareToPlay];
-        [self setPlaybackState: FMAudioPlayerPlaybackStateWaitingForItem];
+        [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
     }
 }
 
@@ -291,6 +306,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     //todo: recover!
 }
 
+// NOTE: This notification only gets called on iOS 6. Need to make sure any stall handling here is equivalent / doesn't conflict with the iOS 5 behavior.
 - (void)playerItemStalled:(NSNotification *)notification {
     if(![NSThread isMainThread]) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -301,7 +317,6 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
     NSLog(@"Stalled");
     [self setPlaybackState:FMAudioPlayerPlaybackStateStalled];
     //todo: try to recover from stall
-    //todo: check if this is equivalent to existing iOS 5 tests for stalled-ness
 }
 
 #pragma mark - State Handling
@@ -310,16 +325,13 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 //todo: do we need to use the currentItemChanged notification to check for skip success?
 - (void)setSession:(FMSession *)session {
     if(_session) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:FMSessionNextItemAvailableNotification object:_session];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:FMSessionActivePlacementChangedNotification object:_session];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:FMSessionActiveStationChangedNotification object:_session];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_session];
     }
     _session = session;
     if(_session) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionReceivedItem:) name:FMSessionNextItemAvailableNotification object:_session];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(placementChanged:) name:FMSessionActivePlacementChangedNotification object:_session];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationChanged:) name:FMSessionActiveStationChangedNotification object:_session];
-
     }
 }
 
@@ -349,6 +361,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
         case AVPlayerStatusUnknown:
         {
             NSLog(@"Observed AVPlayerStatusUnknown");
+            //anything to do?
         }
             break;
 
@@ -358,12 +371,7 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
              [playerItem status] == AVPlayerItemStatusReadyToPlay,
              its duration can be fetched from the item. */
             NSLog(@"Observed AVPlayerStatusReadyToPlay");
-            //todo: only set this state if we're not currently playing and it's the active item
-            [self setPlaybackState:FMAudioPlayerPlaybackStateReadyToPlay];
-            if(_playImmediately) {
-                NSLog(@"Playing immediately");
-                [self play];
-            }
+            [self assetReadyForPlayback];
         }
             break;
 
@@ -437,6 +445,9 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
         [_player play];
         _isTryingToPlay = YES;
         _playImmediately = NO;
+        if(_player.rate > 0.0) {
+            [self setPlaybackState:FMAudioPlayerPlaybackStatePlaying];
+        }
     }
 }
 
@@ -457,7 +468,16 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 }
 
 - (void)skip {
-    
+    NSLog(@"Skip Called");
+    FMAudioPlayerPlaybackState originalState = self.playbackState;
+    AVPlayerItem *itemToRemove = _player.currentItem;
+    [self setPlaybackState:FMAudioPlayerPlaybackStateRequestingSkip];
+    [self.session requestSkipWithSuccess:^{
+        [_player removeItem:itemToRemove];
+        [self play];
+    } failure:^(NSError *error) {
+        [self setPlaybackState:originalState];
+    }];
 }
 
 @end

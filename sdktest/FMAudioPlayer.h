@@ -18,6 +18,7 @@ typedef enum FMAudioPlayerPlaybackState : NSUInteger {
     FMAudioPlayerPlaybackStatePlaying,
     FMAudioPlayerPlaybackStatePaused,
     FMAudioPlayerPlaybackStateStalled,
+    FMAudioPlayerPlaybackStateRequestingSkip,
     FMAudioPlayerPlaybackStateComplete
 } FMAudioPlayerPlaybackState;
 

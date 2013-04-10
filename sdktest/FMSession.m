@@ -352,11 +352,18 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     [self sendRequest:completeRequest];
 }
 
-//todo: What is full behavior on success? do we automatically initiate a nextTrack?
-- (void)requestSkip:(BOOL)forced {
+- (void)requestSkip:(BOOL)forced
+        withSuccess:(void (^)(void))success
+            failure:(void (^)(NSError *error))failure {
+    
     FMAPIRequest *skipRequest = [FMAPIRequest requestSkip:self.currentItem.playId force:forced elapsed:-1];
     skipRequest.successBlock = ^(NSDictionary *result) {
+        NSLog(@"Skip success");
         self.currentItem = nil;
+        [self requestNextTrack];
+        if(success) {
+            success();
+        }
     };
     skipRequest.failureBlock = ^(NSError *error) {
         if([[error domain] isEqualToString:FMAPIErrorDomain] && [error code] == FMErrorCodeInvalidSkip) {
@@ -365,15 +372,29 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
         else {
             NSLog(@"ERROR: Failed to skip: %@", error);
         }
+        if(failure) {
+            failure(error);
+        }
     };
+    [self sendRequest:skipRequest];
 }
 
 - (void)requestSkip {
-    [self requestSkip:NO];
+    [self requestSkip:NO withSuccess:nil failure:nil];
+}
+
+- (void)requestSkipWithSuccess:(void (^)(void))success
+                       failure:(void (^)(NSError *error))failure {
+    [self requestSkip:NO withSuccess:success failure:failure];
 }
 
 - (void)requestSkipIgnoringLimit {
-    [self requestSkip:YES];
+    [self requestSkip:YES withSuccess:nil failure:nil];
+}
+
+- (void)requestSkipIgnoringLimitWithSuccess:(void (^)(void))success
+                                    failure:(void (^)(NSError *error))failure {
+    [self requestSkip:YES withSuccess:success failure:failure];
 }
 
 @end
