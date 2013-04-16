@@ -16,12 +16,12 @@ Definitions
 
 *Station*: A station is a collection of music that you select using the dashboard at [http://feed.fm/][2]. One station can be assigned to multiple placements.
 
-*Client Token and Client Secret*: When you create an account at [http://feed.fm/][3], you are issued a unique client token and secret. These keys are used to identify your app to the Feed Media API.
+*Client Token* and *Client Secret*: When you create an account at [http://feed.fm/][3], you are issued a unique client token and secret. These keys are used to identify your app to the Feed Media API.
 
 Adding Files
 ============
 
-1. Add the SDK to your project: File --> Add Files to "<Your Project>"...
+1. Add the SDK to your project: File --&gt; Add Files to "&lt;Your Project&gt;"...
     1. Chose the "Feed SDK" folder in the dialog
     2. For "Destination", check "Copy items into destination group's folder (if needed)"
     3. For "Folders", select "Create groups for any added folders"
