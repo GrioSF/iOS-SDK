@@ -10,6 +10,7 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import "FMAPIRequest.h"
 #import "FMAuth+Base64.h"
+#import "FMLog.h"
 
 #define kFMNonceabet "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #define kFMNonceabetLength 62
@@ -126,7 +127,7 @@ static inline NSString *FM_URLDecodeString(NSString *string) {
 }
 
 - (NSURLRequest *)authenticatedURLRequest:(FMAPIRequest *)request {
-    NSLog(@"Authenticating request using token/secret/cuuid %@/%@/%@",self.clientToken,self.clientSecret,self.cuuid);
+    FMLogDebug(@"Authenticating request using token/secret/cuuid %@/%@/%@",self.clientToken,self.clientSecret,self.cuuid);
 
     if(![FMAuth isValidString:self.clientToken] || ![FMAuth isValidString:self.clientSecret]) {
         return nil;
@@ -141,7 +142,7 @@ static inline NSString *FM_URLDecodeString(NSString *string) {
     }
     NSDictionary *oauthHeaders = [self oauthHeaders];   //NOTE: this generates nonce & timestamp
     NSString *signatureBaseString = [self signatureBaseString:request withOAuthHeaders:oauthHeaders];
-    NSLog(@"Generated SBS: %@",signatureBaseString);
+    FMLogDebug(@"Generated SBS: %@",signatureBaseString);
     NSString *key = [NSString stringWithFormat:@"%@&",FM_URLEncodeString(self.clientSecret)];
     NSData *hash = HMAC_SHA256(key, signatureBaseString);
     NSString *base64hash = [FMAuth base64EncodedStringFromData:hash];
@@ -154,7 +155,7 @@ static inline NSString *FM_URLDecodeString(NSString *string) {
     NSMutableURLRequest *urlRequest = [[request urlRequest] mutableCopy];
     [urlRequest addValue:oauthString forHTTPHeaderField:@"Authorization"];
 
-    NSLog(@"Returning urlRequest: %@\nHeaders: %@", urlRequest,[urlRequest allHTTPHeaderFields]);
+    FMLogDebug(@"Returning urlRequest: %@\nHeaders: %@", urlRequest,[urlRequest allHTTPHeaderFields]);
     return urlRequest;
 }
 

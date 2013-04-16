@@ -14,6 +14,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    FMLogSetLevel(FMLogLevelDebug);
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     FMViewController *viewController = [[FMViewController alloc] initWithNibName:@"FMViewController" bundle:nil];

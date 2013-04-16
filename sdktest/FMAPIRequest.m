@@ -8,6 +8,7 @@
 
 #import "FMAPIRequest.h"
 #import "FMError.h"
+#import "FMLog.h"
 
 #define kFeedAPILocation @"http://feed.fm/api/v2/"
 #define kFeedSDKVersion @"1.0"
@@ -60,7 +61,7 @@
 
 + (FMAPIRequest *)requestPlayInPlacement:(NSString *)placementId withStation:(NSString *)stationId {
     if(placementId == nil || [placementId isEqualToString:@""]) {
-        NSLog(@"ERROR: placementId must not be nil");
+        FMLogError(@"ERROR: placementId must not be nil");
         return nil;
     }
     FMAPIRequest *request = [[FMAPIRequest alloc] init];
@@ -163,7 +164,7 @@
 }
 
 - (void)failWithError:(NSError *)error {
-    NSLog(@"Request failing with error: %@", error);
+    FMLogDebug(@"Request failing with error: %@", error);
     self.error = error;
     if(self.failureBlock) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -208,7 +209,7 @@
         [urlRequest setValue: @"text/text; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     }
     else {
-        NSLog(@"Warning: Unexpected http method: %@",self.httpMethod);
+        FMLogWarn(@"Warning: Unexpected http method: %@",self.httpMethod);
     }
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [urlRequest setValue:[FMAPIRequest userAgent] forHTTPHeaderField:@"User-Agent"];
@@ -250,10 +251,10 @@
 - (void)send {
     NSURLRequest *urlRequest = nil;
     if(self.authRequired) {
-        NSLog(@"Trying to send request with auth: %@", self.auth);
+        FMLogDebug(@"Trying to send request with auth: %@", self.auth);
         urlRequest = [self.auth authenticatedURLRequest:self];
         if(urlRequest == nil) {
-            NSLog(@"ERROR: Tried to send API Request but no authentication available: %@", self);
+            FMLogError(@"ERROR: Tried to send API Request but no authentication available: %@", self);
             [self failWithError:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeInvalidCredentials userInfo:nil]];
             return;
         }
@@ -261,7 +262,7 @@
     else {
         urlRequest = [self urlRequest];
     }
-    NSLog(@"Sending request with endpoint, body: %@\n%@",urlRequest.URL.absoluteString,[[NSString alloc] initWithData:urlRequest.HTTPBody encoding:NSUTF8StringEncoding]);
+    FMLogDebug(@"Sending request with endpoint, body: %@\n%@",urlRequest.URL.absoluteString,[[NSString alloc] initWithData:urlRequest.HTTPBody encoding:NSUTF8StringEncoding]);
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSHTTPURLResponse *response = nil;

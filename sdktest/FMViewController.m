@@ -12,7 +12,6 @@
 #import "FMStation.h"
 #import "FMAudioItem.h"
 #import "FMProgressView.h"
-#import "FMError.h"
 
 #define kFMSessionClientToken @"e518c7bb995c28ea12deb8ddc9b6458c41005f56"
 #define kFMSessionClientSecret @"512cac1423f76a4b25235fa0afb092013b68f7d8"
@@ -59,11 +58,11 @@
     self.progressView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
 
     [self.playerContainer addSubview:self.progressView];
-
+    
     [FMSession setClientToken:kFMSessionClientToken
                        secret:kFMSessionClientSecret];
     [[FMSession sharedSession] setPlacement:kFMSessionPlacementId];
-    NSLog(@"Set placement: %@", [FMSession sharedSession].activePlacementId);
+    FMLogDebug(@"Set placement: %@", [FMSession sharedSession].activePlacementId);
     [[FMSession sharedSession] setDelegate:self];
     self.feedPlayer = [[FMAudioPlayer alloc] initWithSession:[FMSession sharedSession]];
 
@@ -87,7 +86,7 @@
 
 - (void)playerUpdated:(NSNotification *)notification {
     FMAudioPlayerPlaybackState newState = self.feedPlayer.playbackState;
-    NSLog(@"Got playback state: %i", newState);
+    FMLogDebug(@"Got playback state: %i", newState);
     switch(newState) {
         case FMAudioPlayerPlaybackStateWaitingForItem:
             [self showPlayButtonSpinner];

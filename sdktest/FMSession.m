@@ -11,7 +11,6 @@
 #import "FMAPIRequest.h"
 #import "FMStation.h"
 #import "FMAudioItem.h"
-#import "FMError.h"
 
 #define kFMAuthStoragePath @"FeedMedia/"
 #define kFMAuthStorageName @"FMAuth.plist"
@@ -37,7 +36,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 + (void)setClientToken:(NSString *)token secret:(NSString *)secret {
 
     if(token == nil || [token isEqualToString:@""] || secret == nil || [secret isEqualToString:@""]) {
-        NSLog(@"ERROR: FMSession must be initialized with a token and secret");
+        FMLogError(@"ERROR: FMSession must be initialized with a token and secret");
         return;
     }
     [[FMSession sharedSession] cancelOutstandingRequests];
@@ -76,7 +75,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
     _nextItem = nextItem;
     if(nextItem != nil) {
-        NSLog(@"Next Item Set, sending Notification");
+        FMLogDebug(@"Next Item Set, sending Notification");
         [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionNextItemAvailableNotification object:self userInfo:nil];
     }
 }
@@ -122,7 +121,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
             NSError *error = nil;
             [[NSFileManager defaultManager] createDirectoryAtPath:saveDirectory withIntermediateDirectories:YES attributes:nil error:&error];
             if(error) {
-                NSLog(@"ERROR: Failed to save Feed Media cuuid");
+                FMLogError(@"ERROR: Failed to save Feed Media cuuid");
             }
         }
     }
@@ -139,7 +138,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
         }
     };
     timeRequest.failureBlock = ^(NSError *error) {
-        NSLog(@"ERROR: FeedMedia Failed to synchronize clock to server: %@",error);
+        FMLogError(@"ERROR: FeedMedia Failed to synchronize clock to server: %@",error);
     };
     [timeRequest send];
 }
@@ -159,10 +158,10 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
         }
     };
     cuuidRequest.failureBlock = ^(NSError *error) {
-        NSLog(@"ERROR: FeedMedia failed to obtain cuuid: %@",error);
+        FMLogError(@"ERROR: FeedMedia failed to obtain cuuid: %@",error);
     };
-    NSLog(@"Sending cuuid Request");
-    NSLog(@"Cuuid request has auth: %@",cuuidRequest.auth);
+    FMLogDebug(@"Sending cuuid Request");
+    FMLogDebug(@"Cuuid request has auth: %@",cuuidRequest.auth);
     [cuuidRequest send];
 }
 
@@ -336,13 +335,13 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 }
 
 - (void)nextTrackSucceeded:(FMAudioItem *)nextItem {
-    NSLog(@"Next Track Succeeded: %@",nextItem);
+    FMLogDebug(@"Next Track Succeeded: %@",nextItem);
     _nextTrackInProgress = NO;
     self.nextItem = nextItem;
 }
 
 - (void)nextTrackFailed:(NSError *)error {
-    NSLog(@"Next Track Failed: %@",error);
+    FMLogDebug(@"Next Track Failed: %@",error);
     _nextTrackInProgress = NO;
 
     if(self.delegate && [self.delegate respondsToSelector:@selector(session:didFailToReceiveItem:)]) {
@@ -356,7 +355,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
     FMAPIRequest *playRequest = [FMAPIRequest requestStart:self.currentItem.playId];
     playRequest.failureBlock = ^(NSError *error) {
-        NSLog(@"ERROR: Failed to start play on %@. Next item will not be available! %@", self.currentItem, error);
+        FMLogError(@"ERROR: Failed to start play on %@. Next item will not be available! %@", self.currentItem, error);
     };
     [self sendRequest:playRequest];
 }
@@ -372,7 +371,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
     FMAPIRequest *completeRequest = [FMAPIRequest requestComplete:playId];
     completeRequest.failureBlock = ^(NSError *error) {
-        NSLog(@"ERROR: Failed to register play completion: %@. Next item will not be available!", error);
+        FMLogError(@"ERROR: Failed to register play completion: %@. Next item will not be available!", error);
     };
     [self sendRequest:completeRequest];
 }
@@ -383,7 +382,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     
     FMAPIRequest *skipRequest = [FMAPIRequest requestSkip:self.currentItem.playId force:forced elapsed:-1];
     skipRequest.successBlock = ^(NSDictionary *result) {
-        NSLog(@"Skip success");
+        FMLogDebug(@"Skip success");
         self.currentItem = nil;
         [self requestNextTrack];
         if(success) {
@@ -391,7 +390,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
         }
     };
     skipRequest.failureBlock = ^(NSError *error) {
-        NSLog(@"ERROR: Failed to skip: %@", error);
+        FMLogWarn(@"Failed to skip: %@", error);
         if(failure) {
             failure(error);
         }

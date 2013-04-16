@@ -121,14 +121,14 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 #pragma mark - Item Handling
 
 - (void)prepareToPlay {
-    NSLog(@"Prepare To Play");
+    FMLogDebug(@"Prepare To Play");
     if([_player.items count] > 1) {
-        NSLog(@"Already have items, ignoring");
+        FMLogDebug(@"Already have items, ignoring");
         //already have a playing item, no need for additional preparation
         return;
     }
     if(!self.session.nextItem) {
-        NSLog(@"Requesting item");
+        FMLogDebug(@"Requesting item");
         //FMSession will ignore requestNextTrack if a request is already in progress, then we'll get a callback when it's ready
         //todo: make sure we actually have a session, and that session has a placement/station/etc
         //todo: if there's an error, we won't get a callback. Is it ok to stay in WaitingForItem forever, or do we need a solution?
@@ -138,11 +138,11 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 }
 
 - (void)sessionReceivedItem:(NSNotification *)notification {
-    NSLog(@"Session Received Item");
+    FMLogDebug(@"Session Received Item");
     if(self.session.nextItem) {
         NSURL *itemUrl = self.session.nextItem.contentUrl;
         //todo: write guard against nil url
-        NSLog(@"Requesting asset for %@",itemUrl);
+        FMLogDebug(@"Requesting asset for %@",itemUrl);
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:itemUrl options:nil];
         NSArray *requestedKeys = [NSArray arrayWithObjects:kTracksKey, kPlayableKey, nil];
 
@@ -159,7 +159,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 }
 
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys {
-    NSLog(@"Prepare to play asset");
+    FMLogDebug(@"Prepare to play asset");
     /* Make sure that the value of each key has loaded successfully. */
 	for (NSString *thisKey in requestedKeys)
 	{
@@ -201,7 +201,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
     /* Make our new AVPlayerItem the AVPlayer's current item. */
     [_player insertItem:nextItem afterItem:nil];
-    NSLog(@"Added item to queue");
+    FMLogDebug(@"Added item to queue");
 
     //If we want to try prerolling, delete the above block and put all this into effect AFTER readyToPlay KVO is triggered
 //    if([_player.items count] == 1) {
@@ -224,7 +224,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error {
-    NSLog(@"Asset failed to prepare: %@", error);
+    FMLogWarn(@"Asset failed to prepare: %@", error);
     //todo: cleanup
     //todo: throw error
     //todo: attempt to reload/load next asset
@@ -239,7 +239,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         [self setPlaybackState:FMAudioPlayerPlaybackStatePlaying];
     }
     if(_playImmediately) {
-        NSLog(@"Playing immediately");
+        FMLogDebug(@"Playing immediately");
         [self play];
     }
 }
@@ -284,12 +284,12 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         });
         return;
     }
-    NSLog(@"Item reached end");
+    FMLogDebug(@"Item reached end");
     [self unregisterForPlayerItemNotifications:notification.object];
     [self.session playCompleted];
     self.playbackState = FMAudioPlayerPlaybackStateComplete;
     if([_player.items count] < 2) {
-        NSLog(@"Player Queue empty, preparing to play a new one");
+        FMLogDebug(@"Player Queue empty, preparing to play a new one");
         [self prepareToPlay];
         [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
     }
@@ -304,7 +304,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     }
 
     [self unregisterForPlayerItemNotifications:notification.object];
-    NSLog(@"Item failed to reach end: %@", notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey]);
+    FMLogDebug(@"Item failed to reach end: %@", notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey]);
     //todo: recover!
 }
 
@@ -316,7 +316,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         });
         return;
     }
-    NSLog(@"Stalled");
+    FMLogDebug(@"Stalled");
     [self setPlaybackState:FMAudioPlayerPlaybackStateStalled];
     //todo: try to recover from stall
 }
@@ -338,12 +338,12 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 }
 
 - (void)placementChanged:(NSNotification *)notification {
-    NSLog(@"Placement Changed");
+    FMLogDebug(@"Placement Changed");
     [self stop];
 }
 
 - (void)stationChanged:(NSNotification *)notification {
-    NSLog(@"Station Changed");
+    FMLogDebug(@"Station Changed");
     [self stop];
     [self prepareToPlay];
 }
@@ -352,7 +352,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     if(_playbackState == playbackState) return;
     
     _playbackState = playbackState;
-    NSLog(@"Posting new playback state: %i", _playbackState);
+    FMLogDebug(@"Posting new playback state: %i", _playbackState);
     [[NSNotificationCenter defaultCenter] postNotificationName:FMAudioPlayerPlaybackStateDidChangeNotification object:self];
 }
 
@@ -362,7 +362,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
              it has not tried to load new media resources for playback */
         case AVPlayerStatusUnknown:
         {
-            NSLog(@"Observed AVPlayerStatusUnknown");
+            FMLogDebug(@"Observed AVPlayerStatusUnknown");
             //anything to do?
         }
             break;
@@ -372,14 +372,14 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
             /* Once the AVPlayerItem becomes ready to play, i.e.
              [playerItem status] == AVPlayerItemStatusReadyToPlay,
              its duration can be fetched from the item. */
-            NSLog(@"Observed AVPlayerStatusReadyToPlay");
+            FMLogDebug(@"Observed AVPlayerStatusReadyToPlay");
             [self assetReadyForPlayback];
         }
             break;
 
         case AVPlayerStatusFailed:
         {
-            NSLog(@"Observed AVPlayerStatusFailed");
+            FMLogDebug(@"Observed AVPlayerStatusFailed");
             [self assetFailedToPrepareForPlayback:playerItem.error];
         }
             break;
@@ -416,7 +416,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
      replacement will/did occur. */
 	else if (context == FMAudioPlayerCurrentItemObservationContext) {
         AVPlayerItem *newPlayerItem = [change objectForKey:NSKeyValueChangeNewKey];
-        NSLog(@"Observed current item change to: %@",newPlayerItem);
+        FMLogDebug(@"Observed current item change to: %@",newPlayerItem);
         /* New player item null? */
         if (newPlayerItem == (id)[NSNull null]) {
         }
@@ -435,7 +435,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 #pragma mark - Playback
 
 - (void)play {
-    NSLog(@"Play Called");
+    FMLogDebug(@"Play Called");
     _isClientPaused = NO;
     _playImmediately = YES;
 
@@ -443,7 +443,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         [self prepareToPlay];
     }
     else {  //if(!_isInternalPaused) {
-        NSLog(@"Telling _player Play");
+        FMLogDebug(@"Telling _player Play");
         [_player play];
         _isTryingToPlay = YES;
         _playImmediately = NO;
@@ -461,7 +461,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 }
 
 - (void)stop {
-    NSLog(@"Stop Called");
+    FMLogDebug(@"Stop Called");
     _isTryingToPlay = NO;
     _isClientPaused = NO;
     [_player pause];
@@ -470,7 +470,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 }
 
 - (void)skip {
-    NSLog(@"Skip Called");
+    FMLogDebug(@"Skip Called");
     FMAudioPlayerPlaybackState originalState = self.playbackState;
     AVPlayerItem *itemToRemove = _player.currentItem;
     [self setPlaybackState:FMAudioPlayerPlaybackStateRequestingSkip];

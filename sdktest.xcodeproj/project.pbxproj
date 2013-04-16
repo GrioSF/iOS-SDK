@@ -37,6 +37,7 @@
 		C1A9284516EE6E6C006C6963 /* FMAPIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284416EE6E6C006C6963 /* FMAPIRequest.m */; };
 		C1A9284816EE8BE3006C6963 /* FMAuth+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284716EE8BE3006C6963 /* FMAuth+Base64.m */; };
 		C1A9284B16EE92C7006C6963 /* FMStation.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284A16EE92C6006C6963 /* FMStation.m */; };
+		C1AAE4FD171DD57400483F13 /* FMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AAE4FC171DD57400483F13 /* FMLog.m */; };
 		C1B11589170A273500DA8041 /* FMStationPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B11588170A273500DA8041 /* FMStationPickerViewController.m */; };
 		C1BF242416FA211A007909CB /* FMError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1BF242316FA211A007909CB /* FMError.m */; };
 /* End PBXBuildFile section */
@@ -88,6 +89,8 @@
 		C1A9284916EE92C6006C6963 /* FMStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStation.h; sourceTree = "<group>"; };
 		C1A9284A16EE92C6006C6963 /* FMStation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStation.m; sourceTree = "<group>"; };
 		C1A9284C16EFDB52006C6963 /* FMError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMError.h; sourceTree = "<group>"; };
+		C1AAE4FB171DD4A200483F13 /* FMLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMLog.h; sourceTree = "<group>"; };
+		C1AAE4FC171DD57400483F13 /* FMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMLog.m; sourceTree = "<group>"; };
 		C1B11587170A273500DA8041 /* FMStationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStationPickerViewController.h; sourceTree = "<group>"; };
 		C1B11588170A273500DA8041 /* FMStationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStationPickerViewController.m; sourceTree = "<group>"; };
 		C1BF242316FA211A007909CB /* FMError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMError.m; sourceTree = "<group>"; };
@@ -194,6 +197,7 @@
 				C1A429A216E96833001BD576 /* FMAudioItem.h */,
 				C1A9284916EE92C6006C6963 /* FMStation.h */,
 				C1A9284C16EFDB52006C6963 /* FMError.h */,
+				C1AAE4FB171DD4A200483F13 /* FMLog.h */,
 				C1A429A516E969E9001BD576 /* Internal */,
 			);
 			name = "Feed SDK";
@@ -207,6 +211,7 @@
 				C1A429A316E96833001BD576 /* FMAudioItem.m */,
 				C1A9284A16EE92C6006C6963 /* FMStation.m */,
 				C1BF242316FA211A007909CB /* FMError.m */,
+				C1AAE4FC171DD57400483F13 /* FMLog.m */,
 				C1A9284316EE6E6C006C6963 /* FMAPIRequest.h */,
 				C1A9284416EE6E6C006C6963 /* FMAPIRequest.m */,
 				C1A429A916E96A0C001BD576 /* FMAuth.h */,
@@ -309,6 +314,7 @@
 				C1BF242416FA211A007909CB /* FMError.m in Sources */,
 				C1B11589170A273500DA8041 /* FMStationPickerViewController.m in Sources */,
 				C108F23D1714B9EC0096DF46 /* FMProgressView.m in Sources */,
+				C1AAE4FD171DD57400483F13 /* FMLog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

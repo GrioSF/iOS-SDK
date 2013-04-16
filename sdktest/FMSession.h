@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FMError.h"
+#import "FMLog.h"
+
 @class FMAudioItem, FMSession, FMStation;
 
 typedef enum FMAudioFormat : NSUInteger {
@@ -39,7 +42,6 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 @property (nonatomic) FMAudioFormat *preferredCodec;    //defaults to FMAudioFormatAny (not yet supported)
 @property (nonatomic, readonly) FMAudioItem *currentItem;
 @property (nonatomic, readonly) FMAudioItem *nextItem;
-@property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog (consider moving to separate debug header with more powerful options, e.g. log levels and output options) (not yet supported)
 
 + (void)setClientToken:(NSString *)token secret:(NSString *)secret;
 + (FMSession *)sharedSession;
