@@ -12,6 +12,7 @@
 #import "FMStation.h"
 #import "FMAudioItem.h"
 #import "FMProgressView.h"
+#import "FMError.h"
 
 #define kFMSessionClientToken @"e518c7bb995c28ea12deb8ddc9b6458c41005f56"
 #define kFMSessionClientSecret @"512cac1423f76a4b25235fa0afb092013b68f7d8"
@@ -150,8 +151,11 @@
 }
 
 - (void)skipFailed:(NSNotification *)notification {
-    UIAlertView *noSkipAlert = [[UIAlertView alloc] initWithTitle:@"No More Skips" message:@"Sorry, you‘ve reached your skip limit for this station. Skips will replenish over time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [noSkipAlert show];
+    NSError *error = notification.userInfo[FMAudioPlayerSkipFailureErrorKey];
+    if([[error domain] isEqualToString:FMAPIErrorDomain] && [error code] == FMErrorCodeSkipLimitExceeded) {
+        UIAlertView *noSkipAlert = [[UIAlertView alloc] initWithTitle:@"No More Skips" message:@"Sorry, you‘ve reached your skip limit for this station. Skips will replenish over time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [noSkipAlert show];
+    }
 }
 
 - (void)showPlayButtonSpinner {

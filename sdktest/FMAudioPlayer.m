@@ -18,6 +18,7 @@ static void *FMAudioPlayerPlayerItemStatusObserverContext = &FMAudioPlayerPlayer
 
 NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlayerPlaybackStateDidChangeNotification";
 NSString *const FMAudioPlayerSkipFailedNotification = @"FMAudioPlayerSkipFailedNotification";
+NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErrorKey";
 
 #define kTracksKey @"tracks"
 #define kStatusKey @"status"
@@ -478,7 +479,7 @@ NSString *const FMAudioPlayerSkipFailedNotification = @"FMAudioPlayerSkipFailedN
         [self play];
     } failure:^(NSError *error) {
         [self setPlaybackState:originalState];
-        [[NSNotificationCenter defaultCenter] postNotificationName:FMAudioPlayerSkipFailedNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FMAudioPlayerSkipFailedNotification object:self userInfo:@{FMAudioPlayerSkipFailureErrorKey : error}];
     }];
 }
 

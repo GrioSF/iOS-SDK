@@ -12,6 +12,7 @@
 
 extern NSString *const FMAudioPlayerPlaybackStateDidChangeNotification;
 extern NSString *const FMAudioPlayerSkipFailedNotification;
+extern NSString *const FMAudioPlayerSkipFailureErrorKey;    //userInfo error key for FMAudioPlayerSkipFailedNotification
 
 typedef enum FMAudioPlayerPlaybackState : NSUInteger {
     FMAudioPlayerPlaybackStateWaitingForItem,
