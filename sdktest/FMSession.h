@@ -40,7 +40,7 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 @property (nonatomic, readonly) FMAudioItem *currentItem;
 @property (nonatomic, readonly) FMAudioItem *nextItem;
 @property (nonatomic, readonly) BOOL skipAvailable;
-@property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog (consider moving to separate debug header with more powerful options, e.g. log levels and output options)
+@property (nonatomic) BOOL debugLogEnabled;             //prints debug information to NSLog (consider moving to separate debug header with more powerful options, e.g. log levels and output options) (not yet supported)
 
 + (void)setClientToken:(NSString *)token secret:(NSString *)secret;
 + (FMSession *)sharedSession;
@@ -83,7 +83,10 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 
 /**
  If successful, `-requestSkip` will behave like `-playCompleted` by nilling out the currentItem in preparation for the next `-playStarted` call.
-    May fail if the user is out of skips, in which case the delegate will be notified.
+    May fail if the user is out of skips, in which case the delegate will be notified and the failure block (if any) will be called.
+ 
+ @param success Optional block to be called if the server grants the skip
+ @param failure Optional block to be called if the server rejects the skip
  */
 - (void)requestSkip;
 - (void)requestSkipWithSuccess:(void (^)(void))success
@@ -91,6 +94,9 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 
 /**
  Behaves like `-requestSkip`, but ignores the user's skip limit. Use only to resolve system issues, e.g. unplayable track
+ 
+ @param success Optional block to be called if the server grants the skip
+ @param failure Optional block to be called if the server rejects the skip
  */
 - (void)requestSkipIgnoringLimit;
 - (void)requestSkipIgnoringLimitWithSuccess:(void (^)(void))success
