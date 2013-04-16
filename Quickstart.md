@@ -69,7 +69,7 @@ Playing Music with FMAudioPlayer
 
     - (void)viewDidLoad {
         [super viewDidLoad];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSongMetadata:)name:FMSessionCurrentItemChangedNotification object:[[FMSession sharedSession]]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSongMetadata:) name:FMSessionCurrentItemChangedNotification object:[[FMSession sharedSession]]];
         // Your view controller's internal setup...
     }
 
