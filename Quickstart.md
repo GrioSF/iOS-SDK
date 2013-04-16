@@ -7,38 +7,41 @@ The Feed Media SDK for iOS allows you to play DMCA compliant radio within your i
 
 This quickstart guide assumes you will be using a single placement and the `FMAudioPlayer` class, which uses `AVFoundation` for audio playback: please see the full documentation if you're using multiple placements or you need to write your own playback engine.
 
-Before you begin, you should have an account at feed.fm and set up at least one *placement* and *station*. If you have not already done so, please go to [http://feed.fm/dashboard]. 
+Before you begin, you should have an account at feed.fm and set up at least one *placement* and *station*. If you have not already done so, please go to [http://feed.fm/][2]. 
 
 Definitions
 ===========
 
-*Placement*: A placement is a way to identify a location to play music in. It consists of one or more stations to pull music from, and budget rules to limit how much music to serve (on a per user or per placement basis). You may have one or more placements in your app. You can manage your placements at [http://feed.fm/dashboard].
+*Placement*: A placement is a way to identify a location to play music in. It consists of one or more stations to pull music from, and budget rules to limit how much music to serve (on a per user or per placement basis). You may have one or more placements in your app. You can manage your placements at [http://feed.fm/][2].
 
-*Station*: A station is a collection of music that you select using the dashboard at [http://feed.fm/dashboard]. One station can be assigned to multiple placements.
+*Station*: A station is a collection of music that you select using the dashboard at [http://feed.fm/][2]. One station can be assigned to multiple placements.
 
-*Client Token and Client Secret*: When you create an account at [http://feed.fm], you are issued a unique client token and secret. These keys are used to identify your app to the Feed Media API.
+*Client Token and Client Secret*: When you create an account at [http://feed.fm/][3], you are issued a unique client token and secret. These keys are used to identify your app to the Feed Media API.
 
 Adding Files
 ============
 
-1) Add the SDK to your project: File --> Add Files to "<Your Project>"...
-    1. Chose the "Feed SDK" folder in the dialog.
-    2. For "Destination", check "Copy items into destination group's folder (if needed)".
-    3. For "Folders", select "Create groups for any added folders".
-    4. For "Add to targets", check all targets where you'll be using the SDK.
-2) Link required libraries
+1. Add the SDK to your project: File --> Add Files to "<Your Project>"...
+    1. Chose the "Feed SDK" folder in the dialog
+    2. For "Destination", check "Copy items into destination group's folder (if needed)"
+    3. For "Folders", select "Create groups for any added folders"
+    4. For "Add to targets", check all targets where you'll be using the SDK
+2. Link required libraries
     1. Select your project in the Project Navigator
     2. Select your target
     3. Select the "Build Phases" tab
     4. Expand "Link Binary With Libraries"
-    5. Click the "+" to add CoreMedia.framework and AVFoundation.framework
+    5. Click the "+" to add `CoreMedia.framework` and `AVFoundation.framework`
 
 Initializing the SDK
 ====================
 
-1) In your Application Delegate, import FMSession with `#import "FMSession.h"` 
+1) In your Application Delegate, import FMSession
+
+    #import "FMSession.h"
+
 2) Set your client token and secret, placementId, and optionally set the log level:
-    
+
     -(BOOL)application:(UIApplication *)application 
                 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
@@ -54,13 +57,15 @@ Initializing the SDK
 Playing Music with FMAudioPlayer
 ================================
 
-1) In your View Controller, import FMAudioPlayer with `#import "FMAudioPlayer.h"` 
+1) In your View Controller, import FMAudioPlayer: 
 
-1) Initialize an FMAudioPlayer and store it in a property:
+    #import "FMAudioPlayer.h"
+
+2) Initialize an FMAudioPlayer and store it in a property:
 
     self.player = [[FMAudioPlayer alloc] initWithSession:[FMSession sharedSession]];
 
-2) Register for notifications to update your UI to display song metadata
+3) Register for notifications to update your UI to display song metadata
 
     - (void)viewDidLoad {
         [super viewDidLoad];
@@ -77,7 +82,7 @@ Playing Music with FMAudioPlayer
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
 
-3) Optionally request available stations:
+4) Optionally request available stations:
 
     [[FMSession sharedSession] requestStationsForPlacement:nil
                                                withSuccess:^(NSArray *stations) 
@@ -90,16 +95,22 @@ Playing Music with FMAudioPlayer
         NSLog(@"Failed to receive stations: %@", error);
     }];
 
-4) Optionally set a specific station to play (if this step is omitted, the player will use the active placement's default station):
+5) Optionally set a specific station to play (if this step is omitted, the player will use the active placement's default station):
 
-        FMStation *station = stations[i];   //assume user selected the ith station from a -requestStations call
-        [[FMSession sharedSession] setStation:station];
+    FMStation *station = stations[i];   //assume user selected the ith station from a -requestStations call
+    [[FMSession sharedSession] setStation:station];
 
-5) Begin playback:
+6) Begin playback:
 
     [self.player play];
 
+Managing your AudioSession
+==========================
 
+The Feed Media SDK does *not* modify your application's audio session. Please see Apple's [documentation on Audio Session Programming][4]. In particular, note that the default audio session category respects the silent switch, so you should make sure to either pause audio while the silent switch is active or choose a different category for your app.
 
 
 [1]: http://feed.fm/documentation
+[2]: http://feed.fm/dashboard
+[3]: http://feed.fm/
+[4]: http://developer.apple.com/library/ios/#documentation/Audio/Conceptual/AudioSessionProgrammingGuide/Introduction/Introduction.html
