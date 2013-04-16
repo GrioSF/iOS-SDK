@@ -11,6 +11,7 @@
 @class FMSession, FMAudioItem;
 
 extern NSString *const FMAudioPlayerPlaybackStateDidChangeNotification;
+extern NSString *const FMAudioPlayerSkipFailedNotification;
 
 typedef enum FMAudioPlayerPlaybackState : NSUInteger {
     FMAudioPlayerPlaybackStateWaitingForItem,

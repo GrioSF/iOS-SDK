@@ -157,6 +157,11 @@
     return self;
 }
 
+- (void)cancel {
+    self.successBlock = nil;
+    self.failureBlock = nil;
+}
+
 - (void)failWithError:(NSError *)error {
     NSLog(@"Request failing with error: %@", error);
     self.error = error;

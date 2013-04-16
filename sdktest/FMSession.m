@@ -24,12 +24,13 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 @interface FMSession () {
     FMAuth *_auth;
     NSMutableArray *_queuedRequests;
+    NSMutableArray *_requestsInProgress;
     BOOL _nextTrackInProgress;
 }
 @property FMAuth *auth;
 @property (nonatomic) FMAudioItem *currentItem;
 @property (nonatomic) FMAudioItem *nextItem;
-@property (nonatomic) BOOL skipAvailable;
+//@property (nonatomic) BOOL skipAvailable;
 @end
 
 @implementation FMSession
@@ -40,6 +41,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
         NSLog(@"ERROR: FMSession must be initialized with a token and secret");
         return;
     }
+    [[FMSession sharedSession] cancelOutstandingRequests];
     [FMSession sharedSession].auth.clientToken = token;
     [FMSession sharedSession].auth.clientSecret = secret;
 
@@ -61,6 +63,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 - (id)init {
     if(self = [super init]) {
         _queuedRequests = [[NSMutableArray alloc] init];
+        _requestsInProgress = [[NSMutableArray alloc] init];
         _auth = [self authFromDisk];
         if(_auth == nil) {
             _auth = [[FMAuth alloc] init];
@@ -94,7 +97,6 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     _activePlacementId = [activePlacementId copy];
     [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActivePlacementChangedNotification object:self userInfo:nil];
     self.activeStation = nil;
-    //todo: any other sideeffects? Clear out current/next items?
 }
 
 - (void)setStation:(FMStation *)activeStation {
@@ -102,10 +104,10 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     if([activeStation isEqual:_activeStation]) return;
 
     _activeStation = [activeStation copy];
+    [self cancelOutstandingRequests];
     self.currentItem = nil;
     self.nextItem = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActiveStationChangedNotification object:self userInfo:nil];
-    //todo: any other sideeffects? Clear out current/next items?
 }
 
 #pragma mark - AUTH
@@ -184,7 +186,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     return auth;
 }
 
-#pragma mark - REQUEST QUEUEING
+#pragma mark - REQUEST HANDLING
 
 - (void)sendRequest:(FMAPIRequest *)request {
     if(request.authRequired) {
@@ -196,15 +198,43 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
             request.auth = self.auth;
         }
     }
+    
+    __block __weak FMAPIRequest *blockSafeRequest = request;
+    void (^success)(NSDictionary *) = request.successBlock;
+    void (^failure)(NSError *) = request.failureBlock;
+    request.successBlock = ^(NSDictionary *result) {
+        if(success) {
+            success(result);
+        }
+        [_requestsInProgress removeObject:blockSafeRequest];
+    };
+    request.failureBlock = ^(NSError *error) {
+        if(failure) {
+            failure(error);
+        }
+        [_requestsInProgress removeObject:blockSafeRequest];
+    };
+    
+    [_requestsInProgress addObject:request];
     [request send];
 }
 
 - (void)sendQueuedRequests {
-    for(FMAPIRequest *request in _queuedRequests) {
-        request.auth = self.auth;
-        [request send];
-    }
+    //Empty _queuedRequests first so that sendRequest: can requeue them if there's a problem
+    NSArray *requestsToSend = [NSArray arrayWithArray:_queuedRequests];
     [_queuedRequests removeAllObjects];
+
+    for(FMAPIRequest *request in requestsToSend) {
+        [self sendRequest:request];
+    }
+}
+
+- (void)cancelOutstandingRequests {
+    [_queuedRequests removeAllObjects];
+    for(FMAPIRequest *request in _requestsInProgress) {
+        [request cancel];
+    }
+    [_requestsInProgress removeAllObjects];
 }
 
 #pragma mark - STATIONS
@@ -327,8 +357,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
     FMAPIRequest *playRequest = [FMAPIRequest requestStart:self.currentItem.playId];
     playRequest.successBlock = ^(NSDictionary *result) {
-        self.skipAvailable = [result[@"can_skip"] boolValue];
-        //todo: request nextTrack automatically?
+//        self.skipAvailable = [result[@"can_skip"] boolValue];
     };
     playRequest.failureBlock = ^(NSError *error) {
         NSLog(@"ERROR: Failed to start play on %@. Next item will not be available! %@", self.currentItem, error);
@@ -366,12 +395,12 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
         }
     };
     skipRequest.failureBlock = ^(NSError *error) {
-        if([[error domain] isEqualToString:FMAPIErrorDomain] && [error code] == FMErrorCodeInvalidSkip) {
-            self.skipAvailable = NO;
-        }
-        else {
+//        if([[error domain] isEqualToString:FMAPIErrorDomain] && [error code] == FMErrorCodeInvalidSkip) {
+//            self.skipAvailable = NO;
+//        }
+//        else {
             NSLog(@"ERROR: Failed to skip: %@", error);
-        }
+//        }
         if(failure) {
             failure(error);
         }

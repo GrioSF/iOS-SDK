@@ -68,6 +68,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationUpdated:) name:FMSessionActiveStationChangedNotification object:[FMSession sharedSession]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerUpdated:) name:FMAudioPlayerPlaybackStateDidChangeNotification object:self.feedPlayer];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skipFailed:) name:FMAudioPlayerSkipFailedNotification object:self.feedPlayer];
 }
 
 - (void)dealloc {
@@ -91,14 +92,6 @@
             [self showPlayButtonSpinner];
             [self.skipButton setEnabled:NO];
             break;
-//        case FMAudioPlayerPlaybackStateNewItem:
-//            NSLog(@"Got New Item Notification");
-//            [self hidePlayButtonSpinner];
-//            [self.skipButton setEnabled:NO];
-//            //FIXME: should listen to skipLimitKnown property of player or similar to set enabled, right now the button is enabled during a period when the player isn't sure if it can skip
-//            [self.progressView setProgress:0.0];
-//            [self updateLabels];
-//            break;
         case FMAudioPlayerPlaybackStateReadyToPlay:
         case FMAudioPlayerPlaybackStatePaused:
             [self hidePlayButtonSpinner];
@@ -153,13 +146,12 @@
 }
 
 - (void)skip:(id)sender {
-    if(self.feedPlayer.session.skipAvailable) {
-        [self.feedPlayer skip];
-    }
-    else {  //todo: make sure this doesn't get triggered when we don't know the skip limit yet
-        UIAlertView *noSkipAlert = [[UIAlertView alloc] initWithTitle:@"No More Skips" message:@"Sorry, you‘ve reached your skip limit for this station. Skips will replenish over time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [noSkipAlert show];
-    }
+    [self.feedPlayer skip];
+}
+
+- (void)skipFailed:(NSNotification *)notification {
+    UIAlertView *noSkipAlert = [[UIAlertView alloc] initWithTitle:@"No More Skips" message:@"Sorry, you‘ve reached your skip limit for this station. Skips will replenish over time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [noSkipAlert show];
 }
 
 - (void)showPlayButtonSpinner {

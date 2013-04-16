@@ -37,5 +37,6 @@
 + (FMAPIRequest *)requestComplete:(NSString *)playId;
 
 - (void)send;
+- (void)cancel;
 
 @end
