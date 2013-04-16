@@ -21,8 +21,7 @@
 
 @implementation FMStationPickerViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
         self.title = @"Select Station";
@@ -30,11 +29,8 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kFMStationPickerCellIdentifier];
 
     [[FMSession sharedSession] requestStationsForPlacement:nil
                                                withSuccess:
@@ -60,13 +56,11 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(section == 0) {
         return [self.stations count];
     }
@@ -75,10 +69,13 @@
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kFMStationPickerCellIdentifier forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kFMStationPickerCellIdentifier];
+    if(cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kFMStationPickerCellIdentifier];
+    }
+    
     FMStation *station = self.stations[indexPath.row];
     cell.textLabel.text = station.name;
     cell.detailTextLabel.text = station.identifier;
@@ -95,8 +92,7 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [[FMSession sharedSession] setStation:self.stations[indexPath.row]];
     
     [self.selectedCell setAccessoryType:UITableViewCellAccessoryNone];
