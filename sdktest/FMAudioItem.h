@@ -14,14 +14,11 @@
 @property (readonly) NSString *name;
 @property (readonly) NSString *artist;
 @property (readonly) NSString *album;
-//Not yet supported
-//@property (readonly) NSURL *imageUrl;       //album art
-//@property (readonly) NSURL *storeUrl;       //itms link
 
 @property (readonly) NSTimeInterval duration;
 @property (readonly) NSURL *contentUrl;
 @property (readonly) NSString *codec;
-@property (readonly) double bitrate;        //in kbps
+@property (readonly) double bitrate;        //in kbps, will be average if song is encoded with vbr
 
 - (id)initWithJSON:(id)jsonDictionary;
 

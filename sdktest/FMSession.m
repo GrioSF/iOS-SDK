@@ -30,7 +30,6 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 @property FMAuth *auth;
 @property (nonatomic) FMAudioItem *currentItem;
 @property (nonatomic) FMAudioItem *nextItem;
-//@property (nonatomic) BOOL skipAvailable;
 @end
 
 @implementation FMSession
@@ -356,9 +355,6 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     self.nextItem = nil;
 
     FMAPIRequest *playRequest = [FMAPIRequest requestStart:self.currentItem.playId];
-    playRequest.successBlock = ^(NSDictionary *result) {
-//        self.skipAvailable = [result[@"can_skip"] boolValue];
-    };
     playRequest.failureBlock = ^(NSError *error) {
         NSLog(@"ERROR: Failed to start play on %@. Next item will not be available! %@", self.currentItem, error);
     };
@@ -395,12 +391,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
         }
     };
     skipRequest.failureBlock = ^(NSError *error) {
-//        if([[error domain] isEqualToString:FMAPIErrorDomain] && [error code] == FMErrorCodeInvalidSkip) {
-//            self.skipAvailable = NO;
-//        }
-//        else {
-            NSLog(@"ERROR: Failed to skip: %@", error);
-//        }
+        NSLog(@"ERROR: Failed to skip: %@", error);
         if(failure) {
             failure(error);
         }
