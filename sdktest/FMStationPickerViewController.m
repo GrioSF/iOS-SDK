@@ -8,7 +8,6 @@
 
 #import "FMStationPickerViewController.h"
 #import "FMSession.h"
-#import "FMStation.h"
 
 #define kFMStationPickerCellIdentifier @"kFMStationPickerCellIdentifier"
 

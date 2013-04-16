@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class FMSession, FMAudioItem;
+#import "FMSession.h"
 
 extern NSString *const FMAudioPlayerPlaybackStateDidChangeNotification;
 extern NSString *const FMAudioPlayerSkipFailedNotification;

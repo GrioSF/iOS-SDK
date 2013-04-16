@@ -7,10 +7,8 @@
 //  Contains code copyright (c) 2011 Apple Inc. from the sample code StitchedStreamPlayer
 //
 
-#import "FMAudioPlayer.h"
-#import "FMSession.h"
-#import "FMAudioItem.h"
 #import <AVFoundation/AVFoundation.h>
+#import "FMAudioPlayer.h"
 
 static void *FMAudioPlayerRateObservationContext = &FMAudioPlayerRateObservationContext;
 static void *FMAudioPlayerCurrentItemObservationContext = &FMAudioPlayerCurrentItemObservationContext;

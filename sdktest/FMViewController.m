@@ -7,10 +7,7 @@
 //
 
 #import "FMViewController.h"
-#import "FMAudioPlayer.h"
 #import "FMStationPickerViewController.h"
-#import "FMStation.h"
-#import "FMAudioItem.h"
 #import "FMProgressView.h"
 
 #define kFMSessionClientToken @"e518c7bb995c28ea12deb8ddc9b6458c41005f56"
@@ -63,7 +60,6 @@
                        secret:kFMSessionClientSecret];
     [[FMSession sharedSession] setPlacement:kFMSessionPlacementId];
     FMLogDebug(@"Set placement: %@", [FMSession sharedSession].activePlacementId);
-    [[FMSession sharedSession] setDelegate:self];
     self.feedPlayer = [[FMAudioPlayer alloc] initWithSession:[FMSession sharedSession]];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationUpdated:) name:FMSessionActiveStationChangedNotification object:[FMSession sharedSession]];

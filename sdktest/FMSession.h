@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FMStation.h"
+#import "FMAudioItem.h"
 #import "FMError.h"
 #import "FMLog.h"
 
