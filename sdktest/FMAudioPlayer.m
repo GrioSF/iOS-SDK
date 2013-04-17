@@ -12,7 +12,7 @@
 
 static void *FMAudioPlayerRateObservationContext = &FMAudioPlayerRateObservationContext;
 static void *FMAudioPlayerCurrentItemObservationContext = &FMAudioPlayerCurrentItemObservationContext;
-static void *FMAudioPlayerPlayerItemStatusObserverContext = &FMAudioPlayerPlayerItemStatusObserverContext;
+static void *FMAudioPlayerPlayerItemStatusObservationContext = &FMAudioPlayerPlayerItemStatusObservationContext;
 
 NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlayerPlaybackStateDidChangeNotification";
 NSString *const FMAudioPlayerSkipFailedNotification = @"FMAudioPlayerSkipFailedNotification";
@@ -26,6 +26,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 @interface FMAudioPlayer () {
     AVQueuePlayer *_player;
+    FMBandwidthMonitor *_bandwidthMonitor;
     BOOL _isClientPaused;
     //BOOL _isInternalPaused;
     BOOL _isTryingToPlay;
@@ -63,6 +64,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 - (void)dealloc {
     [_player removeObserver:self forKeyPath:kCurrentItemKey];
     [_player removeObserver:self forKeyPath:kRateKey];
+    [_bandwidthMonitor stop];
 }
 
 #pragma mark - Passthrough Properties
@@ -127,6 +129,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     }
     if(!self.session.nextItem) {
         FMLogDebug(@"Requesting item");
+        [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
         //FMSession will ignore requestNextTrack if a request is already in progress, then we'll get a callback when it's ready
         //todo: make sure we actually have a session, and that session has a placement/station/etc
         //todo: if there's an error, we won't get a callback. Is it ok to stay in WaitingForItem forever, or do we need a solution?
@@ -228,8 +231,14 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     //todo: attempt to reload/load next asset
 }
 
-- (void)assetReadyForPlayback {
+- (void)assetReadyForPlayback:(AVPlayerItem *)item {
     //todo: only set this state if we're not currently playing and it's the active item
+
+    _bandwidthMonitor = [[FMBandwidthMonitor alloc] init];
+    _bandwidthMonitor.delegate = self;
+    _bandwidthMonitor.monitoredItem = item;
+    [_bandwidthMonitor start];
+    
     if(_player.rate == 0.0) {
         [self setPlaybackState:FMAudioPlayerPlaybackStateReadyToPlay];
     }
@@ -249,7 +258,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     [item addObserver:self
                forKeyPath:kStatusKey
                   options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                  context:FMAudioPlayerPlayerItemStatusObserverContext];
+                  context:FMAudioPlayerPlayerItemStatusObservationContext];
 
     /* Register to be notified when the item completes */
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -284,6 +293,8 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     }
     FMLogDebug(@"Item reached end");
     [self unregisterForPlayerItemNotifications:notification.object];
+    [_bandwidthMonitor stop];
+    _bandwidthMonitor = nil;
     [self.session playCompleted];
     self.playbackState = FMAudioPlayerPlaybackStateComplete;
     if([_player.items count] < 2) {
@@ -317,6 +328,23 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     FMLogDebug(@"Stalled");
     [self setPlaybackState:FMAudioPlayerPlaybackStateStalled];
     //todo: try to recover from stall
+}
+
+- (void)updateLoadState {
+    FMLogDebug(@"playerItem loadState updated");
+    if(self.playbackState == FMAudioPlayerPlaybackStateStalled && _isTryingToPlay) {
+        FMLogDebug(@"Want to recover from stall");
+        if(_bandwidthMonitor.playbackLikelyToKeepUp) {
+            FMLogDebug(@"Bandwidth monitor says go for it");
+            [_player play];
+        }
+    }
+
+    //Todo: if bandwidth monitor says load is complete, start loading the next item
+}
+
+- (void)bandwidthMonitorDidUpdate:(FMBandwidthMonitor *)monitor {
+    [self updateLoadState];
 }
 
 #pragma mark - State Handling
@@ -371,7 +399,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
              [playerItem status] == AVPlayerItemStatusReadyToPlay,
              its duration can be fetched from the item. */
             FMLogDebug(@"Observed AVPlayerStatusReadyToPlay");
-            [self assetReadyForPlayback];
+            [self assetReadyForPlayback:playerItem];
         }
             break;
 
@@ -389,13 +417,11 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
                         change:(NSDictionary*)change
                        context:(void*)context
 {
-	/* AVPlayerItem "status" property value observer. */
-	if (context == FMAudioPlayerPlayerItemStatusObserverContext) {
+	/* AVPlayerItem property value observers. */
+	if(context == FMAudioPlayerPlayerItemStatusObservationContext) {
         AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
         [self observeStatusChange:status ofItem:object];
 	}
-
-    /* AVPlayer "rate" property value observer. */
 	else if (context == FMAudioPlayerRateObservationContext) {
         BOOL playing = _player.rate > 0;
         if(playing) {

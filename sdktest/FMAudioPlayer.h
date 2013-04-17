@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FMSession.h"
+#import "FMBandwidthMonitor.h"
 
 extern NSString *const FMAudioPlayerPlaybackStateDidChangeNotification;
 extern NSString *const FMAudioPlayerSkipFailedNotification;
@@ -23,7 +24,7 @@ typedef enum FMAudioPlayerPlaybackState : NSUInteger {
     FMAudioPlayerPlaybackStateComplete
 } FMAudioPlayerPlaybackState;
 
-@interface FMAudioPlayer : NSObject
+@interface FMAudioPlayer : NSObject <FMBandwidthMonitorDelegate>
 
 @property (nonatomic) FMSession *session; //note: playback will stop automatically if the placement or station are changed
 @property (nonatomic) float mixVolume; // value between 0.0 and 1.0 relative to system volume

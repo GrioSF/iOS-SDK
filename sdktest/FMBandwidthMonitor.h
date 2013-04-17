@@ -7,7 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
+
+@class FMBandwidthMonitor;
+
+@protocol FMBandwidthMonitorDelegate <NSObject>
+@optional
+- (void)bandwidthMonitorDidUpdate:(FMBandwidthMonitor *)monitor;
+@end
 
 @interface FMBandwidthMonitor : NSObject
+
+@property (nonatomic, weak) id<FMBandwidthMonitorDelegate> delegate;
+@property (nonatomic, weak) AVPlayerItem *monitoredItem;
+@property (nonatomic) NSTimeInterval refreshRate;
+@property (nonatomic, readonly) BOOL playbackLikelyToKeepUp;
+@property (nonatomic, readonly) BOOL loadingComplete;
+
+- (void)start;
+- (void)stop;
 
 @end

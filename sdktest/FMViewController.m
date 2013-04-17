@@ -104,6 +104,10 @@
             [self.skipButton setEnabled:YES];
             [self startProgressTimer];
             break;
+        case FMAudioPlayerPlaybackStateStalled:
+            [self showPlayButtonSpinner];
+            [self.playButton setEnabled:NO];
+            [self.skipButton setEnabled:YES];
         case FMAudioPlayerPlaybackStateRequestingSkip:
             [self showPlayButtonSpinner];
             [self.playButton setEnabled:NO];
