@@ -237,6 +237,7 @@ NSString *const FMAudioFormatAAC = @"aac";
         [request cancel];
     }
     [_requestsInProgress removeAllObjects];
+    _nextTrackInProgress = NO;
 }
 
 #pragma mark - STATIONS
