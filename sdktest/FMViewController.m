@@ -108,6 +108,7 @@
             [self showPlayButtonSpinner];
             [self.playButton setEnabled:NO];
             [self.skipButton setEnabled:NO];
+            break;
         case FMAudioPlayerPlaybackStateComplete:
             [self updateLabels];
             [self.playButton setEnabled:NO];
