@@ -62,7 +62,7 @@
             _duration = [duration doubleValue];
         }
 
-        id bitrate = trackDict[@"kbitrate"];
+        id bitrate = trackDict[@"bitrate"];
         if([bitrate respondsToSelector:@selector(doubleValue)]) {
             _bitrate = [bitrate doubleValue];
         }
