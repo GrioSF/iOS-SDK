@@ -29,7 +29,6 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     AVURLAsset *_loadingAsset;
     FMBandwidthMonitor *_bandwidthMonitor;
     BOOL _isClientPaused;
-    //BOOL _isInternalPaused;
     BOOL _isTryingToPlay;
     BOOL _playImmediately;
 }
@@ -211,25 +210,6 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     /* Make our new AVPlayerItem the AVPlayer's current item. */
     [_player insertItem:nextItem afterItem:nil];
     FMLogDebug(@"Added item to queue");
-
-    //If we want to try prerolling, delete the above block and put all this into effect AFTER readyToPlay KVO is triggered
-//    if([_player.items count] == 1) {
-//        NSLog(@"Requesting preroll");
-//        [_player prerollAtRate:1.0 completionHandler:^(BOOL finished) {
-//            if(finished) {
-//                NSLog(@"Preroll Success");
-//                [self setPlaybackState:FMAudioPlayerPlaybackStateReadyToPlay];
-//                if(_playImmediately) {
-//                    NSLog(@"Playing immediately");
-//                    [self play];
-//                }
-//            }
-//            else {
-//                NSLog(@"Preroll Failed");
-//                //todo: how bad is this error? how to recover?
-//            }
-//        }];
-//    }
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error {
@@ -337,7 +317,6 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     }
     FMLogDebug(@"Stalled");
     [self setPlaybackState:FMAudioPlayerPlaybackStateStalled];
-    //todo: try to recover from stall
 }
 
 - (void)updateLoadState {
@@ -350,7 +329,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         }
     }
 
-    //Todo: if bandwidth monitor says load is complete, start loading the next item
+    //todo: if bandwidth monitor says load is complete, start loading the next item
 }
 
 - (void)bandwidthMonitorDidUpdate:(FMBandwidthMonitor *)monitor {
@@ -359,7 +338,6 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 #pragma mark - State Handling
 
-//todo: are these the proper actions to take?
 - (void)setSession:(FMSession *)session {
     if(_session) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_session];
@@ -476,7 +454,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     if(![self isPreparedToPlay]) {
         [self prepareToPlay];
     }
-    else {  //if(!_isInternalPaused) {
+    else {
         FMLogDebug(@"Telling _player Play");
         [_player play];
         _isTryingToPlay = YES;
