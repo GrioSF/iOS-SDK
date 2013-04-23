@@ -13,10 +13,14 @@
 #define kFMAuthStoragePath @"FeedMedia/"
 #define kFMAuthStorageName @"FMAuth.plist"
 
+#define kFMSessionDefaultBitrate 128
+
 NSString *const FMSessionCurrentItemChangedNotification = @"FMSessionCurrentItemChangedNotification";
 NSString *const FMSessionNextItemAvailableNotification = @"FMSessionNextItemAvailableNotification";
 NSString *const FMSessionActivePlacementChangedNotification = @"FMSessionActivePlacementChangedNotification";
 NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveStationChangedNotification";
+NSString *const FMAudioFormatMP3 = @"mp3";
+NSString *const FMAudioFormatAAC = @"aac";
 
 @interface FMSession () {
     FMAuth *_auth;
@@ -60,6 +64,8 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
     if(self = [super init]) {
         _queuedRequests = [[NSMutableArray alloc] init];
         _requestsInProgress = [[NSMutableArray alloc] init];
+        _supportedAudioFormats = @[FMAudioFormatAAC,FMAudioFormatMP3];
+        _maxBitrate = kFMSessionDefaultBitrate;
         _auth = [self authFromDisk];
         if(_auth == nil) {
             _auth = [[FMAuth alloc] init];
@@ -310,7 +316,12 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 
     _nextTrackInProgress = YES;
 
-    FMAPIRequest *trackRequest = [FMAPIRequest requestPlayInPlacement:self.activePlacementId withStation:self.activeStation.identifier];
+    NSString *supportedFormatString = [self.supportedAudioFormats componentsJoinedByString:@","];
+    FMAPIRequest *trackRequest = trackRequest = [FMAPIRequest requestPlayInPlacement:self.activePlacementId
+                                            withStation:self.activeStation.identifier
+                                                formats:supportedFormatString
+                                             maxBitrate:[NSNumber numberWithInteger:self.maxBitrate]];
+    
     trackRequest.successBlock = ^(NSDictionary *result) {
         NSDictionary *playJSON = result[@"play"];
         FMAudioItem *nextItem = nil;
@@ -415,3 +426,7 @@ NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveSta
 }
 
 @end
+
+#undef kFMAuthStoragePath
+#undef kFMAuthStorageName
+#undef kFMSessionDefaultBitrate

@@ -12,18 +12,15 @@
 #import "FMError.h"
 #import "FMLog.h"
 
-@class FMAudioItem, FMSession, FMStation;
-
-typedef enum FMAudioFormat : NSUInteger {
-    FMAudioFormatAny,
-    FMAudioFormatMP3,
-    FMAudioFormatAAC
-} FMAudioFormat;
+@class FMSession;
 
 extern NSString *const FMSessionCurrentItemChangedNotification;
 extern NSString *const FMSessionNextItemAvailableNotification;
 extern NSString *const FMSessionActivePlacementChangedNotification;
 extern NSString *const FMSessionActiveStationChangedNotification;
+
+extern NSString *const FMAudioFormatMP3;
+extern NSString *const FMAudioFormatAAC;
 
 @protocol FMSessionDelegate <NSObject>
 
@@ -41,7 +38,21 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 @property (nonatomic, assign) id<FMSessionDelegate> delegate;
 @property (nonatomic, copy, setter=setStation:) FMStation *activeStation;
 @property (nonatomic, copy, setter=setPlacement:) NSString *activePlacementId;
-@property (nonatomic) FMAudioFormat *preferredCodec;    //defaults to FMAudioFormatAny (not yet supported)
+
+/**
+ Order specifies priority (earlier elements are preferred). 
+ Nil-ing this property will allow any format to be served, but is not recommended.
+ Set to @[FMAudioFormatMP3] to exclude AAC files.
+ Defaults to @[FMAudioFormatAAC,FMAudioFormatMP3]. 
+ */
+@property (nonatomic) NSArray *supportedAudioFormats;
+
+/**
+ Set to specify available bandwidth, in kbps. Set to 0 to request the highest available quality.
+ Defaults to 128.
+ */
+@property (nonatomic) NSInteger maxBitrate;
+
 @property (nonatomic, readonly) FMAudioItem *currentItem;
 @property (nonatomic, readonly) FMAudioItem *nextItem;
 

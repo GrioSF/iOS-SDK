@@ -60,6 +60,16 @@
 }
 
 + (FMAPIRequest *)requestPlayInPlacement:(NSString *)placementId withStation:(NSString *)stationId {
+    return [self requestPlayInPlacement:placementId
+                            withStation:stationId
+                                formats:nil
+                             maxBitrate:nil];
+}
+
++ (FMAPIRequest *)requestPlayInPlacement:(NSString *)placementId
+                             withStation:(NSString *)stationId
+                                 formats:(NSString *)formatList
+                              maxBitrate:(NSNumber *)bitrate {
     if(placementId == nil || [placementId isEqualToString:@""]) {
         FMLogError(@"ERROR: placementId must not be nil");
         return nil;
@@ -70,6 +80,12 @@
     request.postParameters[@"placement_id"] = placementId;
     if(stationId && ![stationId isEqualToString:@""]) {
         request.postParameters[@"station_id"] = stationId;
+    }
+    if(formatList && ![formatList isEqualToString:@""]) {
+        request.postParameters[@"formats"] = formatList;
+    }
+    if(bitrate && [bitrate integerValue] > 0) {
+        request.postParameters[@"max_bitrate"] = [NSString stringWithFormat:@"%li",(long)[bitrate integerValue]];
     }
     request.authRequired = YES;
     return request;
