@@ -23,6 +23,7 @@
 @property (nonatomic) NSTimeInterval refreshRate;
 @property (nonatomic, readonly) BOOL playbackLikelyToKeepUp;
 @property (nonatomic, readonly) BOOL loadingComplete;
+@property (nonatomic, readonly) double currentDownloadRate; //returns -1 if unknown
 
 - (void)start;
 - (void)stop;

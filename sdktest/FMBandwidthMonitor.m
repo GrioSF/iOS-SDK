@@ -36,6 +36,9 @@
     [self stop];
 }
 
+// !!!: loadedDuration Issues
+/* If the asset isn't being played, loadedTimeRanges appears to stay empty for a while and then suddenly jumps up, which throws off the calculation. Works as expected if the asset is playing, but it's not reliable if paused or preloading.
+ */
 - (NSTimeInterval)loadedDuration {
     NSArray *timeRanges = self.monitoredItem.loadedTimeRanges;
     CMTimeRange totalRange = kCMTimeRangeZero;
@@ -43,7 +46,7 @@
         totalRange = CMTimeRangeGetUnion(totalRange, [rangeValue CMTimeRangeValue]);
     }
     CMTime endTime = CMTimeRangeGetEnd(totalRange);
-    return CMTimeGetSeconds(endTime);
+    return MAX(0,CMTimeGetSeconds(endTime));
 }
 
 - (void)start {
@@ -83,13 +86,26 @@
     NSTimeInterval loadedDuration = [self loadedDuration];
     _estimatedDownloadRate = (_estimatedDownloadRate + .5*(loadedDuration - _lastPlayableDuration)/self.refreshRate)/1.5;
     _lastPlayableDuration = loadedDuration;
-//    FMLogDebug(@"Calculated download rate: %f",_estimatedDownloadRate);
-
+    FMLogDebug(@"Calculated download rate: %f",_estimatedDownloadRate);
+    FMLogDebug(@"Calculated download kbps: %f",self.currentDownloadRate);
     if(self.loadingComplete) {
         [self stop];
     }
     
     [self notifyDelegate];
+}
+
+- (double)currentDownloadRate {
+    NSArray *accessEvents = self.monitoredItem.accessLog.events;
+    AVPlayerItemAccessLogEvent *lastEvent = [accessEvents lastObject];
+    double bitrate = lastEvent.observedBitrate / 1024;
+
+    if(bitrate > 0) {
+        return _estimatedDownloadRate * bitrate;
+    }
+    else {
+        return -1;
+    }
 }
 
 - (BOOL)playbackLikelyToKeepUp {
