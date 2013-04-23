@@ -26,6 +26,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 @interface FMAudioPlayer () {
     AVQueuePlayer *_player;
+    AVURLAsset *_loadingAsset;
     FMBandwidthMonitor *_bandwidthMonitor;
     BOOL _isClientPaused;
     //BOOL _isInternalPaused;
@@ -84,7 +85,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     }
 }
 
-- (float) currentPlaybackRate {
+- (float)currentPlaybackRate {
     return _player.rate;
 }
 
@@ -145,6 +146,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         //todo: write guard against nil url
         FMLogDebug(@"Requesting asset for %@",itemUrl);
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:itemUrl options:nil];
+        _loadingAsset = asset;
         NSArray *requestedKeys = [NSArray arrayWithObjects:kTracksKey, kPlayableKey, nil];
 
         /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
@@ -161,6 +163,12 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys {
     FMLogDebug(@"Prepare to play asset");
+    if(_loadingAsset != asset) {
+        FMLogDebug(@"Asset is stale, ignoring");
+        return;
+    }
+    _loadingAsset = nil;
+
     /* Make sure that the value of each key has loaded successfully. */
 	for (NSString *thisKey in requestedKeys)
 	{
@@ -352,10 +360,10 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 #pragma mark - State Handling
 
 //todo: are these the proper actions to take?
-//todo: do we need to use the currentItemChanged notification to check for skip success?
 - (void)setSession:(FMSession *)session {
     if(_session) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_session];
+        [self stop];
     }
     _session = session;
     if(_session) {
@@ -490,6 +498,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     FMLogDebug(@"Stop Called");
     _isTryingToPlay = NO;
     _isClientPaused = NO;
+    _loadingAsset = nil;
     [_player pause];
     [_player removeAllItems];
     [self setPlaybackState:FMAudioPlayerPlaybackStateComplete];
