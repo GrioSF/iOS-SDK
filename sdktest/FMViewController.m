@@ -63,6 +63,7 @@
     self.feedPlayer = [[FMAudioPlayer alloc] initWithSession:[FMSession sharedSession]];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationUpdated:) name:FMSessionActiveStationChangedNotification object:[FMSession sharedSession]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songUpdated:) name:FMSessionCurrentItemChangedNotification object:[FMSession sharedSession]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerUpdated:) name:FMAudioPlayerPlaybackStateDidChangeNotification object:self.feedPlayer];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skipFailed:) name:FMAudioPlayerSkipFailedNotification object:self.feedPlayer];
 }
@@ -74,6 +75,10 @@
 
 - (void)stationUpdated:(NSNotification *)notification {
     self.currentStationLabel.text = [FMSession sharedSession].activeStation.name;
+}
+
+- (void)songUpdated:(NSNotification *)notification {
+    [self updateLabels];
 }
 
 - (void)selectStation:(id)sender {
@@ -98,7 +103,6 @@
             break;
         case FMAudioPlayerPlaybackStatePlaying:
             [self hidePlayButtonSpinner];
-            [self updateLabels];
             [self.playButton setImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
             [self.playButton setEnabled:YES];
             [self.skipButton setEnabled:YES];
@@ -115,7 +119,6 @@
             [self.skipButton setEnabled:NO];
             break;
         case FMAudioPlayerPlaybackStateComplete:
-            [self updateLabels];
             [self.playButton setEnabled:NO];
             [self.skipButton setEnabled:NO];
             [self cancelProgressTimer];
