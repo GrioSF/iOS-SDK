@@ -9,6 +9,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "FMAudioPlayer.h"
+#import "FMAsset.h"
 
 static void *FMAudioPlayerRateObservationContext = &FMAudioPlayerRateObservationContext;
 static void *FMAudioPlayerCurrentItemObservationContext = &FMAudioPlayerCurrentItemObservationContext;
@@ -18,15 +19,13 @@ NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlaye
 NSString *const FMAudioPlayerSkipFailedNotification = @"FMAudioPlayerSkipFailedNotification";
 NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErrorKey";
 
-#define kTracksKey @"tracks"
 #define kStatusKey @"status"
 #define kRateKey @"rate"
-#define kPlayableKey @"playable"
 #define kCurrentItemKey	@"currentItem"
 
 @interface FMAudioPlayer () {
     AVQueuePlayer *_player;
-    AVURLAsset *_loadingAsset;
+    FMAsset *_loadingAsset;
     FMBandwidthMonitor *_bandwidthMonitor;
     BOOL _isClientPaused;
     BOOL _isTryingToPlay;
@@ -140,83 +139,43 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 - (void)sessionReceivedItem:(NSNotification *)notification {
     FMLogDebug(@"Session Received Item");
+    if(_loadingAsset) {
+        //todo: assuming only one asset load at a time, get ready to queue up next tracks in advance!
+        [_loadingAsset cancel];
+    }
     if(self.session.nextItem) {
-        NSURL *itemUrl = self.session.nextItem.contentUrl;
-        //todo: write guard against nil url
-        FMLogDebug(@"Requesting asset for %@",itemUrl);
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:itemUrl options:nil];
-        _loadingAsset = asset;
-        NSArray *requestedKeys = [NSArray arrayWithObjects:kTracksKey, kPlayableKey, nil];
-
-        /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
-        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
-         ^{
-             dispatch_async( dispatch_get_main_queue(),
-                            ^{
-                                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                                [self prepareToPlayAsset:asset withKeys:requestedKeys];
-                            });
-         }];
+        _loadingAsset = [FMAsset assetWithAudioItem:self.session.nextItem];
+        __block __weak FMAudioPlayer *blockSelf = self;
+        [_loadingAsset setCompletionBlockWithSuccess:^(FMAsset *asset, AVPlayerItem *playerItem) {
+            [blockSelf assetLoaded:asset];
+        } failure:^(FMAsset *asset, NSError *error) {
+            [blockSelf assetFailed:asset];
+            FMLogWarn(@"Asset failed to load: %@", error);
+        }];
+        [_loadingAsset loadPlayerItem];
     }
 }
 
-- (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys {
-    FMLogDebug(@"Prepare to play asset");
-    if(_loadingAsset != asset) {
-        FMLogDebug(@"Asset is stale, ignoring");
-        return;
-    }
+- (void)assetLoaded:(FMAsset *)asset {
+    FMLogDebug(@"Loaded Asset: %@", asset);
+    //todo: make sure this is the asset we want
+    [self registerForPlayerItemNotifications:asset.playerItem];
+    [self applyMixVolumeToItem:asset.playerItem];
+    
+    [_player insertItem:asset.playerItem afterItem:nil];
     _loadingAsset = nil;
-
-    /* Make sure that the value of each key has loaded successfully. */
-	for (NSString *thisKey in requestedKeys)
-	{
-		NSError *error = nil;
-		AVKeyValueStatus keyStatus = [asset statusOfValueForKey:thisKey error:&error];
-		if (keyStatus == AVKeyValueStatusFailed)
-		{
-			[self assetFailedToPrepareForPlayback:error];
-			return;
-		}
-		/* If you are also implementing the use of -[AVAsset cancelLoading], add your code here to bail
-         out properly in the case of cancellation. */
-	}
-
-    /* Use the AVAsset playable property to detect whether the asset can be played. */
-    if (!asset.playable)
-    {
-        /* Generate an error describing the failure. */
-        //todo: rewrite into our own error codes
-		NSString *localizedDescription = NSLocalizedString(@"Item cannot be played", @"Item cannot be played description");
-		NSString *localizedFailureReason = NSLocalizedString(@"The assets tracks were loaded, but could not be made playable.", @"Item cannot be played failure reason");
-		NSDictionary *errorDict = [NSDictionary dictionaryWithObjectsAndKeys:
-								   localizedDescription, NSLocalizedDescriptionKey,
-								   localizedFailureReason, NSLocalizedFailureReasonErrorKey,
-								   nil];
-		NSError *assetCannotBePlayedError = [NSError errorWithDomain:@"FMAudioPlayerErrorDomain" code:0 userInfo:errorDict];
-
-        /* Display the error to the user. */
-        [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
-
-        return;
-    }
-
-    /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
-    AVPlayerItem *nextItem = [AVPlayerItem playerItemWithAsset:asset];
-
-    [self registerForPlayerItemNotifications:nextItem];
-    [self applyMixVolumeToItem:nextItem];
-
-    /* Make our new AVPlayerItem the AVPlayer's current item. */
-    [_player insertItem:nextItem afterItem:nil];
     FMLogDebug(@"Added item to queue");
 }
 
--(void)assetFailedToPrepareForPlayback:(NSError *)error {
-    FMLogWarn(@"Asset failed to prepare: %@", error);
-    //todo: cleanup
-    //todo: throw error
-    //todo: attempt to reload/load next asset
+- (void)assetFailed:(FMAsset *)asset {
+    FMLogWarn(@"Asset failed to load: %@", asset.loadError);
+    _loadingAsset = nil;
+    //todo: recover...force system skip?
+}
+
+- (void)assetFailedToPrepareForPlayback:(AVPlayerItem *)playerItem {
+    FMLogWarn(@"Asset failed to prepare: %@", playerItem.error);
+    //todo: recover
 }
 
 - (void)assetReadyForPlayback:(AVPlayerItem *)item {
@@ -394,7 +353,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         case AVPlayerStatusFailed:
         {
             FMLogDebug(@"Observed AVPlayerStatusFailed");
-            [self assetFailedToPrepareForPlayback:playerItem.error];
+            [self assetFailedToPrepareForPlayback:playerItem];
         }
             break;
     }
@@ -476,6 +435,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     FMLogDebug(@"Stop Called");
     _isTryingToPlay = NO;
     _isClientPaused = NO;
+    [_loadingAsset cancel];
     _loadingAsset = nil;
     [_player pause];
     [_player removeAllItems];
@@ -498,8 +458,6 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 @end
 
-#undef kTracksKey
 #undef kStatusKey
 #undef kRateKey
-#undef kPlayableKey
 #undef kCurrentItemKey

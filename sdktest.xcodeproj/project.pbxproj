@@ -40,6 +40,7 @@
 		C1A9284B16EE92C7006C6963 /* FMStation.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284A16EE92C6006C6963 /* FMStation.m */; };
 		C1AAE4FD171DD57400483F13 /* FMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AAE4FC171DD57400483F13 /* FMLog.m */; };
 		C1B11589170A273500DA8041 /* FMStationPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B11588170A273500DA8041 /* FMStationPickerViewController.m */; };
+		C1B28BA8172AF16B00358AB0 /* FMAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B28BA7172AF16B00358AB0 /* FMAsset.m */; };
 		C1BF242416FA211A007909CB /* FMError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1BF242316FA211A007909CB /* FMError.m */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +97,8 @@
 		C1AAE4FC171DD57400483F13 /* FMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMLog.m; sourceTree = "<group>"; };
 		C1B11587170A273500DA8041 /* FMStationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStationPickerViewController.h; sourceTree = "<group>"; };
 		C1B11588170A273500DA8041 /* FMStationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStationPickerViewController.m; sourceTree = "<group>"; };
+		C1B28BA6172AF16B00358AB0 /* FMAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAsset.h; sourceTree = "<group>"; };
+		C1B28BA7172AF16B00358AB0 /* FMAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAsset.m; sourceTree = "<group>"; };
 		C1BF242316FA211A007909CB /* FMError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMError.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -227,6 +230,8 @@
 				C1A429AD16E96A17001BD576 /* FMBandwidthMonitor.m */,
 				C1A429AF16E96A1F001BD576 /* FMReachability.h */,
 				C1A429B016E96A1F001BD576 /* FMReachability.m */,
+				C1B28BA6172AF16B00358AB0 /* FMAsset.h */,
+				C1B28BA7172AF16B00358AB0 /* FMAsset.m */,
 			);
 			name = Internal;
 			sourceTree = "<group>";
@@ -321,6 +326,7 @@
 				C108F23D1714B9EC0096DF46 /* FMProgressView.m in Sources */,
 				C1AAE4FD171DD57400483F13 /* FMLog.m in Sources */,
 				C1319B091727532400059BB6 /* FMMetadataView.m in Sources */,
+				C1B28BA8172AF16B00358AB0 /* FMAsset.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
