@@ -50,7 +50,6 @@
 }
 
 - (void)start {
-    _estimatedDownloadRate = 0;
     _lastPlayableDuration = [self loadedDuration];
 
     [_networkCheckTimer invalidate];

@@ -163,36 +163,49 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     [self applyMixVolumeToItem:asset.playerItem];
     
     [_player insertItem:asset.playerItem afterItem:nil];
-    _loadingAsset = nil;
     FMLogDebug(@"Added item to queue");
 }
 
 - (void)assetFailed:(FMAsset *)asset {
     FMLogWarn(@"Asset failed to load: %@", asset.loadError);
     _loadingAsset = nil;
-    //todo: recover...force system skip?
+    [self.session requestSkipWithSuccess:^{
+        [self play];
+    } failure:^(NSError *error) {
+        FMLogError(@"Failed to force skip, playback will stop");
+        //todo: any more options for recovery? any notifications to throw to let clients know this is fatal?
+    }];
 }
 
 - (void)assetFailedToPrepareForPlayback:(AVPlayerItem *)playerItem {
     FMLogWarn(@"Asset failed to prepare: %@", playerItem.error);
-    //todo: recover
+    [self.session requestSkipWithSuccess:^{
+        [self play];
+    } failure:^(NSError *error) {
+        FMLogError(@"Failed to force skip, playback will stop");
+        //todo: any more options for recovery? any notifications to throw to let clients know this is fatal?
+    }];
 }
 
 - (void)assetReadyForPlayback:(AVPlayerItem *)item {
     //todo: only set this state if we're not currently playing and it's the active item
 
-    _bandwidthMonitor = [[FMBandwidthMonitor alloc] init];
-    _bandwidthMonitor.delegate = self;
-    _bandwidthMonitor.monitoredItem = item;
-    [_bandwidthMonitor start];
-    
+    if(item == _loadingAsset.playerItem) {
+        _loadingAsset = nil;
+
+        _bandwidthMonitor = [[FMBandwidthMonitor alloc] init];
+        _bandwidthMonitor.delegate = self;
+        _bandwidthMonitor.monitoredItem = item;
+    }
+
+    FMLogDebug(@"Item ready with player rate %f", _player.rate);
     if(_player.rate == 0.0) {
         [self setPlaybackState:FMAudioPlayerPlaybackStateReadyToPlay];
     }
     else {
         [self setPlaybackState:FMAudioPlayerPlaybackStatePlaying];
     }
-    if(_playImmediately) {
+    if((_playImmediately || _isTryingToPlay) && !_isClientPaused) {
         FMLogDebug(@"Playing immediately");
         [self play];
     }
@@ -370,6 +383,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         [self observeStatusChange:status ofItem:object];
 	}
 	else if (context == FMAudioPlayerRateObservationContext) {
+        FMLogDebug(@"Got rate update: %f", _player.rate);
         BOOL playing = _player.rate > 0;
         if(playing) {
             [self setPlaybackState:FMAudioPlayerPlaybackStatePlaying];
@@ -416,6 +430,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     else {
         FMLogDebug(@"Telling _player Play");
         [_player play];
+        [_bandwidthMonitor start];
         _isTryingToPlay = YES;
         _playImmediately = NO;
         if(_player.rate > 0.0) {
@@ -428,6 +443,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     _isClientPaused = YES;
     _isTryingToPlay = NO;
     [_player pause];
+    [_bandwidthMonitor stop];
     [self.session updatePlay:[self currentPlaybackTime]];
 }
 
@@ -440,6 +456,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     [_player pause];
     [_player removeAllItems];
     [self setPlaybackState:FMAudioPlayerPlaybackStateComplete];
+    [_bandwidthMonitor stop];
 }
 
 - (void)skip {
