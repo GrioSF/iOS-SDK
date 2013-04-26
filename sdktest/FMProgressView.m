@@ -38,7 +38,7 @@
     [self setProgress:self.progress];
 }
 
-- (void) setProgress:(float)progress {
+- (void)setProgress:(float)progress withAnimationDuration:(NSTimeInterval)duration {
     progress = MIN(MAX(0,progress),1.0);
     if(isnan(progress)) {
         progress = 0;
@@ -48,9 +48,16 @@
         [CATransaction setValue:(id)kCFBooleanTrue
                          forKey:kCATransactionDisableActions];
     }
+    else if(duration > 0) {
+        [CATransaction setValue:@(duration) forKey:kCATransactionAnimationDuration];
+    }
     progressLayer.frame = CGRectMake(0,0,progress*self.bounds.size.width,self.bounds.size.height);
     [CATransaction commit];
     _progress = progress;
+}
+
+- (void)setProgress:(float)progress {
+    [self setProgress:progress withAnimationDuration:0];
 }
 
 

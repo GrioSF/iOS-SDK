@@ -197,7 +197,8 @@
 - (void)updateProgress:(NSTimer *)timer {
     NSTimeInterval duration = self.feedPlayer.currentItemDuration;
     if(duration > 0) {
-        self.progressView.progress = (self.feedPlayer.currentPlaybackTime / duration);
+        [self.progressView setProgress:(self.feedPlayer.currentPlaybackTime / duration)
+                 withAnimationDuration:kFMProgressBarUpdateTimeInterval];
     }
     else {
         self.progressView.progress = 0.0;
@@ -207,6 +208,7 @@
 @end
 
 #undef kFMProgressBarUpdateTimeInterval
+#undef kFMProgressBarHeight
 #undef kFMSessionClientToken
 #undef kFMSessionClientSecret
 #undef kFMSessionPlacementId

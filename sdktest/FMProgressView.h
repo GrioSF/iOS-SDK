@@ -12,4 +12,6 @@
 
 @property (nonatomic) float progress;
 
+- (void)setProgress:(float)progress withAnimationDuration:(NSTimeInterval)duration;
+
 @end
