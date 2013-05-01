@@ -29,20 +29,20 @@
 		C1A4298F16E967EC001BD576 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A4298E16E967EC001BD576 /* Default-568h@2x.png */; };
 		C1A4299216E967EC001BD576 /* FMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A4299116E967EC001BD576 /* FMViewController.m */; };
 		C1A4299516E967EC001BD576 /* FMViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1A4299316E967EC001BD576 /* FMViewController.xib */; };
-		C1A4299E16E96806001BD576 /* FMSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A4299D16E96806001BD576 /* FMSession.m */; };
-		C1A429A116E96812001BD576 /* FMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A016E96812001BD576 /* FMAudioPlayer.m */; };
-		C1A429A416E96833001BD576 /* FMAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429A316E96833001BD576 /* FMAudioItem.m */; };
-		C1A429AB16E96A0C001BD576 /* FMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429AA16E96A0C001BD576 /* FMAuth.m */; };
-		C1A429AE16E96A17001BD576 /* FMBandwidthMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429AD16E96A17001BD576 /* FMBandwidthMonitor.m */; };
-		C1A429B116E96A1F001BD576 /* FMReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A429B016E96A1F001BD576 /* FMReachability.m */; };
-		C1A9284516EE6E6C006C6963 /* FMAPIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284416EE6E6C006C6963 /* FMAPIRequest.m */; };
-		C1A9284816EE8BE3006C6963 /* FMAuth+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284716EE8BE3006C6963 /* FMAuth+Base64.m */; };
-		C1A9284B16EE92C7006C6963 /* FMStation.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A9284A16EE92C6006C6963 /* FMStation.m */; };
-		C1AAE4FD171DD57400483F13 /* FMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AAE4FC171DD57400483F13 /* FMLog.m */; };
+		C1B095D71731A42A0075EA5E /* FMAPIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C61731A42A0075EA5E /* FMAPIRequest.m */; };
+		C1B095D81731A42A0075EA5E /* FMAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C81731A42A0075EA5E /* FMAsset.m */; };
+		C1B095D91731A42A0075EA5E /* FMAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C91731A42A0075EA5E /* FMAudioItem.m */; };
+		C1B095DA1731A42A0075EA5E /* FMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CA1731A42A0075EA5E /* FMAudioPlayer.m */; };
+		C1B095DB1731A42A0075EA5E /* FMAuth+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CC1731A42A0075EA5E /* FMAuth+Base64.m */; };
+		C1B095DC1731A42A0075EA5E /* FMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CE1731A42A0075EA5E /* FMAuth.m */; };
+		C1B095DD1731A42A0075EA5E /* FMBandwidthMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D01731A42A0075EA5E /* FMBandwidthMonitor.m */; };
+		C1B095DE1731A42A0075EA5E /* FMError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D11731A42A0075EA5E /* FMError.m */; };
+		C1B095DF1731A42A0075EA5E /* FMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D21731A42A0075EA5E /* FMLog.m */; };
+		C1B095E01731A42A0075EA5E /* FMReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D41731A42A0075EA5E /* FMReachability.m */; };
+		C1B095E11731A42A0075EA5E /* FMSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D51731A42A0075EA5E /* FMSession.m */; };
+		C1B095E21731A42A0075EA5E /* FMStation.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D61731A42A0075EA5E /* FMStation.m */; };
 		C1B11589170A273500DA8041 /* FMStationPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B11588170A273500DA8041 /* FMStationPickerViewController.m */; };
-		C1B28BA8172AF16B00358AB0 /* FMAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B28BA7172AF16B00358AB0 /* FMAsset.m */; };
 		C1B28BAA172B30BD00358AB0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B28BA9172B30BD00358AB0 /* SystemConfiguration.framework */; };
-		C1BF242416FA211A007909CB /* FMError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1BF242316FA211A007909CB /* FMError.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,33 +75,33 @@
 		C1A4299016E967EC001BD576 /* FMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMViewController.h; sourceTree = "<group>"; };
 		C1A4299116E967EC001BD576 /* FMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMViewController.m; sourceTree = "<group>"; };
 		C1A4299416E967EC001BD576 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FMViewController.xib; sourceTree = "<group>"; };
-		C1A4299C16E96806001BD576 /* FMSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMSession.h; sourceTree = "<group>"; };
-		C1A4299D16E96806001BD576 /* FMSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMSession.m; sourceTree = "<group>"; };
-		C1A4299F16E96812001BD576 /* FMAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAudioPlayer.h; sourceTree = "<group>"; };
-		C1A429A016E96812001BD576 /* FMAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioPlayer.m; sourceTree = "<group>"; };
-		C1A429A216E96833001BD576 /* FMAudioItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAudioItem.h; sourceTree = "<group>"; };
-		C1A429A316E96833001BD576 /* FMAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioItem.m; sourceTree = "<group>"; };
-		C1A429A916E96A0C001BD576 /* FMAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAuth.h; sourceTree = "<group>"; };
-		C1A429AA16E96A0C001BD576 /* FMAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAuth.m; sourceTree = "<group>"; };
-		C1A429AC16E96A17001BD576 /* FMBandwidthMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMBandwidthMonitor.h; sourceTree = "<group>"; };
-		C1A429AD16E96A17001BD576 /* FMBandwidthMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMBandwidthMonitor.m; sourceTree = "<group>"; };
-		C1A429AF16E96A1F001BD576 /* FMReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMReachability.h; sourceTree = "<group>"; };
-		C1A429B016E96A1F001BD576 /* FMReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMReachability.m; sourceTree = "<group>"; };
-		C1A9284316EE6E6C006C6963 /* FMAPIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAPIRequest.h; sourceTree = "<group>"; };
-		C1A9284416EE6E6C006C6963 /* FMAPIRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAPIRequest.m; sourceTree = "<group>"; };
-		C1A9284616EE8BE3006C6963 /* FMAuth+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FMAuth+Base64.h"; sourceTree = "<group>"; };
-		C1A9284716EE8BE3006C6963 /* FMAuth+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FMAuth+Base64.m"; sourceTree = "<group>"; };
-		C1A9284916EE92C6006C6963 /* FMStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStation.h; sourceTree = "<group>"; };
-		C1A9284A16EE92C6006C6963 /* FMStation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStation.m; sourceTree = "<group>"; };
-		C1A9284C16EFDB52006C6963 /* FMError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMError.h; sourceTree = "<group>"; };
-		C1AAE4FB171DD4A200483F13 /* FMLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMLog.h; sourceTree = "<group>"; };
-		C1AAE4FC171DD57400483F13 /* FMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMLog.m; sourceTree = "<group>"; };
+		C1B095BE1731A42A0075EA5E /* FMAudioItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAudioItem.h; sourceTree = "<group>"; };
+		C1B095BF1731A42A0075EA5E /* FMAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAudioPlayer.h; sourceTree = "<group>"; };
+		C1B095C01731A42A0075EA5E /* FMError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMError.h; sourceTree = "<group>"; };
+		C1B095C11731A42A0075EA5E /* FMLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMLog.h; sourceTree = "<group>"; };
+		C1B095C21731A42A0075EA5E /* FMSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMSession.h; sourceTree = "<group>"; };
+		C1B095C31731A42A0075EA5E /* FMStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStation.h; sourceTree = "<group>"; };
+		C1B095C51731A42A0075EA5E /* FMAPIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAPIRequest.h; sourceTree = "<group>"; };
+		C1B095C61731A42A0075EA5E /* FMAPIRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAPIRequest.m; sourceTree = "<group>"; };
+		C1B095C71731A42A0075EA5E /* FMAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAsset.h; sourceTree = "<group>"; };
+		C1B095C81731A42A0075EA5E /* FMAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAsset.m; sourceTree = "<group>"; };
+		C1B095C91731A42A0075EA5E /* FMAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioItem.m; sourceTree = "<group>"; };
+		C1B095CA1731A42A0075EA5E /* FMAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioPlayer.m; sourceTree = "<group>"; };
+		C1B095CB1731A42A0075EA5E /* FMAuth+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FMAuth+Base64.h"; sourceTree = "<group>"; };
+		C1B095CC1731A42A0075EA5E /* FMAuth+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FMAuth+Base64.m"; sourceTree = "<group>"; };
+		C1B095CD1731A42A0075EA5E /* FMAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAuth.h; sourceTree = "<group>"; };
+		C1B095CE1731A42A0075EA5E /* FMAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAuth.m; sourceTree = "<group>"; };
+		C1B095CF1731A42A0075EA5E /* FMBandwidthMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMBandwidthMonitor.h; sourceTree = "<group>"; };
+		C1B095D01731A42A0075EA5E /* FMBandwidthMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMBandwidthMonitor.m; sourceTree = "<group>"; };
+		C1B095D11731A42A0075EA5E /* FMError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMError.m; sourceTree = "<group>"; };
+		C1B095D21731A42A0075EA5E /* FMLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMLog.m; sourceTree = "<group>"; };
+		C1B095D31731A42A0075EA5E /* FMReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMReachability.h; sourceTree = "<group>"; };
+		C1B095D41731A42A0075EA5E /* FMReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMReachability.m; sourceTree = "<group>"; };
+		C1B095D51731A42A0075EA5E /* FMSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMSession.m; sourceTree = "<group>"; };
+		C1B095D61731A42A0075EA5E /* FMStation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStation.m; sourceTree = "<group>"; };
 		C1B11587170A273500DA8041 /* FMStationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStationPickerViewController.h; sourceTree = "<group>"; };
 		C1B11588170A273500DA8041 /* FMStationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMStationPickerViewController.m; sourceTree = "<group>"; };
-		C1B28BA6172AF16B00358AB0 /* FMAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAsset.h; sourceTree = "<group>"; };
-		C1B28BA7172AF16B00358AB0 /* FMAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAsset.m; sourceTree = "<group>"; };
 		C1B28BA9172B30BD00358AB0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		C1BF242316FA211A007909CB /* FMError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMError.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,7 +169,7 @@
 		C1A4297E16E967EB001BD576 /* sdktest */ = {
 			isa = PBXGroup;
 			children = (
-				C1A4299B16E967F5001BD576 /* Feed SDK */,
+				C1B095BD1731A42A0075EA5E /* Feed Media SDK */,
 				C1A4298716E967EB001BD576 /* FMAppDelegate.h */,
 				C1A4298816E967EB001BD576 /* FMAppDelegate.m */,
 				C1B11587170A273500DA8041 /* FMStationPickerViewController.h */,
@@ -201,43 +201,43 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		C1A4299B16E967F5001BD576 /* Feed SDK */ = {
+		C1B095BD1731A42A0075EA5E /* Feed Media SDK */ = {
 			isa = PBXGroup;
 			children = (
-				C1A4299C16E96806001BD576 /* FMSession.h */,
-				C1A4299F16E96812001BD576 /* FMAudioPlayer.h */,
-				C1A429A216E96833001BD576 /* FMAudioItem.h */,
-				C1A9284916EE92C6006C6963 /* FMStation.h */,
-				C1A9284C16EFDB52006C6963 /* FMError.h */,
-				C1AAE4FB171DD4A200483F13 /* FMLog.h */,
-				C1A429A516E969E9001BD576 /* Internal */,
+				C1B095BE1731A42A0075EA5E /* FMAudioItem.h */,
+				C1B095BF1731A42A0075EA5E /* FMAudioPlayer.h */,
+				C1B095C01731A42A0075EA5E /* FMError.h */,
+				C1B095C11731A42A0075EA5E /* FMLog.h */,
+				C1B095C21731A42A0075EA5E /* FMSession.h */,
+				C1B095C31731A42A0075EA5E /* FMStation.h */,
+				C1B095C41731A42A0075EA5E /* Internal */,
 			);
-			name = "Feed SDK";
+			path = "Feed Media SDK";
 			sourceTree = "<group>";
 		};
-		C1A429A516E969E9001BD576 /* Internal */ = {
+		C1B095C41731A42A0075EA5E /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				C1A4299D16E96806001BD576 /* FMSession.m */,
-				C1A429A016E96812001BD576 /* FMAudioPlayer.m */,
-				C1A429A316E96833001BD576 /* FMAudioItem.m */,
-				C1A9284A16EE92C6006C6963 /* FMStation.m */,
-				C1BF242316FA211A007909CB /* FMError.m */,
-				C1AAE4FC171DD57400483F13 /* FMLog.m */,
-				C1A9284316EE6E6C006C6963 /* FMAPIRequest.h */,
-				C1A9284416EE6E6C006C6963 /* FMAPIRequest.m */,
-				C1A429A916E96A0C001BD576 /* FMAuth.h */,
-				C1A429AA16E96A0C001BD576 /* FMAuth.m */,
-				C1A9284616EE8BE3006C6963 /* FMAuth+Base64.h */,
-				C1A9284716EE8BE3006C6963 /* FMAuth+Base64.m */,
-				C1A429AC16E96A17001BD576 /* FMBandwidthMonitor.h */,
-				C1A429AD16E96A17001BD576 /* FMBandwidthMonitor.m */,
-				C1A429AF16E96A1F001BD576 /* FMReachability.h */,
-				C1A429B016E96A1F001BD576 /* FMReachability.m */,
-				C1B28BA6172AF16B00358AB0 /* FMAsset.h */,
-				C1B28BA7172AF16B00358AB0 /* FMAsset.m */,
+				C1B095C51731A42A0075EA5E /* FMAPIRequest.h */,
+				C1B095C61731A42A0075EA5E /* FMAPIRequest.m */,
+				C1B095C71731A42A0075EA5E /* FMAsset.h */,
+				C1B095C81731A42A0075EA5E /* FMAsset.m */,
+				C1B095C91731A42A0075EA5E /* FMAudioItem.m */,
+				C1B095CA1731A42A0075EA5E /* FMAudioPlayer.m */,
+				C1B095CB1731A42A0075EA5E /* FMAuth+Base64.h */,
+				C1B095CC1731A42A0075EA5E /* FMAuth+Base64.m */,
+				C1B095CD1731A42A0075EA5E /* FMAuth.h */,
+				C1B095CE1731A42A0075EA5E /* FMAuth.m */,
+				C1B095CF1731A42A0075EA5E /* FMBandwidthMonitor.h */,
+				C1B095D01731A42A0075EA5E /* FMBandwidthMonitor.m */,
+				C1B095D11731A42A0075EA5E /* FMError.m */,
+				C1B095D21731A42A0075EA5E /* FMLog.m */,
+				C1B095D31731A42A0075EA5E /* FMReachability.h */,
+				C1B095D41731A42A0075EA5E /* FMReachability.m */,
+				C1B095D51731A42A0075EA5E /* FMSession.m */,
+				C1B095D61731A42A0075EA5E /* FMStation.m */,
 			);
-			name = Internal;
+			path = Internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,21 +316,21 @@
 				C1A4298516E967EB001BD576 /* main.m in Sources */,
 				C1A4298916E967EB001BD576 /* FMAppDelegate.m in Sources */,
 				C1A4299216E967EC001BD576 /* FMViewController.m in Sources */,
-				C1A4299E16E96806001BD576 /* FMSession.m in Sources */,
-				C1A429A116E96812001BD576 /* FMAudioPlayer.m in Sources */,
-				C1A429A416E96833001BD576 /* FMAudioItem.m in Sources */,
-				C1A429AB16E96A0C001BD576 /* FMAuth.m in Sources */,
-				C1A429AE16E96A17001BD576 /* FMBandwidthMonitor.m in Sources */,
-				C1A429B116E96A1F001BD576 /* FMReachability.m in Sources */,
-				C1A9284516EE6E6C006C6963 /* FMAPIRequest.m in Sources */,
-				C1A9284816EE8BE3006C6963 /* FMAuth+Base64.m in Sources */,
-				C1A9284B16EE92C7006C6963 /* FMStation.m in Sources */,
-				C1BF242416FA211A007909CB /* FMError.m in Sources */,
 				C1B11589170A273500DA8041 /* FMStationPickerViewController.m in Sources */,
 				C108F23D1714B9EC0096DF46 /* FMProgressView.m in Sources */,
-				C1AAE4FD171DD57400483F13 /* FMLog.m in Sources */,
 				C1319B091727532400059BB6 /* FMMetadataView.m in Sources */,
-				C1B28BA8172AF16B00358AB0 /* FMAsset.m in Sources */,
+				C1B095D71731A42A0075EA5E /* FMAPIRequest.m in Sources */,
+				C1B095D81731A42A0075EA5E /* FMAsset.m in Sources */,
+				C1B095D91731A42A0075EA5E /* FMAudioItem.m in Sources */,
+				C1B095DA1731A42A0075EA5E /* FMAudioPlayer.m in Sources */,
+				C1B095DB1731A42A0075EA5E /* FMAuth+Base64.m in Sources */,
+				C1B095DC1731A42A0075EA5E /* FMAuth.m in Sources */,
+				C1B095DD1731A42A0075EA5E /* FMBandwidthMonitor.m in Sources */,
+				C1B095DE1731A42A0075EA5E /* FMError.m in Sources */,
+				C1B095DF1731A42A0075EA5E /* FMLog.m in Sources */,
+				C1B095E01731A42A0075EA5E /* FMReachability.m in Sources */,
+				C1B095E11731A42A0075EA5E /* FMSession.m in Sources */,
+				C1B095E21731A42A0075EA5E /* FMStation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
