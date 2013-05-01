@@ -169,22 +169,14 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 - (void)assetFailed:(FMAsset *)asset {
     FMLogWarn(@"Asset failed to load: %@", asset.loadError);
     _loadingAsset = nil;
-    [self.session requestSkipWithSuccess:^{
-        [self play];
-    } failure:^(NSError *error) {
-        FMLogError(@"Failed to force skip, playback will stop");
-        //todo: any more options for recovery? any notifications to throw to let clients know this is fatal?
-    }];
+    [self.session rejectItem:asset.audioItem];
 }
 
 - (void)assetFailedToPrepareForPlayback:(AVPlayerItem *)playerItem {
     FMLogWarn(@"Asset failed to prepare: %@", playerItem.error);
-    [self.session requestSkipWithSuccess:^{
-        [self play];
-    } failure:^(NSError *error) {
-        FMLogError(@"Failed to force skip, playback will stop");
-        //todo: any more options for recovery? any notifications to throw to let clients know this is fatal?
-    }];
+    if(playerItem == _loadingAsset.playerItem) {
+        [self.session rejectItem:_loadingAsset.audioItem];
+    }
 }
 
 - (void)assetReadyForPlayback:(AVPlayerItem *)item {

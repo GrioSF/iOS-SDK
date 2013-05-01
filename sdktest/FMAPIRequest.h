@@ -37,7 +37,8 @@
 + (FMAPIRequest *)requestStart:(NSString *)playId;
 + (FMAPIRequest *)requestElapse:(NSString *)playId time:(NSTimeInterval)elapsedTime;
 + (FMAPIRequest *)requestSkip:(NSString *)playId;
-+ (FMAPIRequest *)requestSkip:(NSString *)playId force:(BOOL)force elapsed:(NSTimeInterval)elapsedTime;
++ (FMAPIRequest *)requestSkip:(NSString *)playId elapsed:(NSTimeInterval)elapsedTime;
++ (FMAPIRequest *)requestInvalidate:(NSString *)playId;
 + (FMAPIRequest *)requestComplete:(NSString *)playId;
 
 - (void)send;

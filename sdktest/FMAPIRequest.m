@@ -109,19 +109,25 @@
 }
 
 + (FMAPIRequest *)requestSkip:(NSString *)playId {
-    return [self requestSkip:playId force:NO elapsed:-1];
+    return [self requestSkip:playId elapsed:-1];
 }
 
-+ (FMAPIRequest *)requestSkip:(NSString *)playId force:(BOOL)force elapsed:(NSTimeInterval)elapsedTime {
++ (FMAPIRequest *)requestSkip:(NSString *)playId elapsed:(NSTimeInterval)elapsedTime {
     FMAPIRequest *request = [[FMAPIRequest alloc] init];
     request.httpMethod = @"POST";
     request.httpEndpoint = [NSString stringWithFormat:@"play/%@/skip",playId];
-    if(force) {
-        request.postParameters[@"force"] = @(1);
-    }
+
     if(elapsedTime > 0) {
         request.postParameters[@"seconds"] = [NSString stringWithFormat:@"%f", elapsedTime];
     }
+    request.authRequired = YES;
+    return request;
+}
+
++ (FMAPIRequest *)requestInvalidate:(NSString *)playId {
+    FMAPIRequest *request = [[FMAPIRequest alloc] init];
+    request.httpMethod = @"POST";
+    request.httpEndpoint = [NSString stringWithFormat:@"play/%@/invalidate",playId];
     request.authRequired = YES;
     return request;
 }

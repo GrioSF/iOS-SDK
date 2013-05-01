@@ -49,7 +49,7 @@ extern NSString *const FMAudioFormatAAC;
 
 /**
  Set to specify available bandwidth, in kbps. Set to 0 to request the highest available quality.
- Defaults to 128.
+ Defaults to 48.
  */
 @property (nonatomic) NSInteger maxBitrate;
 
@@ -107,13 +107,11 @@ extern NSString *const FMAudioFormatAAC;
                        failure:(void (^)(NSError *error))failure;
 
 /**
- Behaves like `-requestSkip`, but ignores the user's skip limit. Use only to resolve system issues, e.g. unplayable track
+ Use only to resolve system issues, e.g. unplayable track.
+ Automatically requests a new track.
  
- @param success Optional block to be called if the server grants the skip
- @param failure Optional block to be called if the server rejects the skip
- */
-- (void)requestSkipIgnoringLimit;
-- (void)requestSkipIgnoringLimitWithSuccess:(void (^)(void))success
-                                    failure:(void (^)(NSError *error))failure;
+ @param item The item that failed. Should be either the FMSession's currentItem or nextItem, otherwise the call will be ignored.
+  */
+- (void)rejectItem:(FMAudioItem *)item;
 
 @end

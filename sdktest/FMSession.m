@@ -13,7 +13,7 @@
 #define kFMAuthStoragePath @"FeedMedia/"
 #define kFMAuthStorageName @"FMAuth.plist"
 
-#define kFMSessionDefaultBitrate 128
+#define kFMSessionDefaultBitrate 48
 
 NSString *const FMSessionCurrentItemChangedNotification = @"FMSessionCurrentItemChangedNotification";
 NSString *const FMSessionNextItemAvailableNotification = @"FMSessionNextItemAvailableNotification";
@@ -386,11 +386,15 @@ NSString *const FMAudioFormatAAC = @"aac";
     [self sendRequest:completeRequest];
 }
 
-- (void)requestSkip:(BOOL)forced
-        withSuccess:(void (^)(void))success
-            failure:(void (^)(NSError *error))failure {
-    
-    FMAPIRequest *skipRequest = [FMAPIRequest requestSkip:self.currentItem.playId force:forced elapsed:-1];
+- (void)requestSkip {
+    [self requestSkipWithSuccess:nil failure:nil];
+}
+
+//todo: See if there's an easy way to get a proper elapsedTime
+
+- (void)requestSkipWithSuccess:(void (^)(void))success
+                       failure:(void (^)(NSError *error))failure {
+    FMAPIRequest *skipRequest = [FMAPIRequest requestSkip:self.currentItem.playId elapsed:-1];
     skipRequest.successBlock = ^(NSDictionary *result) {
         FMLogDebug(@"Skip success");
         self.currentItem = nil;
@@ -408,22 +412,25 @@ NSString *const FMAudioFormatAAC = @"aac";
     [self sendRequest:skipRequest];
 }
 
-- (void)requestSkip {
-    [self requestSkip:NO withSuccess:nil failure:nil];
-}
+- (void)rejectItem:(FMAudioItem *)item {
+    BOOL isCurrentItem = [item isEqual:self.currentItem];
+    BOOL isNextItem = [item isEqual:self.nextItem];
+    if(!isCurrentItem && !isNextItem) {
+        return;
+    }
 
-- (void)requestSkipWithSuccess:(void (^)(void))success
-                       failure:(void (^)(NSError *error))failure {
-    [self requestSkip:NO withSuccess:success failure:failure];
-}
-
-- (void)requestSkipIgnoringLimit {
-    [self requestSkip:YES withSuccess:nil failure:nil];
-}
-
-- (void)requestSkipIgnoringLimitWithSuccess:(void (^)(void))success
-                                    failure:(void (^)(NSError *error))failure {
-    [self requestSkip:YES withSuccess:success failure:failure];
+    FMAPIRequest *invalidateRequest = [FMAPIRequest requestInvalidate:item.playId];
+    [self sendRequest:invalidateRequest];
+    invalidateRequest.successBlock = ^(NSDictionary *result) {
+        FMLogDebug(@"Invalidate success");
+        if(isCurrentItem) {
+            self.currentItem = nil;
+        }
+        else {
+            self.nextItem = nil;
+            [self requestNextTrack];
+        }
+    };
 }
 
 @end
