@@ -246,8 +246,10 @@ NSString *const FMAudioFormatAAC = @"aac";
                         withSuccess:(void (^)(NSArray *stations))success
                             failure:(void (^)(NSError *error))failure {
 
-    placementId = placementId ?: self.activePlacementId;
-    NSAssert(placementId != nil, @"Must either set FMSession's placementId in advance or pass explicit placementId to -requestStations call");
+    if(placementId == nil || [placementId isEqualToString:@""]) {
+        placementId = placementId ?: self.activePlacementId;
+    }
+    NSAssert(placementId != nil && ![placementId isEqualToString:@""], @"Must either set FMSession's placementId before requesting stations or pass explicit placementId");
 
     FMAPIRequest *stationRequest = [FMAPIRequest requestStationsForPlacement:placementId];
     stationRequest.successBlock = ^(NSDictionary *result) {
@@ -257,32 +259,20 @@ NSString *const FMAudioFormatAAC = @"aac";
             if(failure) {
                 failure(error);
             }
-            [self stationRequestFailed:error];
         }
         else {
             NSArray *stations = [self stationsFromJSON:stationJSON];
             if(success) {
                 success(stations);
             }
-            [self stationRequestSucceeded:stations];
         }
     };
     stationRequest.failureBlock = ^(NSError *error) {
         if(failure) {
             failure(error);
         }
-        [self stationRequestFailed:error];
     };
     [self sendRequest:stationRequest];
-}
-
-
-- (void)requestStationsForPlacement:(NSString *)placementId {
-    [self requestStationsForPlacement:placementId withSuccess:nil failure:nil];
-}
-
-- (void)requestStations {
-    [self requestStationsForPlacement:nil];
 }
 
 - (NSArray *)stationsFromJSON:(NSArray *)stationJSON {
@@ -298,17 +288,6 @@ NSString *const FMAudioFormatAAC = @"aac";
     return stations;
 }
 
-- (void)stationRequestSucceeded:(NSArray *)stations {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(session:didReceiveStations:)]) {
-        [self.delegate session:self didReceiveStations:stations];
-    }
-}
-
-- (void)stationRequestFailed:(NSError *)error {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(session:didFailToReceiveStations:)]) {
-        [self.delegate session:self didFailToReceiveStations:error];
-    }
-}
 
 #pragma mark - PLAYBACK
 
@@ -353,10 +332,7 @@ NSString *const FMAudioFormatAAC = @"aac";
 - (void)nextTrackFailed:(NSError *)error {
     FMLogDebug(@"Next Track Failed: %@",error);
     _nextTrackInProgress = NO;
-
-    if(self.delegate && [self.delegate respondsToSelector:@selector(session:didFailToReceiveItem:)]) {
-        [self.delegate session:self didFailToReceiveItem:error];
-    }
+    // todo: need to recover or issue a permanent failure notice
 }
 
 - (void)playStarted {

@@ -22,20 +22,8 @@ extern NSString *const FMSessionActiveStationChangedNotification;
 extern NSString *const FMAudioFormatMP3;
 extern NSString *const FMAudioFormatAAC;
 
-@protocol FMSessionDelegate <NSObject>
-
-@optional
-- (void)session:(FMSession *)session didReceiveStations:(NSArray *)stations;
-- (void)session:(FMSession *)session didFailToReceiveStations:(NSError *)error;
-- (void)session:(FMSession *)session didFailToReceiveItem:(NSError *)error;
-- (void)session:(FMSession *)session didFailToSkipTrack:(NSError *)error;
-
-@end
-
-
 @interface FMSession : NSObject
 
-@property (nonatomic, assign) id<FMSessionDelegate> delegate;
 @property (nonatomic, copy, setter=setStation:) FMStation *activeStation;
 @property (nonatomic, copy, setter=setPlacement:) NSString *activePlacementId;
 
@@ -59,8 +47,6 @@ extern NSString *const FMAudioFormatAAC;
 + (void)setClientToken:(NSString *)token secret:(NSString *)secret;
 + (FMSession *)sharedSession;
 
-- (void)requestStations;
-- (void)requestStationsForPlacement:(NSString *)placementId;
 - (void)requestStationsForPlacement:(NSString *)placementId
                         withSuccess:(void (^)(NSArray *stations))success
                             failure:(void (^)(NSError *error))failure;
