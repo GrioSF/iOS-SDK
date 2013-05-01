@@ -24,7 +24,7 @@
         }
         _playId = playId;
 
-        NSDictionary *trackDict = jsonDictionary[@"blip"][@"audio_file"];
+        NSDictionary *trackDict = jsonDictionary[@"audio_file"];
         NSString *fileLocation = trackDict[@"url"];
         if([fileLocation isKindOfClass:[NSString class]] && ![fileLocation isEqualToString:@""]) {
             _contentUrl = [NSURL URLWithString:fileLocation];
