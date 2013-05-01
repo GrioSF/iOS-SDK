@@ -31,7 +31,7 @@ Adding Files
     2. Select your target
     3. Select the "Build Phases" tab
     4. Expand "Link Binary With Libraries"
-    5. Click the "+" to add `CoreMedia.framework` and `AVFoundation.framework`
+    5. Click the "+" to add `CoreMedia.framework`, `AVFoundation.framework`, and `SystemConfiguration.framework`
 
 Initializing the SDK
 ====================
