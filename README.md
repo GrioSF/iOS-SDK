@@ -22,7 +22,7 @@ Adding Files
 ============
 
 1. Add the SDK to your project: File --&gt; Add Files to "&lt;Your Project&gt;"...
-    1. Chose the "Feed SDK" folder in the dialog
+    1. Chose the "Feed Media SDK" folder in the dialog
     2. For "Destination", check "Copy items into destination group's folder (if needed)"
     3. For "Folders", select "Create groups for any added folders"
     4. For "Add to targets", check all targets where you'll be using the SDK
