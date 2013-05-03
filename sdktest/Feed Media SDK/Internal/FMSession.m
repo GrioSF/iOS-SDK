@@ -26,7 +26,7 @@ NSString *const FMAudioFormatAAC = @"aac";
     FMAuth *_auth;
     NSMutableArray *_queuedRequests;
     NSMutableArray *_requestsInProgress;
-    BOOL _nextTrackInProgress;
+    BOOL _nextItemInProgress;
 }
 @property FMAuth *auth;
 @property (nonatomic) FMAudioItem *currentItem;
@@ -237,7 +237,7 @@ NSString *const FMAudioFormatAAC = @"aac";
         [request cancel];
     }
     [_requestsInProgress removeAllObjects];
-    _nextTrackInProgress = NO;
+    _nextItemInProgress = NO;
 }
 
 #pragma mark - STATIONS
@@ -291,7 +291,7 @@ NSString *const FMAudioFormatAAC = @"aac";
 
 #pragma mark - PLAYBACK
 
-- (BOOL)canRequestTracks {
+- (BOOL)canRequestItems {
     if(self.auth.clientToken == nil ||
        [self.auth.clientToken isEqualToString:@""] ||
        self.auth.clientSecret == nil ||
@@ -305,18 +305,18 @@ NSString *const FMAudioFormatAAC = @"aac";
     }
 }
 
-- (void)requestNextTrack {
-    if(self.nextItem != nil || _nextTrackInProgress) return;
+- (void)requestNextItem {
+    if(self.nextItem != nil || _nextItemInProgress) return;
 
-    _nextTrackInProgress = YES;
+    _nextItemInProgress = YES;
 
     NSString *supportedFormatString = [self.supportedAudioFormats componentsJoinedByString:@","];
-    FMAPIRequest *trackRequest = trackRequest = [FMAPIRequest requestPlayInPlacement:self.activePlacementId
+    FMAPIRequest *playRequest = playRequest = [FMAPIRequest requestPlayInPlacement:self.activePlacementId
                                             withStation:self.activeStation.identifier
                                                 formats:supportedFormatString
                                              maxBitrate:[NSNumber numberWithInteger:self.maxBitrate]];
     
-    trackRequest.successBlock = ^(NSDictionary *result) {
+    playRequest.successBlock = ^(NSDictionary *result) {
         NSDictionary *playJSON = result[@"play"];
         FMAudioItem *nextItem = nil;
 
@@ -325,27 +325,27 @@ NSString *const FMAudioFormatAAC = @"aac";
         }
         
         if(nextItem == nil) {
-            [self nextTrackFailed:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:nil]];
+            [self nextItemFailed:[NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeUnexpectedReturnType userInfo:nil]];
         }
         else {
-            [self nextTrackSucceeded:nextItem];
+            [self nextItemSucceeded:nextItem];
         }
     };
-    trackRequest.failureBlock = ^(NSError *error) {
-        [self nextTrackFailed:error];
+    playRequest.failureBlock = ^(NSError *error) {
+        [self nextItemFailed:error];
     };
-    [self sendRequest:trackRequest];
+    [self sendRequest:playRequest];
 }
 
-- (void)nextTrackSucceeded:(FMAudioItem *)nextItem {
-    FMLogDebug(@"Next Track Succeeded: %@",nextItem);
-    _nextTrackInProgress = NO;
+- (void)nextItemSucceeded:(FMAudioItem *)nextItem {
+    FMLogDebug(@"Next Item Fetch Succeeded: %@",nextItem);
+    _nextItemInProgress = NO;
     self.nextItem = nextItem;
 }
 
-- (void)nextTrackFailed:(NSError *)error {
-    FMLogDebug(@"Next Track Failed: %@",error);
-    _nextTrackInProgress = NO;
+- (void)nextItemFailed:(NSError *)error {
+    FMLogDebug(@"Next Item Fetch Failed: %@",error);
+    _nextItemInProgress = NO;
     // todo: need to recover or issue a permanent failure notice
 }
 
@@ -359,7 +359,7 @@ NSString *const FMAudioFormatAAC = @"aac";
     };
     startRequest.successBlock = ^(NSDictionary *dictionary) {
         // Once the server acknowledges our start request, we can queue up the next song immediately
-        [self requestNextTrack];
+        [self requestNextItem];
     };
     [self sendRequest:startRequest];
 }
@@ -430,7 +430,7 @@ NSString *const FMAudioFormatAAC = @"aac";
         }
         else {
             self.nextItem = nil;
-            [self requestNextTrack];
+            [self requestNextItem];
         }
     };
 }

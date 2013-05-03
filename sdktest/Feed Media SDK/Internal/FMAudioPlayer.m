@@ -122,7 +122,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 - (void)prepareToPlay {
     FMLogDebug(@"Prepare To Play");
 
-    if(![self.session canRequestTracks]) {
+    if(![self.session canRequestItems]) {
         FMLogWarn(@"Can't prepare to play: session not ready");
         return;
     }
@@ -136,9 +136,9 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
     if(!self.session.nextItem) {
         FMLogDebug(@"Requesting item");
-        //FMSession will ignore requestNextTrack if a request is already in progress, but either way we'll get a notification when it's ready
+        //FMSession will ignore requestNextItem if a request is already in progress, but either way we'll get a notification when it's ready
         //todo: if there's an error, we won't get a callback. Is it ok to stay in WaitingForItem forever, or do we need a solution?
-        [self.session requestNextTrack];
+        [self.session requestNextItem];
     }
     else {
         [self loadNextItem];
@@ -147,7 +147,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 - (void)loadNextItem {
     if(_loadingAsset) {
-        //todo: assuming only one asset load at a time, get ready to queue up next tracks in advance!
+        //todo: assuming only one asset load at a time, get ready to queue up next items in advance!
         [_loadingAsset cancel];
     }
     if(self.session.nextItem) {

@@ -24,8 +24,8 @@
         }
         _playId = playId;
 
-        NSDictionary *trackDict = jsonDictionary[@"audio_file"];
-        NSString *fileLocation = trackDict[@"url"];
+        NSDictionary *fileDict = jsonDictionary[@"audio_file"];
+        NSString *fileLocation = fileDict[@"url"];
         if([fileLocation isKindOfClass:[NSString class]] && ![fileLocation isEqualToString:@""]) {
             _contentUrl = [NSURL URLWithString:fileLocation];
         }
@@ -37,32 +37,32 @@
 
         // Be tolerant if any metadata is missing or empty
 
-        NSString *trackTitle = trackDict[@"track"][@"title"];
+        NSString *trackTitle = fileDict[@"track"][@"title"];
         if([trackTitle isKindOfClass:[NSString class]]) {
             _name = trackTitle;
         }
 
-        NSString *artistName = trackDict[@"artist"][@"name"];
+        NSString *artistName = fileDict[@"artist"][@"name"];
         if([artistName isKindOfClass:[NSString class]]) {
             _artist = artistName;
         }
 
-        NSString *albumTitle = trackDict[@"release"][@"title"];
+        NSString *albumTitle = fileDict[@"release"][@"title"];
         if([albumTitle isKindOfClass:[NSString class]]) {
             _album = albumTitle;
         }
 
-        NSString *codec = trackDict[@"codec"];
+        NSString *codec = fileDict[@"codec"];
         if([codec isKindOfClass:[NSString class]]) {
             _codec = codec;
         }
 
-        id duration = trackDict[@"duration_in_seconds"];
+        id duration = fileDict[@"duration_in_seconds"];
         if([duration respondsToSelector:@selector(doubleValue)]) {
             _duration = [duration doubleValue];
         }
 
-        id bitrate = trackDict[@"bitrate"];
+        id bitrate = fileDict[@"bitrate"];
         if([bitrate respondsToSelector:@selector(doubleValue)]) {
             _bitrate = [bitrate doubleValue];
         }

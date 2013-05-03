@@ -62,12 +62,12 @@ extern NSString *const FMAudioFormatAAC;
 /**
  Returns whether or not the session is ready for requests, e.g. a valid client token, secret, and placementId has been set.
  */
-- (BOOL)canRequestTracks;
+- (BOOL)canRequestItems;
 
 /**
- Requests the next track for the current placement/station, which will populate the `nextItem` property and trigger the `FMSessionNextItemAvailableNotification` notification on success. Only has effect if `nextItem` is nil.
+ Requests the next item for the current placement/station, which will populate the `nextItem` property and trigger the `FMSessionNextItemAvailableNotification` notification on success. Only has effect if `nextItem` is nil.
  */
- - (void)requestNextTrack;
+ - (void)requestNextItem;
 
 /** 
  Moves the nextItem into the currentItem position and notifies the server that the play began. If a previous item is playing, `-playCompleted` or `-requestSkip` must be called first.
@@ -98,8 +98,8 @@ extern NSString *const FMAudioFormatAAC;
                        failure:(void (^)(NSError *error))failure;
 
 /**
- Use only to resolve system issues, e.g. unplayable track.
- Automatically requests a new track.
+ Use only to resolve system issues, e.g. unplayable content.
+ Automatically requests a new item.
  
  @param item The item that failed. Should be either the FMSession's currentItem or nextItem, otherwise the call will be ignored.
   */
