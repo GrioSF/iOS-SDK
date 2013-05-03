@@ -70,6 +70,7 @@ NSString *const FMAudioFormatAAC = @"aac";
         if(_auth == nil) {
             _auth = [[FMAuth alloc] init];
         }
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeUpdate:) name:UIApplicationSignificantTimeChangeNotification object:nil];
     }
     return self;
 }
@@ -130,6 +131,10 @@ NSString *const FMAudioFormatAAC = @"aac";
         }
     }
     return saveDirectory;
+}
+
+- (void)timeUpdate:(NSNotification *)notification {
+    [self updateServerTime];
 }
 
 - (void)updateServerTime {

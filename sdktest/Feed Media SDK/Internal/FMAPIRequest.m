@@ -323,7 +323,6 @@
         
         NSError *apiError = [self errorFromJSON:jsonObject];
         if(apiError) {
-            //TODO: Try to recover from timestamp error?
             [self failWithError:apiError];
         }
         else {
