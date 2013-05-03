@@ -136,7 +136,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
     if(!self.session.nextItem) {
         FMLogDebug(@"Requesting item");
-        //FMSession will ignore requestNextTrack if a request is already in progress, but either way we'll get a callback when it's ready
+        //FMSession will ignore requestNextTrack if a request is already in progress, but either way we'll get a notification when it's ready
         //todo: if there's an error, we won't get a callback. Is it ok to stay in WaitingForItem forever, or do we need a solution?
         [self.session requestNextTrack];
     }
@@ -189,7 +189,9 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 - (void)assetFailedToPrepareForPlayback:(AVPlayerItem *)playerItem {
     FMLogWarn(@"Asset failed to prepare: %@", playerItem.error);
     if(playerItem == _loadingAsset.playerItem) {
-        [self.session rejectItem:_loadingAsset.audioItem];
+        FMAudioItem *rejectedItem = _loadingAsset.audioItem;
+        _loadingAsset = nil;
+        [self.session rejectItem:rejectedItem];
     }
 }
 
@@ -406,12 +408,9 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 	else if (context == FMAudioPlayerCurrentItemObservationContext) {
         AVPlayerItem *newPlayerItem = [change objectForKey:NSKeyValueChangeNewKey];
         FMLogDebug(@"Observed current item change to: %@",newPlayerItem);
-        /* New player item null? */
-        if (newPlayerItem == (id)[NSNull null]) {
-        }
-        /* Replacement of player currentItem has occurred */
-        else {
-            [self.session playStarted]; //todo: is this definitely the right place for this?
+
+        if(newPlayerItem != (id)[NSNull null]) {
+            [self.session playStarted];
         }
 	}
 	else {
