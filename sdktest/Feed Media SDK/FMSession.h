@@ -60,6 +60,11 @@ extern NSString *const FMAudioFormatAAC;
  */
 
 /**
+ Returns whether or not the session is ready for requests, e.g. a valid client token, secret, and placementId has been set.
+ */
+- (BOOL)canRequestTracks;
+
+/**
  Requests the next track for the current placement/station, which will populate the `nextItem` property and trigger the `FMSessionNextItemAvailableNotification` notification on success. Only has effect if `nextItem` is nil.
  */
  - (void)requestNextTrack;

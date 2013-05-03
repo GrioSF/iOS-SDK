@@ -291,6 +291,20 @@ NSString *const FMAudioFormatAAC = @"aac";
 
 #pragma mark - PLAYBACK
 
+- (BOOL)canRequestTracks {
+    if(self.auth.clientToken == nil ||
+       [self.auth.clientToken isEqualToString:@""] ||
+       self.auth.clientSecret == nil ||
+       [self.auth.clientSecret isEqualToString:@""] ||
+       self.activePlacementId == nil ||
+       [self.activePlacementId isEqualToString:@""]) {
+        return NO;
+    }
+    else {
+        return YES;
+    }
+}
+
 - (void)requestNextTrack {
     if(self.nextItem != nil || _nextTrackInProgress) return;
 

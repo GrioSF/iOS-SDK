@@ -88,7 +88,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 }
 
 //todo: beef up with internal ability to play, or is this good enough?
-- (BOOL) isPreparedToPlay {
+- (BOOL)isPreparedToPlay {
     return (_player.currentItem.status == AVPlayerItemStatusReadyToPlay) &&
             (self.playbackState != FMAudioPlayerPlaybackStateWaitingForItem);
 }
@@ -121,6 +121,12 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 - (void)prepareToPlay {
     FMLogDebug(@"Prepare To Play");
+
+    if(![self.session canRequestTracks]) {
+        FMLogWarn(@"Can't prepare to play: session not ready");
+        return;
+    }
+
     if([_player.items count] > 1) {
         FMLogDebug(@"Already have items, ignoring");
         //already have a playing item, no need for additional preparation
@@ -130,11 +136,9 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
     if(!self.session.nextItem) {
         FMLogDebug(@"Requesting item");
-        //FMSession will ignore requestNextTrack if a request is already in progress, then we'll get a callback when it's ready
-        //todo: make sure we actually have a session, and that session has a placement/station/etc
+        //FMSession will ignore requestNextTrack if a request is already in progress, but either way we'll get a callback when it's ready
         //todo: if there's an error, we won't get a callback. Is it ok to stay in WaitingForItem forever, or do we need a solution?
         [self.session requestNextTrack];
-        return;
     }
     else {
         [self loadNextItem];
