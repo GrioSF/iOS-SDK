@@ -339,11 +339,15 @@ NSString *const FMAudioFormatAAC = @"aac";
     self.currentItem = self.nextItem;
     self.nextItem = nil;
 
-    FMAPIRequest *playRequest = [FMAPIRequest requestStart:self.currentItem.playId];
-    playRequest.failureBlock = ^(NSError *error) {
+    FMAPIRequest *startRequest = [FMAPIRequest requestStart:self.currentItem.playId];
+    startRequest.failureBlock = ^(NSError *error) {
         FMLogError(@"ERROR: Failed to start play on %@. Next item will not be available! %@", self.currentItem, error);
     };
-    [self sendRequest:playRequest];
+    startRequest.successBlock = ^(NSDictionary *dictionary) {
+        // Once the server acknowledges our start request, we can queue up the next song immediately
+        [self requestNextTrack];
+    };
+    [self sendRequest:startRequest];
 }
 
 - (void)updatePlay:(NSTimeInterval)elapsedTime {
@@ -357,7 +361,7 @@ NSString *const FMAudioFormatAAC = @"aac";
 
     FMAPIRequest *completeRequest = [FMAPIRequest requestComplete:playId];
     completeRequest.failureBlock = ^(NSError *error) {
-        FMLogError(@"ERROR: Failed to register play completion: %@. Next item will not be available!", error);
+        FMLogWarn(@"ERROR: Failed to register play completion: %@.", error);
     };
     [self sendRequest:completeRequest];
 }
@@ -370,17 +374,25 @@ NSString *const FMAudioFormatAAC = @"aac";
 
 - (void)requestSkipWithSuccess:(void (^)(void))success
                        failure:(void (^)(NSError *error))failure {
+    if(self.currentItem == nil) {
+        FMLogWarn(@"Tried to skip with no currently playing song");
+        if(failure) {
+            failure([NSError errorWithDomain:FMAPIErrorDomain code:FMErrorCodeInvalidSkip userInfo:@{
+                  NSLocalizedDescriptionKey : @"Invalid Skip Request",
+           NSLocalizedFailureReasonErrorKey : @"Requested skip while no song was currently playing"}]);
+        }
+    }
+
     FMAPIRequest *skipRequest = [FMAPIRequest requestSkip:self.currentItem.playId elapsed:-1];
     skipRequest.successBlock = ^(NSDictionary *result) {
         FMLogDebug(@"Skip success");
         self.currentItem = nil;
-        [self requestNextTrack];
         if(success) {
             success();
         }
     };
     skipRequest.failureBlock = ^(NSError *error) {
-        FMLogWarn(@"Failed to skip: %@", error);
+        FMLogDebug(@"Failed to skip: %@", error);
         if(failure) {
             failure(error);
         }

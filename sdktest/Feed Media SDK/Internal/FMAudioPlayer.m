@@ -126,19 +126,22 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
         //already have a playing item, no need for additional preparation
         return;
     }
+
+    [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
     if(!self.session.nextItem) {
         FMLogDebug(@"Requesting item");
-        [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
         //FMSession will ignore requestNextTrack if a request is already in progress, then we'll get a callback when it's ready
         //todo: make sure we actually have a session, and that session has a placement/station/etc
         //todo: if there's an error, we won't get a callback. Is it ok to stay in WaitingForItem forever, or do we need a solution?
         [self.session requestNextTrack];
         return;
     }
+    else {
+        [self loadNextItem];
+    }
 }
 
-- (void)sessionReceivedItem:(NSNotification *)notification {
-    FMLogDebug(@"Session Received Item");
+- (void)loadNextItem {
     if(_loadingAsset) {
         //todo: assuming only one asset load at a time, get ready to queue up next tracks in advance!
         [_loadingAsset cancel];
@@ -153,6 +156,13 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
             FMLogWarn(@"Asset failed to load: %@", error);
         }];
         [_loadingAsset loadPlayerItem];
+    }
+}
+
+- (void)sessionReceivedItem:(NSNotification *)notification {
+    FMLogDebug(@"Session Received Item");
+    if([_player.items count] < 1) {
+        [self loadNextItem];
     }
 }
 
@@ -250,11 +260,9 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     [_bandwidthMonitor stop];
     _bandwidthMonitor = nil;
     [self.session playCompleted];
-    self.playbackState = FMAudioPlayerPlaybackStateComplete;
     if([_player.items count] < 2) {
         FMLogDebug(@"Player Queue empty, preparing to play a new one");
         [self prepareToPlay];
-        [self setPlaybackState:FMAudioPlayerPlaybackStateWaitingForItem];
     }
 }
 
