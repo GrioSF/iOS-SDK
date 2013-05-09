@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		C13892EA173C45C500467005 /* FeedMedia-fat */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C13892EB173C45C500467005 /* Build configuration list for PBXAggregateTarget "FeedMedia-fat" */;
+			buildPhases = (
+				C13892EE173C45DA00467005 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "FeedMedia-fat";
+			productName = FeedMedia;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		C108F23D1714B9EC0096DF46 /* FMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C108F23C1714B9EC0096DF46 /* FMProgressView.m */; };
 		C108F2401714BFC50096DF46 /* nexttrack.png in Resources */ = {isa = PBXBuildFile; fileRef = C108F23F1714BFC50096DF46 /* nexttrack.png */; };
@@ -16,6 +30,34 @@
 		C108F24A1714BFD30096DF46 /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C108F2451714BFD20096DF46 /* play@2x.png */; };
 		C108F24C1714C5730096DF46 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C108F24B1714C5730096DF46 /* QuartzCore.framework */; };
 		C1319B091727532400059BB6 /* FMMetadataView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1319B081727532400059BB6 /* FMMetadataView.m */; };
+		C138928E173C42E600467005 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297A16E967EB001BD576 /* Foundation.framework */; };
+		C1389299173C432C00467005 /* FMAPIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C61731A42A0075EA5E /* FMAPIRequest.m */; };
+		C138929A173C432F00467005 /* FMAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C81731A42A0075EA5E /* FMAsset.m */; };
+		C138929B173C433100467005 /* FMAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C91731A42A0075EA5E /* FMAudioItem.m */; };
+		C138929C173C433300467005 /* FMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CA1731A42A0075EA5E /* FMAudioPlayer.m */; };
+		C138929D173C433E00467005 /* FMAuth+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CC1731A42A0075EA5E /* FMAuth+Base64.m */; };
+		C138929E173C434100467005 /* FMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CE1731A42A0075EA5E /* FMAuth.m */; };
+		C138929F173C434300467005 /* FMBandwidthMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D01731A42A0075EA5E /* FMBandwidthMonitor.m */; };
+		C13892A0173C434500467005 /* FMError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D11731A42A0075EA5E /* FMError.m */; };
+		C13892A1173C434700467005 /* FMLog.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D21731A42A0075EA5E /* FMLog.m */; };
+		C13892A2173C434900467005 /* FMReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D41731A42A0075EA5E /* FMReachability.m */; };
+		C13892A3173C434B00467005 /* FMSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D51731A42A0075EA5E /* FMSession.m */; };
+		C13892A4173C434E00467005 /* FMStation.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D61731A42A0075EA5E /* FMStation.m */; };
+		C13892A6173C43A100467005 /* FMAudioItem.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095BE1731A42A0075EA5E /* FMAudioItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C13892A7173C43A300467005 /* FMAudioPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095BF1731A42A0075EA5E /* FMAudioPlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C13892A8173C43A500467005 /* FMError.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C01731A42A0075EA5E /* FMError.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C13892A9173C43AA00467005 /* FMLog.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C11731A42A0075EA5E /* FMLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C13892AA173C43AC00467005 /* FMSession.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C21731A42A0075EA5E /* FMSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C13892AB173C43AF00467005 /* FMStation.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C31731A42A0075EA5E /* FMStation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C13892AC173C43CA00467005 /* FMAPIRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C51731A42A0075EA5E /* FMAPIRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C13892AD173C43CC00467005 /* FMAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C71731A42A0075EA5E /* FMAsset.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C13892AE173C43D100467005 /* FMAuth+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095CB1731A42A0075EA5E /* FMAuth+Base64.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C13892AF173C43D400467005 /* FMAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095CD1731A42A0075EA5E /* FMAuth.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C13892B0173C43D600467005 /* FMBandwidthMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095CF1731A42A0075EA5E /* FMBandwidthMonitor.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C13892B1173C43D900467005 /* FMReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095D31731A42A0075EA5E /* FMReachability.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C13892B2173C43EF00467005 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B28BA9172B30BD00358AB0 /* SystemConfiguration.framework */; };
+		C13892B3173C43FA00467005 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB317010D4B00FED375 /* CoreMedia.framework */; };
+		C13892B4173C43FF00467005 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB117010D2000FED375 /* AVFoundation.framework */; };
 		C1937AB217010D2000FED375 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB117010D2000FED375 /* AVFoundation.framework */; };
 		C1937AB417010D4C00FED375 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB317010D4B00FED375 /* CoreMedia.framework */; };
 		C1A4297916E967EB001BD576 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A4297816E967EB001BD576 /* UIKit.framework */; };
@@ -45,6 +87,18 @@
 		C1B28BAA172B30BD00358AB0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B28BA9172B30BD00358AB0 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C138928B173C42E600467005 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		C108F23B1714B9EC0096DF46 /* FMProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMProgressView.h; sourceTree = "<group>"; };
 		C108F23C1714B9EC0096DF46 /* FMProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMProgressView.m; sourceTree = "<group>"; };
@@ -57,6 +111,7 @@
 		C108F24B1714C5730096DF46 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C1319B071727532400059BB6 /* FMMetadataView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMMetadataView.h; sourceTree = "<group>"; };
 		C1319B081727532400059BB6 /* FMMetadataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMMetadataView.m; sourceTree = "<group>"; };
+		C138928D173C42E600467005 /* libFeedMedia.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFeedMedia.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1937AB117010D2000FED375 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C1937AB317010D4B00FED375 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C1A4297516E967EB001BD576 /* sdktest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sdktest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +160,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C138928A173C42E600467005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C13892B4173C43FF00467005 /* AVFoundation.framework in Frameworks */,
+				C13892B3173C43FA00467005 /* CoreMedia.framework in Frameworks */,
+				C13892B2173C43EF00467005 /* SystemConfiguration.framework in Frameworks */,
+				C138928E173C42E600467005 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1A4297216E967EB001BD576 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -152,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				C1A4297516E967EB001BD576 /* sdktest.app */,
+				C138928D173C42E600467005 /* libFeedMedia.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -242,7 +309,47 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		C13892A5173C439600467005 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C13892A6173C43A100467005 /* FMAudioItem.h in Headers */,
+				C13892A7173C43A300467005 /* FMAudioPlayer.h in Headers */,
+				C13892A8173C43A500467005 /* FMError.h in Headers */,
+				C13892A9173C43AA00467005 /* FMLog.h in Headers */,
+				C13892AA173C43AC00467005 /* FMSession.h in Headers */,
+				C13892AB173C43AF00467005 /* FMStation.h in Headers */,
+				C13892AC173C43CA00467005 /* FMAPIRequest.h in Headers */,
+				C13892AD173C43CC00467005 /* FMAsset.h in Headers */,
+				C13892AE173C43D100467005 /* FMAuth+Base64.h in Headers */,
+				C13892AF173C43D400467005 /* FMAuth.h in Headers */,
+				C13892B0173C43D600467005 /* FMBandwidthMonitor.h in Headers */,
+				C13892B1173C43D900467005 /* FMReachability.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		C138928C173C42E600467005 /* FeedMedia */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1389298173C42E600467005 /* Build configuration list for PBXNativeTarget "FeedMedia" */;
+			buildPhases = (
+				C1389289173C42E600467005 /* Sources */,
+				C138928A173C42E600467005 /* Frameworks */,
+				C13892A5173C439600467005 /* Headers */,
+				C138928B173C42E600467005 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FeedMedia;
+			productName = FeedMedia;
+			productReference = C138928D173C42E600467005 /* libFeedMedia.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		C1A4297416E967EB001BD576 /* sdktest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1A4299816E967EC001BD576 /* Build configuration list for PBXNativeTarget "sdktest" */;
@@ -283,6 +390,8 @@
 			projectRoot = "";
 			targets = (
 				C1A4297416E967EB001BD576 /* sdktest */,
+				C138928C173C42E600467005 /* FeedMedia */,
+				C13892EA173C45C500467005 /* FeedMedia-fat */,
 			);
 		};
 /* End PBXProject section */
@@ -308,7 +417,42 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		C13892EE173C45DA00467005 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rm -rf ${BUILT_PRODUCTS_DIR}/libFeedMedia.a\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj -target \"FeedMedia\" -sdk \"iphonesimulator\" -configuration \"Release\" clean build\nxcodebuild -project ${PROJECT_NAME}.xcodeproj -target \"FeedMedia\" -sdk \"iphoneos\" -configuration \"Release\" clean build\n\nlipo -create -output \"build/libFeedMedia.a\" \"build/Release-iphoneos/libFeedMedia.a\" \"build/Release-iphonesimulator/libFeedMedia.a\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		C1389289173C42E600467005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1389299173C432C00467005 /* FMAPIRequest.m in Sources */,
+				C138929A173C432F00467005 /* FMAsset.m in Sources */,
+				C138929C173C433300467005 /* FMAudioPlayer.m in Sources */,
+				C138929F173C434300467005 /* FMBandwidthMonitor.m in Sources */,
+				C138929E173C434100467005 /* FMAuth.m in Sources */,
+				C13892A0173C434500467005 /* FMError.m in Sources */,
+				C13892A3173C434B00467005 /* FMSession.m in Sources */,
+				C13892A1173C434700467005 /* FMLog.m in Sources */,
+				C13892A2173C434900467005 /* FMReachability.m in Sources */,
+				C13892A4173C434E00467005 /* FMStation.m in Sources */,
+				C138929D173C433E00467005 /* FMAuth+Base64.m in Sources */,
+				C138929B173C433100467005 /* FMAudioItem.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1A4297116E967EB001BD576 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -356,6 +500,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		C1389296173C42E600467005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/FeedMedia.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "sdktest/sdktest-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C1389297173C42E600467005 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/FeedMedia.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "sdktest/sdktest-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		C13892EC173C45C500467005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C13892ED173C45C500467005 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		C1A4299616E967EC001BD576 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -381,7 +563,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -405,7 +587,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -418,7 +600,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "sdktest/sdktest-Prefix.pch";
 				INFOPLIST_FILE = "sdktest/sdktest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -430,7 +611,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "sdktest/sdktest-Prefix.pch";
 				INFOPLIST_FILE = "sdktest/sdktest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -439,6 +619,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C1389298173C42E600467005 /* Build configuration list for PBXNativeTarget "FeedMedia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1389296173C42E600467005 /* Debug */,
+				C1389297173C42E600467005 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C13892EB173C45C500467005 /* Build configuration list for PBXAggregateTarget "FeedMedia-fat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C13892EC173C45C500467005 /* Debug */,
+				C13892ED173C45C500467005 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		C1A4297016E967EB001BD576 /* Build configuration list for PBXProject "sdktest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
