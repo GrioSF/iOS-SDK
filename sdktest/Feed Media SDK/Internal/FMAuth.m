@@ -9,7 +9,7 @@
 #import "FMAuth.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "FMAPIRequest.h"
-#import "FMAuth+Base64.h"
+#import "FMBase64.h"
 #import "FMLog.h"
 
 #define kFMNonceabet "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -145,7 +145,7 @@ static inline NSString *FM_URLDecodeString(NSString *string) {
     FMLogDebug(@"Generated SBS: %@",signatureBaseString);
     NSString *key = [NSString stringWithFormat:@"%@&",FM_URLEncodeString(self.clientSecret)];
     NSData *hash = HMAC_SHA256(key, signatureBaseString);
-    NSString *base64hash = [FMAuth base64EncodedStringFromData:hash];
+    NSString *base64hash = [FMBase64 base64EncodedStringFromData:hash];
     NSMutableString *oauthString = [[NSMutableString alloc] init];
     [oauthString appendString:@"OAuth realm=\"Feed.fm\","];
     for(NSString *key in oauthHeaders) {

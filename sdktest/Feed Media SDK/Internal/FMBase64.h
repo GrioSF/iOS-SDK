@@ -1,5 +1,5 @@
 //
-//  NSData+Base64.h
+//  FMBase64.h
 //  base64
 //
 //  Created by Matt Gallagher on 2009/06/03.
@@ -21,10 +21,9 @@
 //     distribution.
 //
 //  MODIFIED BY James Anthony 2013/03/11.
-//  Moved from NSData category to FMAuth category and prefixed function names to avoid conflicts when packaged as an SDK.
+//  Moved from NSData category to separate class and prefixed function names to avoid conflicts when packaged as an SDK.
 
 #import <Foundation/Foundation.h>
-#import "FMAuth.h"
 
 void *FM_NewBase64Decode(
 	const char *inputBuffer,
@@ -37,7 +36,7 @@ char *FM_NewBase64Encode(
 	bool separateLines,
 	size_t *outputLength);
 
-@interface FMAuth (Base64)
+@interface FMBase64 : NSObject
 
 + (NSData *)dataFromBase64String:(NSString *)aString;
 + (NSString *)base64EncodedStringFromData:(NSData *)data;

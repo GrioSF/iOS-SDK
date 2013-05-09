@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		C13892EA173C45C500467005 /* FeedMedia-fat */ = {
+		C13892EA173C45C500467005 /* FeedMedia-universal */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = C13892EB173C45C500467005 /* Build configuration list for PBXAggregateTarget "FeedMedia-fat" */;
+			buildConfigurationList = C13892EB173C45C500467005 /* Build configuration list for PBXAggregateTarget "FeedMedia-universal" */;
 			buildPhases = (
 				C13892EE173C45DA00467005 /* ShellScript */,
 			);
 			dependencies = (
 			);
-			name = "FeedMedia-fat";
+			name = "FeedMedia-universal";
 			productName = FeedMedia;
 		};
 /* End PBXAggregateTarget section */
@@ -35,7 +35,7 @@
 		C138929A173C432F00467005 /* FMAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C81731A42A0075EA5E /* FMAsset.m */; };
 		C138929B173C433100467005 /* FMAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C91731A42A0075EA5E /* FMAudioItem.m */; };
 		C138929C173C433300467005 /* FMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CA1731A42A0075EA5E /* FMAudioPlayer.m */; };
-		C138929D173C433E00467005 /* FMAuth+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CC1731A42A0075EA5E /* FMAuth+Base64.m */; };
+		C138929D173C433E00467005 /* FMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CC1731A42A0075EA5E /* FMBase64.m */; };
 		C138929E173C434100467005 /* FMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CE1731A42A0075EA5E /* FMAuth.m */; };
 		C138929F173C434300467005 /* FMBandwidthMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D01731A42A0075EA5E /* FMBandwidthMonitor.m */; };
 		C13892A0173C434500467005 /* FMError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D11731A42A0075EA5E /* FMError.m */; };
@@ -69,7 +69,7 @@
 		C1B095D81731A42A0075EA5E /* FMAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C81731A42A0075EA5E /* FMAsset.m */; };
 		C1B095D91731A42A0075EA5E /* FMAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095C91731A42A0075EA5E /* FMAudioItem.m */; };
 		C1B095DA1731A42A0075EA5E /* FMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CA1731A42A0075EA5E /* FMAudioPlayer.m */; };
-		C1B095DB1731A42A0075EA5E /* FMAuth+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CC1731A42A0075EA5E /* FMAuth+Base64.m */; };
+		C1B095DB1731A42A0075EA5E /* FMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CC1731A42A0075EA5E /* FMBase64.m */; };
 		C1B095DC1731A42A0075EA5E /* FMAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095CE1731A42A0075EA5E /* FMAuth.m */; };
 		C1B095DD1731A42A0075EA5E /* FMBandwidthMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D01731A42A0075EA5E /* FMBandwidthMonitor.m */; };
 		C1B095DE1731A42A0075EA5E /* FMError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B095D11731A42A0075EA5E /* FMError.m */; };
@@ -136,8 +136,8 @@
 		C1B095C81731A42A0075EA5E /* FMAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAsset.m; sourceTree = "<group>"; };
 		C1B095C91731A42A0075EA5E /* FMAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioItem.m; sourceTree = "<group>"; };
 		C1B095CA1731A42A0075EA5E /* FMAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAudioPlayer.m; sourceTree = "<group>"; };
-		C1B095CB1731A42A0075EA5E /* FMAuth+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FMAuth+Base64.h"; sourceTree = "<group>"; };
-		C1B095CC1731A42A0075EA5E /* FMAuth+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FMAuth+Base64.m"; sourceTree = "<group>"; };
+		C1B095CB1731A42A0075EA5E /* FMBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMBase64.h; sourceTree = "<group>"; };
+		C1B095CC1731A42A0075EA5E /* FMBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMBase64.m; sourceTree = "<group>"; };
 		C1B095CD1731A42A0075EA5E /* FMAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAuth.h; sourceTree = "<group>"; };
 		C1B095CE1731A42A0075EA5E /* FMAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAuth.m; sourceTree = "<group>"; };
 		C1B095CF1731A42A0075EA5E /* FMBandwidthMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMBandwidthMonitor.h; sourceTree = "<group>"; };
@@ -285,8 +285,8 @@
 				C1B095C81731A42A0075EA5E /* FMAsset.m */,
 				C1B095C91731A42A0075EA5E /* FMAudioItem.m */,
 				C1B095CA1731A42A0075EA5E /* FMAudioPlayer.m */,
-				C1B095CB1731A42A0075EA5E /* FMAuth+Base64.h */,
-				C1B095CC1731A42A0075EA5E /* FMAuth+Base64.m */,
+				C1B095CB1731A42A0075EA5E /* FMBase64.h */,
+				C1B095CC1731A42A0075EA5E /* FMBase64.m */,
 				C1B095CD1731A42A0075EA5E /* FMAuth.h */,
 				C1B095CE1731A42A0075EA5E /* FMAuth.m */,
 				C1B095CF1731A42A0075EA5E /* FMBandwidthMonitor.h */,
@@ -379,7 +379,7 @@
 			targets = (
 				C1A4297416E967EB001BD576 /* sdktest */,
 				C138928C173C42E600467005 /* FeedMedia */,
-				C13892EA173C45C500467005 /* FeedMedia-fat */,
+				C13892EA173C45C500467005 /* FeedMedia-universal */,
 			);
 		};
 /* End PBXProject section */
@@ -436,7 +436,7 @@
 				C13892A1173C434700467005 /* FMLog.m in Sources */,
 				C13892A2173C434900467005 /* FMReachability.m in Sources */,
 				C13892A4173C434E00467005 /* FMStation.m in Sources */,
-				C138929D173C433E00467005 /* FMAuth+Base64.m in Sources */,
+				C138929D173C433E00467005 /* FMBase64.m in Sources */,
 				C138929B173C433100467005 /* FMAudioItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -455,7 +455,7 @@
 				C1B095D81731A42A0075EA5E /* FMAsset.m in Sources */,
 				C1B095D91731A42A0075EA5E /* FMAudioItem.m in Sources */,
 				C1B095DA1731A42A0075EA5E /* FMAudioPlayer.m in Sources */,
-				C1B095DB1731A42A0075EA5E /* FMAuth+Base64.m in Sources */,
+				C1B095DB1731A42A0075EA5E /* FMBase64.m in Sources */,
 				C1B095DC1731A42A0075EA5E /* FMAuth.m in Sources */,
 				C1B095DD1731A42A0075EA5E /* FMBandwidthMonitor.m in Sources */,
 				C1B095DE1731A42A0075EA5E /* FMError.m in Sources */,
@@ -616,7 +616,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C13892EB173C45C500467005 /* Build configuration list for PBXAggregateTarget "FeedMedia-fat" */ = {
+		C13892EB173C45C500467005 /* Build configuration list for PBXAggregateTarget "FeedMedia-universal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C13892EC173C45C500467005 /* Debug */,
