@@ -49,12 +49,6 @@
 		C13892A9173C43AA00467005 /* FMLog.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C11731A42A0075EA5E /* FMLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C13892AA173C43AC00467005 /* FMSession.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C21731A42A0075EA5E /* FMSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C13892AB173C43AF00467005 /* FMStation.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C31731A42A0075EA5E /* FMStation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C13892AC173C43CA00467005 /* FMAPIRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C51731A42A0075EA5E /* FMAPIRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		C13892AD173C43CC00467005 /* FMAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C71731A42A0075EA5E /* FMAsset.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		C13892AE173C43D100467005 /* FMAuth+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095CB1731A42A0075EA5E /* FMAuth+Base64.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		C13892AF173C43D400467005 /* FMAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095CD1731A42A0075EA5E /* FMAuth.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		C13892B0173C43D600467005 /* FMBandwidthMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095CF1731A42A0075EA5E /* FMBandwidthMonitor.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		C13892B1173C43D900467005 /* FMReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095D31731A42A0075EA5E /* FMReachability.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		C13892B2173C43EF00467005 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B28BA9172B30BD00358AB0 /* SystemConfiguration.framework */; };
 		C13892B3173C43FA00467005 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB317010D4B00FED375 /* CoreMedia.framework */; };
 		C13892B4173C43FF00467005 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB117010D2000FED375 /* AVFoundation.framework */; };
@@ -320,12 +314,6 @@
 				C13892A9173C43AA00467005 /* FMLog.h in Headers */,
 				C13892AA173C43AC00467005 /* FMSession.h in Headers */,
 				C13892AB173C43AF00467005 /* FMStation.h in Headers */,
-				C13892AC173C43CA00467005 /* FMAPIRequest.h in Headers */,
-				C13892AD173C43CC00467005 /* FMAsset.h in Headers */,
-				C13892AE173C43D100467005 /* FMAuth+Base64.h in Headers */,
-				C13892AF173C43D400467005 /* FMAuth.h in Headers */,
-				C13892B0173C43D600467005 /* FMBandwidthMonitor.h in Headers */,
-				C13892B1173C43D900467005 /* FMReachability.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,7 +417,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf ${BUILT_PRODUCTS_DIR}/libFeedMedia.a\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj -target \"FeedMedia\" -sdk \"iphonesimulator\" -configuration \"Release\" clean build\nxcodebuild -project ${PROJECT_NAME}.xcodeproj -target \"FeedMedia\" -sdk \"iphoneos\" -configuration \"Release\" clean build\n\nlipo -create -output \"build/libFeedMedia.a\" \"build/Release-iphoneos/libFeedMedia.a\" \"build/Release-iphonesimulator/libFeedMedia.a\"";
+			shellScript = "rm -rf ${BUILT_PRODUCTS_DIR}/Release-universal/libFeedMedia.a\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj -target \"FeedMedia\" -sdk \"iphonesimulator\" -configuration \"Release\" clean build\nxcodebuild -project ${PROJECT_NAME}.xcodeproj -target \"FeedMedia\" -sdk \"iphoneos\" -configuration \"Release\" clean build\n\ncp -R \"build/Release-iphoneos/usr/local/include/\" \"build/Release-universal\"\ncp -R \"build/Release-iphoneos/usr/local/include/\" \"build/Release-iphoneos\"\ncp -R \"build/Release-iphonesimulator/usr/local/include/\" \"build/Release-iphonesimulator\"\nrm -rf \"build/Release-iphoneos/usr/\"\nrm -rf \"build/Release-iphonesimulator/usr/\"\n\nlipo -create -output \"build/Release-universal/libFeedMedia.a\" \"build/Release-iphoneos/libFeedMedia.a\" \"build/Release-iphonesimulator/libFeedMedia.a\"\n\nmv \"build/Release-iphoneos/libFeedMedia.a\" \"build/Release-iphoneos/libFeedMedia-iphoneos.a\"\nmv \"build/Release-iphonesimulator/libFeedMedia.a\" \"build/Release-iphonesimulator/libFeedMedia-iphonesimulator.a\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -626,6 +614,7 @@
 				C1389297173C42E600467005 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C13892EB173C45C500467005 /* Build configuration list for PBXAggregateTarget "FeedMedia-fat" */ = {
 			isa = XCConfigurationList;
@@ -634,6 +623,7 @@
 				C13892ED173C45C500467005 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C1A4297016E967EB001BD576 /* Build configuration list for PBXProject "sdktest" */ = {
 			isa = XCConfigurationList;
