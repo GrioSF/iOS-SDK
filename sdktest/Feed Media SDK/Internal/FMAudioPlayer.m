@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "FMAudioPlayer.h"
 #import "FMAsset.h"
+#import "FMBandwidthMonitor.h"
 
 static void *FMAudioPlayerRateObservationContext = &FMAudioPlayerRateObservationContext;
 static void *FMAudioPlayerCurrentItemObservationContext = &FMAudioPlayerCurrentItemObservationContext;
@@ -23,7 +24,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 #define kRateKey @"rate"
 #define kCurrentItemKey	@"currentItem"
 
-@interface FMAudioPlayer () {
+@interface FMAudioPlayer () <FMBandwidthMonitorDelegate> {
     AVQueuePlayer *_player;
     FMAsset *_loadingAsset;
     FMBandwidthMonitor *_bandwidthMonitor;
