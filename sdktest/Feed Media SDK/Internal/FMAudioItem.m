@@ -22,7 +22,7 @@
         if(![playId isKindOfClass:[NSString class]] || [playId isEqualToString:@""]) {
             return nil;
         }
-        _playId = playId;
+        _playId = [playId copy];
 
         NSDictionary *fileDict = jsonDictionary[@"audio_file"];
         NSString *fileLocation = fileDict[@"url"];
@@ -39,22 +39,22 @@
 
         NSString *trackTitle = fileDict[@"track"][@"title"];
         if([trackTitle isKindOfClass:[NSString class]]) {
-            _name = trackTitle;
+            _name = [trackTitle copy];
         }
 
         NSString *artistName = fileDict[@"artist"][@"name"];
         if([artistName isKindOfClass:[NSString class]]) {
-            _artist = artistName;
+            _artist = [artistName copy];
         }
 
         NSString *albumTitle = fileDict[@"release"][@"title"];
         if([albumTitle isKindOfClass:[NSString class]]) {
-            _album = albumTitle;
+            _album = [albumTitle copy];
         }
 
         NSString *codec = fileDict[@"codec"];
         if([codec isKindOfClass:[NSString class]]) {
-            _codec = codec;
+            _codec = [codec copy];
         }
 
         id duration = fileDict[@"duration_in_seconds"];
