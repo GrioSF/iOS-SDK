@@ -33,7 +33,7 @@ extern NSString *const FMAudioFormatAAC;
  Set to @[FMAudioFormatMP3] to exclude AAC files.
  Defaults to @[FMAudioFormatAAC,FMAudioFormatMP3]. 
  */
-@property (nonatomic) NSArray *supportedAudioFormats;
+@property (nonatomic, strong) NSArray *supportedAudioFormats;
 
 /**
  Set to specify available bandwidth, in kbps. Set to 0 to request the highest available quality.
