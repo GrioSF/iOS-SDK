@@ -3,20 +3,20 @@ Feed Media SDK for iOS Quickstart Guide
 Introduction
 ============
 
-The Feed Media SDK for iOS allows you to play DMCA compliant radio within your iOS apps. You can read more about the Feed Media API at [http://feed.fm/][1]. The primary object used to communicate with the Feed API is the `FMSession` singleton. You can either use it directly to request track information (if using your own audio player), or use the `FMAudioPlayer` class to let the SDK handle playback. 
+The Feed Media SDK for iOS allows you to play DMCA compliant radio within your iOS apps. You can read more about the Feed Media API at [http://feed.fm/][1]. The primary object you will use to access the Feed Media API is the `FMAudioPlayer` singleton, which uses `AVFoundation` for audio playback.
 
-This quickstart guide assumes you will be using a single placement and the `FMAudioPlayer` class, which uses `AVFoundation` for audio playback: please see the full documentation if you're using multiple placements or you need to write your own playback engine.
+This quickstart guide assumes you will be using a single placement and the static library distribution of the Feed Media SDK, but the full source is available on Github at [https://github.com/fuzz-radio/iOS-SDK][2]. 
 
-Before you begin, you should have an account at feed.fm and set up at least one *placement* and *station*. If you have not already done so, please go to [http://feed.fm/][2]. 
+Before you begin, you should have an account at feed.fm and set up at least one *placement* and *station*. If you have not already done so, please go to [http://feed.fm/][3]. 
 
 Definitions
 ===========
 
-*Placement*: A placement is a way to identify a location to play music in. It consists of one or more stations to pull music from, and budget rules to limit how much music to serve (on a per user or per placement basis). You may have one or more placements in your app. You can manage your placements at [http://feed.fm/][2].
+*Placement*: A placement is a way to identify a location to play music in. It consists of one or more stations to pull music from, and budget rules to limit how much music to serve (on a per user or per placement basis). You may have one or more placements in your app. You can manage your placements at [http://feed.fm/][3].
 
-*Station*: A station is a collection of music that you select using the dashboard at [http://feed.fm/][2]. One station can be assigned to multiple placements.
+*Station*: A station is a collection of music that you select using the dashboard at [http://feed.fm/][3]. One station can be assigned to multiple placements.
 
-*Client Token* and *Client Secret*: When you create an account at [http://feed.fm/][3], you are issued a unique client token and secret. These keys are used to identify your app to the Feed Media API.
+*Client Token* and *Client Secret*: When you create an account at [http://feed.fm/][4], you are issued a unique client token and secret. These keys are used to identify your app to the Feed Media API.
 
 Adding Files
 ============
@@ -36,9 +36,11 @@ Adding Files
 Initializing the SDK
 ====================
 
-1) In your Application Delegate, import FMSession
+1) In your Application Delegate's implementation (`.m` file), add FMAudioPlayer to the list of `#import`ed files
 
-    #import "FMSession.h"
+    #import "MyAppDelegate.h"
+    //...//
+    #import "FMAudioPlayer.h"
 
 2) Set your client token and secret, placementId, and optionally set the log level:
 
@@ -46,9 +48,9 @@ Initializing the SDK
                 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
         FMLogSetLevel(FMLogLevelDebug);
-        [FMSession setClientToken:@"Your Client Token"
-                           secret:@"Your Client Secret"];
-        [[FMSession sharedSession] setPlacement:@"Your Placement ID"];
+        [FMAudioPlayer setClientToken:@"Your Client Token"
+                               secret:@"Your Client Secret"];
+        [[FMAudioPlayer sharedPlayer] setPlacement:@"Your Placement ID"];
 
         // Your app specific setup...
         return YES;
@@ -57,24 +59,23 @@ Initializing the SDK
 Playing Music with FMAudioPlayer
 ================================
 
-1) In your View Controller, import FMAudioPlayer: 
+1) In your View Controller's implementation (`.m` file), add FMAudioPlayer to the list of `#import`ed files: 
 
+    #import "MyViewController.h"
+    //...//
     #import "FMAudioPlayer.h"
 
-2) Initialize an FMAudioPlayer and store it in a property:
-
-    self.player = [[FMAudioPlayer alloc] initWithSession:[FMSession sharedSession]];
-
-3) Register for notifications to update your UI to display song metadata
+2) Register for notifications to update your UI to display song metadata
 
     - (void)viewDidLoad {
         [super viewDidLoad];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSongMetadata:) name:FMSessionCurrentItemChangedNotification object:[[FMSession sharedSession]]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSongMetadata:) name:FMAudioPlayerCurrentItemDidChangeNotification object:[FMAudioPlayer sharedPlayer]];
         // Your view controller's internal setup...
     }
 
     -(void)updateSongMetadata:(NSNotification)notification {
-        // use the properties of [FMSession sharedSession].currentItem like `name`, `artist`, `album`, etc...
+        // Use the properties of [FMAudioPlayer sharedPlayer].currentItem like `name`, `artist`, `album`, etc...
+        // You can find the available properties in "FMAudioItem.h"
     }
 
     // Remember to remove yourself from notifications on dealloc
@@ -82,35 +83,35 @@ Playing Music with FMAudioPlayer
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
 
-4) Optionally request available stations:
+3) Optionally request available stations:
 
-    [[FMSession sharedSession] requestStationsForPlacement:nil
-                                               withSuccess:^(NSArray *stations) 
+    [[FMAudioPlayer sharedPlayer] requestStationsForPlacement:[FMAudioPlayer sharedPlayer].activePlacementId
+                                                  withSuccess:^(NSArray *stations) 
     {
         //Present the user with the list of stations to choose from
         //`stations` is a list of FMStation objects, which have a `name` NSString property for display
     }
-                                                   failure:^(NSError *error) 
+                                                      failure:^(NSError *error) 
     {
         NSLog(@"Failed to receive stations: %@", error);
     }];
 
-5) Optionally set a specific station to play (if this step is omitted, the player will use the active placement's default station):
+4) Optionally set a specific station to play (if this step is omitted, the player will use the active placement's default station):
 
     FMStation *station = stations[i];   //assume user selected the ith station from a -requestStations call
-    [[FMSession sharedSession] setStation:station];
+    [[FMAudioPlayer sharedPlayer] setStation:station];
 
-6) Begin playback:
+5) Begin playback:
 
-    [self.player play];
+    [[FMAudioPlayer sharedPlayer] play];
 
-Managing your AudioSession
-==========================
+Resources
+=========
 
-The Feed Media SDK does *not* modify your application's audio session. Please see Apple's [documentation on Audio Session Programming][4]. In particular, note that the default audio session category respects the silent switch, so you should make sure to either pause audio while the silent switch is active or choose a different category for your app.
+For more information, please contact `support@fuzz.com` or check out our Github repo at [https://github.com/fuzz-radio/iOS-SDK][2].
 
 
 [1]: http://feed.fm/documentation
-[2]: http://feed.fm/dashboard
-[3]: http://feed.fm/
-[4]: http://developer.apple.com/library/ios/#documentation/Audio/Conceptual/AudioSessionProgrammingGuide/Introduction/Introduction.html
+[2]: https://github.com/fuzz-radio/iOS-SDK
+[3]: http://feed.fm/dashboard
+[4]: http://feed.fm/

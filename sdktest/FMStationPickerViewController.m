@@ -7,7 +7,7 @@
 //
 
 #import "FMStationPickerViewController.h"
-#import "FMSession.h"
+#import "FMAudioPlayer.h"
 
 #define kFMStationPickerCellIdentifier @"kFMStationPickerCellIdentifier"
 
@@ -31,13 +31,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [[FMSession sharedSession] requestStationsForPlacement:nil
-                                               withSuccess:
+    [[FMAudioPlayer sharedPlayer] requestStationsForPlacement:nil
+                                                  withSuccess:
      ^(NSArray *stations) {
-        self.stations = stations;
-    }
-                                                   failure:
-    ^(NSError *error) {
+         self.stations = stations;
+     }
+                                                      failure:
+     ^(NSError *error) {
         [self stationRequestFailed:error];
     }];
 }
@@ -78,7 +78,7 @@
     FMStation *station = self.stations[indexPath.row];
     cell.textLabel.text = station.name;
     cell.detailTextLabel.text = station.identifier;
-    if([station isEqual:[FMSession sharedSession].activeStation]) {
+    if([station isEqual:[FMAudioPlayer sharedPlayer].activeStation]) {
         [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
         self.selectedCell = cell;
     }
@@ -92,7 +92,7 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [[FMSession sharedSession] setStation:self.stations[indexPath.row]];
+    [[FMAudioPlayer sharedPlayer] setStation:self.stations[indexPath.row]];
     
     [self.selectedCell setAccessoryType:UITableViewCellAccessoryNone];
     self.selectedCell = [self.tableView cellForRowAtIndexPath:indexPath];

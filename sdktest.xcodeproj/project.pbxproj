@@ -47,7 +47,6 @@
 		C13892A7173C43A300467005 /* FMAudioPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095BF1731A42A0075EA5E /* FMAudioPlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C13892A8173C43A500467005 /* FMError.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C01731A42A0075EA5E /* FMError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C13892A9173C43AA00467005 /* FMLog.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C11731A42A0075EA5E /* FMLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C13892AA173C43AC00467005 /* FMSession.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C21731A42A0075EA5E /* FMSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C13892AB173C43AF00467005 /* FMStation.h in Headers */ = {isa = PBXBuildFile; fileRef = C1B095C31731A42A0075EA5E /* FMStation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C13892B2173C43EF00467005 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1B28BA9172B30BD00358AB0 /* SystemConfiguration.framework */; };
 		C13892B3173C43FA00467005 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1937AB317010D4B00FED375 /* CoreMedia.framework */; };
@@ -128,7 +127,7 @@
 		C1B095BF1731A42A0075EA5E /* FMAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAudioPlayer.h; sourceTree = "<group>"; };
 		C1B095C01731A42A0075EA5E /* FMError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMError.h; sourceTree = "<group>"; };
 		C1B095C11731A42A0075EA5E /* FMLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMLog.h; sourceTree = "<group>"; };
-		C1B095C21731A42A0075EA5E /* FMSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMSession.h; sourceTree = "<group>"; };
+		C1B095C21731A42A0075EA5E /* FMSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMSession.h; path = ../FMSession.h; sourceTree = "<group>"; };
 		C1B095C31731A42A0075EA5E /* FMStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMStation.h; sourceTree = "<group>"; };
 		C1B095C51731A42A0075EA5E /* FMAPIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMAPIRequest.h; sourceTree = "<group>"; };
 		C1B095C61731A42A0075EA5E /* FMAPIRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMAPIRequest.m; sourceTree = "<group>"; };
@@ -269,7 +268,6 @@
 				C1B095BF1731A42A0075EA5E /* FMAudioPlayer.h */,
 				C1B095C01731A42A0075EA5E /* FMError.h */,
 				C1B095C11731A42A0075EA5E /* FMLog.h */,
-				C1B095C21731A42A0075EA5E /* FMSession.h */,
 				C1B095C31731A42A0075EA5E /* FMStation.h */,
 				C1B095C41731A42A0075EA5E /* Internal */,
 			);
@@ -295,6 +293,7 @@
 				C1B095D21731A42A0075EA5E /* FMLog.m */,
 				C1B095D31731A42A0075EA5E /* FMReachability.h */,
 				C1B095D41731A42A0075EA5E /* FMReachability.m */,
+				C1B095C21731A42A0075EA5E /* FMSession.h */,
 				C1B095D51731A42A0075EA5E /* FMSession.m */,
 				C1B095D61731A42A0075EA5E /* FMStation.m */,
 			);
@@ -312,7 +311,6 @@
 				C13892A7173C43A300467005 /* FMAudioPlayer.h in Headers */,
 				C13892A8173C43A500467005 /* FMError.h in Headers */,
 				C13892A9173C43AA00467005 /* FMLog.h in Headers */,
-				C13892AA173C43AC00467005 /* FMSession.h in Headers */,
 				C13892AB173C43AF00467005 /* FMStation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

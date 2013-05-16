@@ -7,8 +7,7 @@
 //
 
 #import "FMMetadataView.h"
-#import "FMSession.h"
-#import "FMAudioItem.h"
+#import "FMAudioPlayer.h"
 
 @interface FMMetadataView () {
     UILabel *_metadataLabel;
@@ -44,7 +43,7 @@
     _metadataLabel.font = [UIFont systemFontOfSize:12.0];
     [self addSubview:_metadataLabel];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemUpdated:) name:FMSessionCurrentItemChangedNotification object:[FMSession sharedSession]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemUpdated:) name:FMAudioPlayerCurrentItemDidChangeNotification object:[FMAudioPlayer sharedPlayer]];
 }
 
 - (void)dealloc {
@@ -52,7 +51,7 @@
 }
 
 - (void)itemUpdated:(NSNotification *)notification {
-    FMAudioItem *currentItem = [FMSession sharedSession].currentItem;
+    FMAudioItem *currentItem = [FMAudioPlayer sharedPlayer].currentItem;
     if(currentItem != nil) {
         _metadataLabel.text = [NSString stringWithFormat:@"%@ – %@", currentItem.artist, currentItem.name];
     }

@@ -10,9 +10,9 @@
 #import "FMStationPickerViewController.h"
 #import "FMProgressView.h"
 
-#define kFMSessionClientToken @"e518c7bb995c28ea12deb8ddc9b6458c41005f56"
-#define kFMSessionClientSecret @"512cac1423f76a4b25235fa0afb092013b68f7d8"
-#define kFMSessionPlacementId @"10002"
+#define kFMClientToken @"e518c7bb995c28ea12deb8ddc9b6458c41005f56"
+#define kFMClientSecret @"512cac1423f76a4b25235fa0afb092013b68f7d8"
+#define kFMPlacementId @"10002"
 
 #define kFMProgressBarUpdateTimeInterval 0.5
 #define kFMProgressBarHeight 5.0f
@@ -56,14 +56,14 @@
 
     [self.playerContainer addSubview:self.progressView];
     
-    [FMSession setClientToken:kFMSessionClientToken
-                       secret:kFMSessionClientSecret];
-    [[FMSession sharedSession] setPlacement:kFMSessionPlacementId];
-    FMLogDebug(@"Set placement: %@", [FMSession sharedSession].activePlacementId);
-    self.feedPlayer = [[FMAudioPlayer alloc] initWithSession:[FMSession sharedSession]];
+    [FMAudioPlayer setClientToken:kFMClientToken
+                           secret:kFMClientSecret];
+    self.feedPlayer = [FMAudioPlayer sharedPlayer];
+    [self.feedPlayer setPlacement:kFMPlacementId];
+    FMLogDebug(@"Set placement: %@", self.feedPlayer.activePlacementId);
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationUpdated:) name:FMSessionActiveStationChangedNotification object:[FMSession sharedSession]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songUpdated:) name:FMSessionCurrentItemChangedNotification object:[FMSession sharedSession]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationUpdated:) name:FMAudioPlayerActiveStationDidChangeNotification object:self.feedPlayer];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songUpdated:) name:FMAudioPlayerCurrentItemDidChangeNotification object:self.feedPlayer];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerUpdated:) name:FMAudioPlayerPlaybackStateDidChangeNotification object:self.feedPlayer];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skipFailed:) name:FMAudioPlayerSkipFailedNotification object:self.feedPlayer];
 }
@@ -74,7 +74,7 @@
 }
 
 - (void)stationUpdated:(NSNotification *)notification {
-    self.currentStationLabel.text = [FMSession sharedSession].activeStation.name;
+    self.currentStationLabel.text = self.feedPlayer.activeStation.name;
 }
 
 - (void)songUpdated:(NSNotification *)notification {
@@ -130,8 +130,8 @@
 }
 
 - (void)updateLabels {
-    self.songLabel.text = self.feedPlayer.session.currentItem.name;
-    self.artistLabel.text = self.feedPlayer.session.currentItem.artist;
+    self.songLabel.text = self.feedPlayer.currentItem.name;
+    self.artistLabel.text = self.feedPlayer.currentItem.artist;
 }
 
 - (void)setVolume:(id)sender {
@@ -209,6 +209,6 @@
 
 #undef kFMProgressBarUpdateTimeInterval
 #undef kFMProgressBarHeight
-#undef kFMSessionClientToken
-#undef kFMSessionClientSecret
-#undef kFMSessionPlacementId
+#undef kFMClientToken
+#undef kFMClientSecret
+#undef kFMPlacementId

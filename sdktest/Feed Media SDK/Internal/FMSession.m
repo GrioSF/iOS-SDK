@@ -7,18 +7,22 @@
 //
 
 #import "FMSession.h"
+#import "FMError.h"
+#import "FMLog.h"
 #import "FMAuth.h"
 #import "FMAPIRequest.h"
+#import "FMStation.h"
+#import "FMAudioItem.h"
 
 #define kFMAuthStoragePath @"FeedMedia/"
 #define kFMAuthStorageName @"FMAuth.plist"
 
 #define kFMSessionDefaultBitrate 48
 
-NSString *const FMSessionCurrentItemChangedNotification = @"FMSessionCurrentItemChangedNotification";
+NSString *const FMSessionCurrentItemDidChangeNotification = @"FMSessionCurrentItemDidChangeNotification";
 NSString *const FMSessionNextItemAvailableNotification = @"FMSessionNextItemAvailableNotification";
-NSString *const FMSessionActivePlacementChangedNotification = @"FMSessionActivePlacementChangedNotification";
-NSString *const FMSessionActiveStationChangedNotification = @"FMSessionActiveStationChangedNotification";
+NSString *const FMSessionActivePlacementDidChangeNotification = @"FMSessionActivePlacementDidChangeNotification";
+NSString *const FMSessionActiveStationDidChangeNotification = @"FMSessionActiveStationDidChangeNotification";
 NSString *const FMAudioFormatMP3 = @"mp3";
 NSString *const FMAudioFormatAAC = @"aac";
 
@@ -90,7 +94,7 @@ NSString *const FMAudioFormatAAC = @"aac";
     if([currentItem isEqual:_currentItem]) return;
 
     _currentItem = currentItem;
-    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionCurrentItemChangedNotification object:self userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionCurrentItemDidChangeNotification object:self userInfo:nil];
 }
 
 - (void)setPlacement:(NSString *)activePlacementId {
@@ -98,7 +102,7 @@ NSString *const FMAudioFormatAAC = @"aac";
     if([activePlacementId isEqualToString:_activePlacementId]) return;
 
     _activePlacementId = [activePlacementId copy];
-    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActivePlacementChangedNotification object:self userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActivePlacementDidChangeNotification object:self userInfo:nil];
     self.activeStation = nil;
 }
 
@@ -110,7 +114,7 @@ NSString *const FMAudioFormatAAC = @"aac";
     [self cancelOutstandingRequests];
     self.currentItem = nil;
     self.nextItem = nil;
-    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActiveStationChangedNotification object:self userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMSessionActiveStationDidChangeNotification object:self userInfo:nil];
 }
 
 #pragma mark - AUTH

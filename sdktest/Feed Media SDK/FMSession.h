@@ -7,17 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FMStation.h"
-#import "FMAudioItem.h"
-#import "FMError.h"
-#import "FMLog.h"
 
-@class FMSession;
+@class FMSession, FMAudioItem, FMStation;
 
-extern NSString *const FMSessionCurrentItemChangedNotification;
+extern NSString *const FMSessionCurrentItemDidChangeNotification;
 extern NSString *const FMSessionNextItemAvailableNotification;
-extern NSString *const FMSessionActivePlacementChangedNotification;
-extern NSString *const FMSessionActiveStationChangedNotification;
+extern NSString *const FMSessionActivePlacementDidChangeNotification;
+extern NSString *const FMSessionActiveStationDidChangeNotification;
 
 extern NSString *const FMAudioFormatMP3;
 extern NSString *const FMAudioFormatAAC;

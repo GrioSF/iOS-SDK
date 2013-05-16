@@ -9,6 +9,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "FMAudioPlayer.h"
+#import "FMSession.h"
 #import "FMAsset.h"
 #import "FMBandwidthMonitor.h"
 
@@ -17,6 +18,9 @@ static void *FMAudioPlayerCurrentItemObservationContext = &FMAudioPlayerCurrentI
 static void *FMAudioPlayerPlayerItemStatusObservationContext = &FMAudioPlayerPlayerItemStatusObservationContext;
 
 NSString *const FMAudioPlayerPlaybackStateDidChangeNotification = @"FMAudioPlayerPlaybackStateDidChangeNotification";
+NSString *const FMAudioPlayerCurrentItemDidChangeNotification = @"FMAudioPlayerCurrentItemDidChangeNotification";
+NSString *const FMAudioPlayerActiveStationDidChangeNotification = @"FMAudioPlayerActiveStationDidChangeNotification";
+NSString *const FMAudioPlayerActivePlacementDidChangeNotification = @"FMAudioPlayerActivePlacementDidChangeNotification";
 NSString *const FMAudioPlayerSkipFailedNotification = @"FMAudioPlayerSkipFailedNotification";
 NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErrorKey";
 
@@ -33,17 +37,23 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     BOOL _playImmediately;
 }
 @property (nonatomic) FMAudioPlayerPlaybackState playbackState;
+@property (nonatomic, readonly) FMSession *session;
 @end
 
 @implementation FMAudioPlayer
 
-+ (FMAudioPlayer *)playerWithSession:(FMSession *)session {
-    return [[FMAudioPlayer alloc] initWithSession:session];
++ (FMAudioPlayer *)sharedPlayer {
+    static FMAudioPlayer *_sharedPlayer;
+    static dispatch_once_t singletonToken;
+    dispatch_once(&singletonToken, ^{
+        _sharedPlayer = [[FMAudioPlayer alloc] initWithSession:[FMSession sharedSession]];
+    });
+    return _sharedPlayer;
 }
 
 - (id)initWithSession:(FMSession *)session {
     if(self = [super init]) {
-        self.session = session;
+        _session = session;
         _mixVolume = 1.0;
         _playbackState = FMAudioPlayerPlaybackStateWaitingForItem;
         _player = [[AVQueuePlayer alloc] init];
@@ -56,6 +66,10 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
                   forKeyPath:kRateKey
                      options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                      context:FMAudioPlayerRateObservationContext];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentItemChanged:) name:FMSessionCurrentItemDidChangeNotification object:self.session];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionReceivedItem:) name:FMSessionNextItemAvailableNotification object:self.session];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationChanged:) name:FMSessionActiveStationDidChangeNotification object:self.session];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(placementChanged:) name:FMSessionActivePlacementDidChangeNotification object:self.session];
 
     }
     return self;
@@ -64,10 +78,61 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 - (void)dealloc {
     [_player removeObserver:self forKeyPath:kCurrentItemKey];
     [_player removeObserver:self forKeyPath:kRateKey];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_bandwidthMonitor stop];
 }
 
-#pragma mark - Passthrough Properties
+#pragma mark - FMSession Passthroughs
+
++ (void)setClientToken:(NSString *)token secret:(NSString *)secret {
+    [FMSession setClientToken:token secret:secret];
+}
+
+- (void)requestStationsForPlacement:(NSString *)placementId
+                        withSuccess:(void (^)(NSArray *stations))success
+                            failure:(void (^)(NSError *error))failure {
+    [self.session requestStationsForPlacement:placementId
+                                  withSuccess:success
+                                      failure:failure];
+}
+
+- (void)setPlacement:(NSString *)activePlacementId {
+    self.session.activePlacementId = activePlacementId;
+}
+
+- (NSString *)activePlacementId {
+    return self.session.activePlacementId;
+}
+
+- (void)setStation:(FMStation *)activeStation {
+    self.session.activeStation = activeStation;
+}
+
+- (FMStation *)activeStation {
+    return self.session.activeStation;
+}
+
+- (FMAudioItem *)currentItem {
+    return self.session.currentItem;
+}
+
+- (void)setSupportedAudioFormats:(NSArray *)supportedAudioFormats {
+    self.session.supportedAudioFormats = supportedAudioFormats;
+}
+
+- (NSArray *)supportedAudioFormats {
+    return self.session.supportedAudioFormats;
+}
+
+- (void)setMaxBitrate:(NSInteger)maxBitrate {
+    self.session.maxBitrate = maxBitrate;
+}
+
+- (NSInteger)maxBitrate {
+    return self.session.maxBitrate;
+}
+
+#pragma mark - Audio Passthroughs
 
 - (NSTimeInterval)currentPlaybackTime {
     CMTime playbackTime = [_player currentTime];
@@ -317,28 +382,24 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 
 #pragma mark - State Handling
 
-- (void)setSession:(FMSession *)session {
-    if(_session) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_session];
-        [self stop];
-    }
-    _session = session;
-    if(_session) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionReceivedItem:) name:FMSessionNextItemAvailableNotification object:_session];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(placementChanged:) name:FMSessionActivePlacementChangedNotification object:_session];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stationChanged:) name:FMSessionActiveStationChangedNotification object:_session];
-    }
+// Called in response to FMSessionCurrentItemDidChangeNotification
+- (void)currentItemChanged:(NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMAudioPlayerCurrentItemDidChangeNotification object:self userInfo:nil];
 }
 
+// Called in response to FMSessionActivePlacementDidChangeNotification
 - (void)placementChanged:(NSNotification *)notification {
     FMLogDebug(@"Placement Changed");
     [self stop];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMAudioPlayerActivePlacementDidChangeNotification object:self userInfo:nil];
 }
 
+// Called in response to FMSessionActiveStationDidChangeNotification
 - (void)stationChanged:(NSNotification *)notification {
     FMLogDebug(@"Station Changed");
     [self stop];
     [self prepareToPlay];
+    [[NSNotificationCenter defaultCenter] postNotificationName:FMAudioPlayerActiveStationDidChangeNotification object:self userInfo:nil];
 }
 
 - (void)setPlaybackState:(FMAudioPlayerPlaybackState)playbackState {
