@@ -5,6 +5,9 @@
 //  Created by James Anthony on 10/1/12.
 //  Copyright (c) 2012 Feed Media Inc. All rights reserved.
 //
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 typedef enum FMLogLevel : NSInteger {
     FMLogLevelNone = 0,
@@ -30,4 +33,8 @@ void _FMLog(NSInteger level, NSString *format, ...);
 
 #ifndef FMLogError
 #define FMLogError(...) FMLog(FMLogLevelError,__VA_ARGS__)
+#endif
+
+#ifdef __cplusplus
+}
 #endif
