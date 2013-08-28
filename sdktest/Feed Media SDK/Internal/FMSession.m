@@ -374,8 +374,10 @@ NSString *const FMAudioFormatAAC = @"aac";
 }
 
 - (void)updatePlay:(NSTimeInterval)elapsedTime {
-    FMAPIRequest *elapseRequest = [FMAPIRequest requestElapse:self.currentItem.playId time:elapsedTime];
-    [self sendRequest:elapseRequest];
+    if (self.currentItem.playId != nil) {
+        FMAPIRequest *elapseRequest = [FMAPIRequest requestElapse:self.currentItem.playId time:elapsedTime];
+        [self sendRequest:elapseRequest];
+    }
 }
 
 - (void)playCompleted {
