@@ -73,7 +73,7 @@ Playing Music with FMAudioPlayer
         // Your view controller's internal setup...
     }
 
-    -(void)updateSongMetadata:(NSNotification)notification {
+    -(void)updateSongMetadata:(NSNotification*)notification {
         // Use the properties of [FMAudioPlayer sharedPlayer].currentItem like `name`, `artist`, `album`, etc...
         // You can find the available properties in "FMAudioItem.h"
     }
