@@ -547,6 +547,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
 - (void)dislike {
     FMLogDebug(@"Dislike Called");
     [self.session requestDislike];
+    [self skip];
 }
 
 - (void)unlike {
