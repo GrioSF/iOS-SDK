@@ -530,6 +530,7 @@ NSString *const FMAudioPlayerSkipFailureErrorKey = @"FMAudioPlayerSkipFailureErr
     AVPlayerItem *itemToRemove = _player.currentItem;
     [self setPlaybackState:FMAudioPlayerPlaybackStateRequestingSkip];
     [self.session requestSkipWithSuccess:^{
+        [itemToRemove removeObserver:self forKeyPath:@"status"];
         [_player removeItem:itemToRemove];
         [self play];
     } failure:^(NSError *error) {
