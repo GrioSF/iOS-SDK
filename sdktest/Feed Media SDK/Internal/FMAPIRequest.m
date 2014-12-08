@@ -140,6 +140,30 @@
     return request;
 }
 
++ (FMAPIRequest *)requestLike:(NSString *)playId {
+    FMAPIRequest *request = [[FMAPIRequest alloc] init];
+    request.httpMethod = @"POST";
+    request.httpEndpoint = [NSString stringWithFormat:@"play/%@/like",playId];
+    request.authRequired = YES;
+    return request;
+}
+
++ (FMAPIRequest *)requestUnlike:(NSString *)playId {
+    FMAPIRequest *request = [[FMAPIRequest alloc] init];
+    request.httpMethod = @"DELETE";
+    request.httpEndpoint = [NSString stringWithFormat:@"play/%@/like",playId];
+    request.authRequired = YES;
+    return request;
+}
+
++ (FMAPIRequest *)requestDislike:(NSString *)playId {
+    FMAPIRequest *request = [[FMAPIRequest alloc] init];
+    request.httpMethod = @"POST";
+    request.httpEndpoint = [NSString stringWithFormat:@"play/%@/dislike",playId];
+    request.authRequired = YES;
+    return request;
+}
+
 + (NSString *)userAgent {
     return [NSString stringWithFormat:@"FeedMediaSDK/%@ (%@; %@; %@; %@)",
             kFeedSDKVersion,

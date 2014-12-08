@@ -93,5 +93,12 @@ typedef enum FMAudioPlayerPlaybackState : NSUInteger {
 @property (nonatomic) NSInteger maxBitrate;
 
 
+/**
+ Set the status like/unlike or dislike/undislike to the current FMAudioItem.
+ */
+- (void)like;
+- (void)dislike;
+- (void)unlike;
+- (void)unDislike;
 
 @end

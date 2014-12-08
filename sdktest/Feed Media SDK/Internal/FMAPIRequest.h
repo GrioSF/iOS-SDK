@@ -40,6 +40,9 @@
 + (FMAPIRequest *)requestSkip:(NSString *)playId elapsed:(NSTimeInterval)elapsedTime;
 + (FMAPIRequest *)requestInvalidate:(NSString *)playId;
 + (FMAPIRequest *)requestComplete:(NSString *)playId;
++ (FMAPIRequest *)requestLike:(NSString *)playId;
++ (FMAPIRequest *)requestUnlike:(NSString *)playId;
++ (FMAPIRequest *)requestDislike:(NSString *)playId;
 
 - (void)send;
 - (void)cancel;

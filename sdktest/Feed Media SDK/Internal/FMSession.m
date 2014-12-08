@@ -391,6 +391,33 @@ NSString *const FMAudioFormatAAC = @"aac";
     [self sendRequest:completeRequest];
 }
 
+- (void)requestLike {
+    NSString *playId = self.currentItem.playId;
+    FMAPIRequest *completeRequest = [FMAPIRequest requestLike:playId];
+    completeRequest.failureBlock = ^(NSError *error) {
+        FMLogWarn(@"ERROR: Failed to register like: %@.", error);
+    };
+    [self sendRequest:completeRequest];
+}
+
+- (void)requestUnlike {
+    NSString *playId = self.currentItem.playId;
+    FMAPIRequest *completeRequest = [FMAPIRequest requestUnlike:playId];
+    completeRequest.failureBlock = ^(NSError *error) {
+        FMLogWarn(@"ERROR: Failed to register unlike: %@.", error);
+    };
+    [self sendRequest:completeRequest];
+}
+
+- (void)requestDislike {
+    NSString *playId = self.currentItem.playId;
+    FMAPIRequest *completeRequest = [FMAPIRequest requestDislike:playId];
+    completeRequest.failureBlock = ^(NSError *error) {
+        FMLogWarn(@"ERROR: Failed to register dislike: %@.", error);
+    };
+    [self sendRequest:completeRequest];
+}
+
 - (void)requestSkip {
     [self requestSkipWithSuccess:nil failure:nil];
 }
