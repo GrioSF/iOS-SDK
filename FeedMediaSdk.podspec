@@ -28,6 +28,7 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/fuzz-radio/iOS-SDK"
   s.author       = { "FUZZ ftw!" => "eric@fuzz.com" }
+  s.license      = { :type => "MIT", :file => "LICENSE" }
   s.source       = { :git => "https://github.com/fuzz-radio/iOS-SDK" }
   s.source_files = "sdktest/Feed Media SDK/Internal", "sdktest/Feed Media SDK/Internal/**/*.{h,m}", "sdktest/Feed Media SDK", "sdktest/Feed Media SDK/**/*.{h,m}"
   s.public_header_files = "sdktest/Feed Media SDK/**/*.h"
