@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "FeedMediaSdk"
-  s.version      = "1.0"
+  s.version      = "1.0.0"
   s.summary      = "Feed Media SDK"
   s.description  = <<-DESC
                     Feed Media SDK for iOS Quickstart Guide
@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/fuzz-radio/iOS-SDK"
   s.author       = { "FUZZ ftw!" => "eric@fuzz.com" }
   s.license      = { :type => "MIT", :file => "LICENSE" }
-  s.source       = { :git => "https://github.com/fuzz-radio/iOS-SDK" }
+  s.source       = { :git => "https://github.com/fuzz-radio/iOS-SDK.git" , :tag => '1.0.0' }
   s.source_files = "sdktest/Feed Media SDK/Internal", "sdktest/Feed Media SDK/Internal/**/*.{h,m}", "sdktest/Feed Media SDK", "sdktest/Feed Media SDK/**/*.{h,m}"
   s.public_header_files = "sdktest/Feed Media SDK/**/*.h"
   s.platform     = :ios, '7.0'
